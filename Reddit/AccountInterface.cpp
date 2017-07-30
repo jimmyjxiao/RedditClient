@@ -1,0 +1,407 @@
+#include "pch.h"
+#include "AccountInterface.h"
+#include <sstream>
+#include "globalvars.h"
+#include "DelegateCommand.h"
+#include "subpost.h"
+#include <experimental/resumable>
+#include "subpostUWP.h"
+#include <pplawait.h>
+#include <ppl.h>
+#include "commentUWPitem.h"
+using namespace Windows::Foundation;
+using namespace Windows::Data::Json;
+using namespace Windows::Web::Http;
+namespace wsaw = Windows::Security::Authentication::Web;
+using namespace account;
+namespace account
+{
+	const std::wstring AccountInterface::apibase = L"https://oauth.reddit.com/";
+	Platform::String^ AccountInterface::baseURI = ref new Platform::String(L"https://oauth.reddit.com/");
+	Concurrency::task<AccountInterface*> AccountInterface::LoginNewAcc()
+	{
+		GUID state;
+		CoCreateGuid(&state); //create unique state string to make sure that it is our authentication when it comes back
+		std::wstringstream ss;
+		ss << L"https://www.reddit.com/api/v1/authorize?client_id=ZPFRVRwyAE1uRA" << L"&response_type=code&state=" << std::hex << state.Data1 << state.Data2 << state.Data3 << state.Data3 << L"&redirect_uri=http://bobthefirst.net&duration=permanent&scope=creddits, modcontributors, modconfig, subscribe, wikiread, wikiedit, vote, mysubreddits, submit, modlog, modposts, modflair, save, modothers, read, privatemessages, report, identity, livemanage, account, modtraffic, edit, modwiki, modself, history, flair"; //authentication request uri
+		Uri^ startURIz = ref new Uri(ref new Platform::String(ss.str().data()));
+		Uri^ redirect = ref new Uri(L"http://bobthefirst.net"); //oauth redirect uri
+		return concurrency::create_task(wsaw::WebAuthenticationBroker::AuthenticateAsync(wsaw::WebAuthenticationOptions::None, startURIz, redirect)).then([](wsaw::WebAuthenticationResult^ outcome) {
+			switch (outcome->ResponseStatus)
+			{
+			case wsaw::WebAuthenticationStatus::Success: {
+				WwwFormUrlDecoder urldecoder(outcome->ResponseData);
+				auto code = urldecoder.GetFirstValueByName(L"code");
+				Platform::Collections::Map<Platform::String^, Platform::String^>^ postcontent = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
+				postcontent->Insert(L"grant_type", L"authorization_code");
+				postcontent->Insert(L"code", code);
+				postcontent->Insert(L"redirect_uri", L"http://bobthefirst.net");
+				auto message = ref new Windows::Web::Http::HttpFormUrlEncodedContent(postcontent);
+				globalvars::generalHttp->DefaultRequestHeaders->Authorization = ref new Windows::Web::Http::Headers::HttpCredentialsHeaderValue(L"basic", L"WlBGUlZSd3lBRTF1UkE6");
+				return globalvars::generalHttp->PostAsync(ref new Uri(L"https://www.reddit.com/api/v1/access_token"), message);
+			}
+			}
+		}).then([](Windows::Web::Http::HttpResponseMessage^ response) {
+			globalvars::generalHttp->DefaultRequestHeaders->Authorization = nullptr;
+			if (response->IsSuccessStatusCode)
+			{
+				return response->Content->ReadAsStringAsync();
+			}
+		}, concurrency::task_continuation_context::use_arbitrary()).then([](Platform::String^ jsonResponse) {
+			JsonObject^ jsonContent;
+			JsonObject::TryParse(jsonResponse, &jsonContent);
+			auto token = jsonContent->GetNamedString(L"access_token");
+			auto refreshtoken = jsonContent->GetNamedString(L"refresh_token");
+
+			auto acc =  new AccountInterface(refreshtoken, token);
+			JsonObject^ mejson;
+			JsonObject::TryParse(concurrency::create_task(acc->httpClient->GetStringAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/me").data())))).get(), &mejson);
+			acc->me = jsontoinfo(mejson);
+			auto credvault = ref new Windows::Security::Credentials::PasswordVault();
+			credvault->Add(ref new Windows::Security::Credentials::PasswordCredential("reddit_refresh_token", acc->me.username, refreshtoken));
+		
+			return acc;
+		}, concurrency::task_continuation_context::use_arbitrary());
+	}
+
+
+
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getObjectInfo(Platform::String ^ fullname)
+	{
+		Platform::String^ apiendpoint =  L"api/info" + L"?id="  + fullname + L"&raw_json=1";
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, apiendpoint));
+	}
+
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getObjectInfo(std::queue<Platform::String^> fullnames)
+	{
+		throw ref new Platform::NotImplementedException();
+	}
+
+	concurrency::task<void> AccountInterface::vote(Platform::IBox<bool>^ dir, Platform::String ^ id)
+	{
+		auto content = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
+		Platform::String^ z;
+		if (dir == nullptr)
+			z = L"0";
+		else if (dir->Value == false)
+			z = L"-1";
+		else if (dir->Value == true)
+			z = L"1";
+		content->Insert(Platform::StringReference(L"dir"), z);
+		content->Insert(Platform::StringReference(L"id"), id);
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(Platform::StringReference((apibase + L"api/vote").data())), ref new Windows::Web::Http::HttpFormUrlEncodedContent(content))).then([](Windows::Web::Http::HttpResponseMessage^ respond)
+		{
+			respond->EnsureSuccessStatusCode();
+		});
+	}
+
+
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getJsonAsync(Windows::Foundation::Uri ^ requestUri)
+	{
+		return concurrency::create_task(httpClient->GetStringAsync(requestUri)).then([](Platform::String^ content) {
+			return JsonObject::Parse(content);
+		});
+	}
+
+
+	concurrency::task<AccountInfo> AccountInterface::getinfo()
+	{
+		
+		return getJsonAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/me").data()))).then([this](Windows::Data::Json::JsonObject^ jsoninfo) {
+			return jsontoinfo(jsoninfo);
+		});
+		
+	}
+
+	AccountInfo AccountInterface::jsontoinfo(Windows::Data::Json::JsonObject ^ jsoninfo)
+	{
+		AccountInfo returning;
+		returning.comment_karma = jsoninfo->GetNamedNumber("comment_karma");
+		returning.has_mail = jsoninfo->GetNamedBoolean("has_mail");
+		returning.has_gold = jsoninfo->GetNamedBoolean("is_gold");
+		returning.link_karma = jsoninfo->GetNamedNumber("link_karma");
+		returning.username = jsoninfo->GetNamedString("name");
+		return returning;
+	}
+
+	Concurrency::task<void> AccountInterface::changeSave(Platform::String ^ fullname, bool dir)
+	{
+		std::wstring path = L"api/";
+		if (!dir)
+			path += L"un";
+		path += L"save";
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(baseURI, Platform::StringReference(path.data())), ref new Windows::Web::Http::HttpFormUrlEncodedContent(ref new Platform::Collections::Map<Platform::String^, Platform::String^>({ std::pair<Platform::String^, Platform::String^>("id", fullname) })))).then([](HttpResponseMessage^ xv) {xv->EnsureSuccessStatusCode(); });
+	}
+
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getJsonFromBasePath(Platform::String ^ path)
+	{
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, path));
+	}
+
+	AccountInterface::AccountInterface()
+	{
+		httpClient = ref new Windows::Web::Http::HttpClient();
+	}
+
+	AccountInterface::AccountInterface(Platform::String ^ refresh)
+	{
+
+		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh));
+		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
+		getinfo();
+		//getinfo();
+	}
+
+	AccountInterface::AccountInterface(Platform::String ^ refresh, Platform::String ^ currentauth)
+	{
+		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh, currentauth));
+		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
+	}
+	concurrency::task<commentUWPlisting> AccountInterface::getCommentAsyncVec(Platform::String^ ID)
+	{
+		return getCommentAsyncVec(ID, commentSort::default);
+	}
+	concurrency::task<commentUWPlisting> AccountInterface::getCommentAsyncVec(Platform::String ^ ID, commentSort sort)
+	{
+
+		std::wstring reqstr = L"/comments/";
+		reqstr += ID->Data();
+		reqstr += L"/?raw_json=1&limit=400";
+		switch (sort)
+		{
+		case commentSort::best:
+			reqstr += L"&sort=confidence";
+			break;
+		case commentSort::controversial:
+			reqstr += L"&sort=controversial";
+			break;
+		case commentSort::top:
+			reqstr += L"&sort=top";
+			break;
+		case commentSort::New:
+			reqstr += L"&sort=new";
+			break;
+		case commentSort::old:
+			reqstr += L"&sort=old";
+			break;
+		case commentSort::qa:
+			reqstr += L"&sort=qa";
+			break;
+		case commentSort::default:
+			break;
+		}
+		return concurrency::create_task(httpClient->GetStringAsync(ref new Uri(baseURI, Platform::StringReference(reqstr.data())))).then([](Platform::String^ jsonstr){
+			commentUWPlisting comments;
+			JsonArray^ json = Windows::Data::Json::JsonArray::Parse(jsonstr);
+			//comments.parent = ref new subpostUWP(json->GetObjectAt(0));
+			JsonObject^ data = json->GetObjectAt(1)->GetNamedObject("data");
+			JsonValue^ tempvalue = data->GetNamedValue("after");
+			
+			
+			JsonArray^ jsoncomments = data->GetNamedArray("children");
+			auto lastObject = (*(Windows::Foundation::Collections::end(jsoncomments) - 1))->GetObject();
+			if (lastObject->GetNamedString("kind") == "more")
+			{
+				comments.commentList = std::vector<CommentUWPitem^>(jsoncomments->Size-1);
+				
+				comments.more = ref new moreComments();
+				for (auto &&x : lastObject->GetNamedObject("data")->GetNamedArray("children"))
+				{
+					comments.more->morelist.push(x->GetString());
+				}
+				jsoncomments->RemoveAtEnd();
+			}
+			else
+				comments.commentList = std::vector<CommentUWPitem^>(jsoncomments->Size);
+			concurrency::parallel_transform(Windows::Foundation::Collections::begin(jsoncomments), Windows::Foundation::Collections::end(jsoncomments), comments.commentList.begin(), [](Windows::Data::Json::IJsonValue^ z) {
+				return ref new CommentUWPitem(z->GetObject()->GetNamedObject("data"));
+			});
+			
+			return comments;
+			
+			
+		});
+		//throw ref new Platform::NotImplementedException();
+	}
+	std::shared_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec()
+	{
+		return getsubredditAsyncVec("");
+	}
+	std::shared_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit)
+	{
+
+		return getsubredditAsyncVec(subreddit, postSort::Defaultsort, timerange::Default);
+		
+	}
+	std::shared_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit, postSort sort, timerange range)
+	{
+		if (subreddit != "")
+		{
+			subreddit = L"r/" + subreddit + L"/";
+		}
+		std::wstring urlstr = subreddit->Data();
+		switch (sort)
+		{
+		case postSort::Defaultsort:
+			break;
+		case postSort::controversial:
+			urlstr += L"controversial/";
+			break;
+		case postSort::hot:
+			urlstr += L"hot/";
+			break;
+		case postSort::New:
+			urlstr += L"new/";
+			break;
+		case postSort::rising:
+			urlstr += L"rising/";
+			break;
+		case postSort::top:
+			urlstr += L"top/";
+			break;
+	
+		default:
+			__assume(0);
+		}
+		urlstr += L"?raw_json=1&limit=40";
+		switch (range)
+		{
+		case timerange::Default:
+			break;
+		case timerange::all:
+			urlstr += L"&t=all";
+			break;
+		case timerange::day:
+			urlstr += L"&t=day";
+			break;
+		case timerange::hour:
+			urlstr += L"&t=hour";
+			break;
+		case timerange::month:
+			urlstr += L"&t=month";
+			break;
+		case timerange::week:
+			urlstr += L"&t=week";
+			break;
+		case timerange::year:
+			urlstr += L"&t=year";
+			break;
+		default:
+			__assume(0);
+		}
+		std::shared_ptr<subredditlisting>listing = std::make_shared<subredditlisting>();
+		listing->listing = ref new Platform::Collections::Vector<subpostUWP^>();
+		listing->getTask = getJsonAsync(ref new Uri(baseURI, Platform::StringReference(urlstr.data()))).then([listing](Windows::Data::Json::JsonObject^ json) {
+			auto data = json->GetNamedObject("data");
+			try
+			{
+				listing->before = data->GetNamedString("before");
+			}
+			catch (...)
+			{
+				listing->before = "";
+			}
+			try
+			{
+				listing->after = data->GetNamedString("after");
+			}
+			catch (...)
+			{
+				listing->after = "";
+			}
+			auto jsonPosts = data->GetNamedArray("children");
+			for (auto x : jsonPosts)
+			{
+				auto jsonpost = x->GetObject()->GetNamedObject("data");
+				subpostUWP^ addingpost= ref new subpostUWP(jsonpost);
+				listing->listing->Append(addingpost);
+			}
+			return listing->listing;
+		}), concurrency::task_continuation_context::use_arbitrary;
+		return listing;
+	}
+	
+
+	AccountInterface::authFilter::authFilter(Windows::Web::Http::Filters::IHttpFilter ^ innerFilter, Platform::String ^ refreshtoken)
+	{
+		this->refreshToken = refreshtoken;
+		//refreshauth();
+		this->innerFilter = innerFilter;
+	}
+
+	AccountInterface::authFilter::authFilter(Windows::Web::Http::Filters::IHttpFilter ^ innerFilter, Platform::String ^ refreshtoken, Platform::String ^ currentToken)
+	{
+		this->refreshToken = refreshtoken;
+		this->innerFilter = innerFilter;
+		AuthHeader = ref new Windows::Web::Http::Headers::HttpCredentialsHeaderValue(L"bearer", currentToken);
+	}
+
+	Windows::Foundation::IAsyncOperationWithProgress<Windows::Web::Http::HttpResponseMessage^, Windows::Web::Http::HttpProgress>^ AccountInterface::authFilter::SendRequestAsync(Windows::Web::Http::HttpRequestMessage ^ request)
+	{
+		
+		return concurrency::create_async([=](concurrency::progress_reporter<HttpProgress> reporter, concurrency::cancellation_token token)
+		{
+
+
+			unsigned int retries = 0;
+			if (request->Properties->HasKey(L"retries"))
+			{
+				retries = static_cast<unsigned int>(request->Properties->Lookup(L"retries"));
+			}
+			
+			if (AuthHeader == nullptr)
+			{
+				return refreshauth().then([token,this, request](void){
+					//IAsyncOperationWithProgress<HttpResponseMessage^, HttpProgress>^ operation = innerFilter->SendRequestAsync(request);
+					//operation->Progress = ref new AsyncOperationProgressHandler<HttpResponseMessage^, HttpProgress>([reporter, &retries](
+					//	IAsyncOperationWithProgress<HttpResponseMessage^, HttpProgress>^ asyncInfo,
+					//	HttpProgress progress)
+					//{
+					//	progress.Retries += retries;
+					//	//reporter.report(progress);
+					//});
+					request->Headers->Authorization = AuthHeader;
+					Platform::String^ eige = request->Headers->Authorization->ToString();
+					return concurrency::create_task(innerFilter->SendRequestAsync(request), token);
+				});
+			}
+			else
+			{
+			
+				request->Headers->Authorization = AuthHeader;
+				return concurrency::create_task(innerFilter->SendRequestAsync(request)).then([=](concurrency::task<HttpResponseMessage^> sendRequestTask)
+				{
+					HttpResponseMessage^ response = sendRequestTask.get();
+					//throw ref new Platform::NotImplementedException("need to figure out which status code for refresh");
+					if (response->StatusCode == Windows::Web::Http::HttpStatusCode::Forbidden)
+					{
+						request->Headers->Authorization = AuthHeader;
+						request->Properties->Insert("retries", (retries + 1));
+						return refreshauth().then([=]() {
+							return create_task(SendRequestAsync(request), token);
+						});
+					}
+					else return sendRequestTask;
+				});
+			}
+		});
+	}
+
+	concurrency::task<void> AccountInterface::authFilter::refreshauth()
+	{
+		globalvars::generalHttp->DefaultRequestHeaders->Authorization = ref new Windows::Web::Http::Headers::HttpCredentialsHeaderValue(L"basic", L"WlBGUlZSd3lBRTF1UkE6");
+		Platform::Collections::Map<Platform::String^, Platform::String^>^ postcontent = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
+		postcontent->Insert(L"grant_type", L"refresh_token");
+		postcontent->Insert(L"refresh_token", refreshToken);
+		return concurrency::create_task(globalvars::generalHttp->PostAsync(ref new Uri(L"https://www.reddit.com/api/v1/access_token"), ref new Windows::Web::Http::HttpFormUrlEncodedContent(postcontent))).then([this](HttpResponseMessage^ res) {
+			Platform::String^ debugline = res->Content->ToString();
+			if (res->IsSuccessStatusCode)
+			{
+				auto currentToken = JsonObject::Parse(res->Content->ToString())->GetNamedString("access_token");
+				AuthHeader = ref new Windows::Web::Http::Headers::HttpCredentialsHeaderValue(L"bearer", currentToken);
+			}
+		});
+
+	}
+
+}

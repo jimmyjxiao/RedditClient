@@ -1,0 +1,536 @@
+﻿<Page
+    x:Class="Reddit.SubRedditViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:converters"
+    xmlns:ac="using:account"
+    xmlns:ex="using:ExpanderControl"
+    xmlns:html="using:html2xaml"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <converters:unformatHtml x:Key="htmlPrev"/>
+        <converters:BrushToColor x:Key="brushify"/>
+        <converters:InverseBool x:Key="boolFlipper"/>
+        <converters:downvotechecked x:Key="downvoteconvert"/>
+        <converters:upvotechecked x:Key="upvoteconvert"/>
+        <local:previewIconC x:Key="pathdataconvz"/>
+        <local:sortToTimeRangeVis x:Key="rangeVisConv"/>
+        <converters:NullableValueConverter x:Key="boxConv"/>
+        <DataTemplate x:Key="listSubPost" x:DataType="ac:subpostUWP">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <PathIcon Grid.Column="0" Grid.RowSpan="2" Width="70">
+                    <PathIcon.Data>
+                        <GeometryGroup>
+                            <EllipseGeometry RadiusX="50" RadiusY="50"/>
+                        </GeometryGroup>
+                    </PathIcon.Data>
+                </PathIcon>
+                <TextBlock Grid.Column="1" Style="{ThemeResource TitleTextBlockStyle}" Text="{x:Bind Title}" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" >
+                    <ex:Expander Template="{StaticResource inlineExpanderButtoning}" IsExpanded="False">
+                        <RichTextBlock html:Properties.Html="{x:Bind selftext_html}"/>
+                    </ex:Expander>
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"  HorizontalAlignment="Left">
+                        posted by <Hyperlink><Run Text="{x:Bind OP}"/></Hyperlink> to <Hyperlink>/>r/<Run Text="{x:Bind subreddit}"/></Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <CommandBar Template="{StaticResource leftAlignNoContentCommandBar}" Grid.Row="2" Grid.ColumnSpan="2">
+                    <AppBarToggleButton Label="Upvote" IsThreeState="False" IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE70E;" FontWeight="ExtraBold"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton Label="Downvote" IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" IsThreeState="False" Command="{x:Bind changedownvote}">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE70D;" FontWeight="ExtraBold"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    
+
+                </CommandBar>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="listSelfPost" x:DataType="ac:subpostUWP">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <PathIcon HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Width="70" Height="70" Foreground="Gray">
+                    <PathIcon.Data>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="-50, -50,100,28"/>
+                            <RectangleGeometry Rect="-50, -14,100,28"/>
+                            <RectangleGeometry Rect="-50,  22,100,28"/>
+                            <EllipseGeometry RadiusX="100" RadiusY="100" Center="0,0"/>
+                        </GeometryGroup>
+                    </PathIcon.Data>
+                </PathIcon>
+                <TextBlock Grid.Column="1" Style="{ThemeResource TitleTextBlockStyle}" Text="{x:Bind Title}" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" >
+                    <ex:Expander Template="{StaticResource inlineExpanderButtoning}" IsExpanded="False">
+                        <local:subpostContentResizingPlaceholder post="{x:Bind}"/>
+                    </ex:Expander>
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"  HorizontalAlignment="Left">
+                        posted by <Hyperlink><Run Text="{x:Bind OP}"/></Hyperlink> to <Hyperlink>/>r/<Run Text="{x:Bind subreddit}"/></Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <CommandBar Template="{StaticResource leftAlignNoContentCommandBar}" Grid.Row="2" Grid.ColumnSpan="2">
+                    <AppBarToggleButton Label="Upvote" IsThreeState="False" IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE70E;" FontWeight="ExtraBold"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton Label="Downvote" IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" IsThreeState="False" Command="{x:Bind changedownvote}">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE70D;" FontWeight="ExtraBold"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+
+
+                </CommandBar>
+            </Grid>
+        </DataTemplate>
+        <Style TargetType="ToggleButton" x:Key="upvotebutton">
+
+            <Setter Property="Padding" Value="0"/>
+
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Path HorizontalAlignment="Center" Stroke="Black" StrokeThickness="1.25"  VerticalAlignment="Center" Height="9" Width="9"  Stretch="Uniform" Fill="Black" Data="M 0,0 -11.78,-11.779 0,-23.561 l 1.061,1.061 -9.97,9.971 21.064,0 0,1.5 -21.064,0 9.97,9.968 L 0,0 Z" RenderTransformOrigin="0.5,0.5" >
+                            <Path.RenderTransform>
+                                <CompositeTransform Rotation="90"/>
+                            </Path.RenderTransform>
+                        </Path>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Red" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltChromeWhiteBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="CheckedPointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Red" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltChromeWhiteBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="CheckedPressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="CheckedDisabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="IndeterminatePointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="IndeterminatePressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="IndeterminateDisabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+    											Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+    											Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter"
+    							BorderBrush="{TemplateBinding BorderBrush}"
+    							BorderThickness="{TemplateBinding BorderThickness}"
+    							Content="{TemplateBinding Content}"
+    							ContentTransitions="{TemplateBinding ContentTransitions}"
+    							ContentTemplate="{TemplateBinding ContentTemplate}"
+    							Padding="{TemplateBinding Padding}"
+    							HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+    							VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+    							AutomationProperties.AccessibilityView="Raw"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ToggleButton" x:Key="downvotebutton">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Path HorizontalAlignment="Center" Stroke="Black" StrokeThickness="1.25"  VerticalAlignment="Center" Height="9" Width="9"  Stretch="Uniform" Fill="Black" Data="M 0,0 -11.78,-11.779 0,-23.561 l 1.061,1.061 -9.97,9.971 21.064,0 0,1.5 -21.064,0 9.97,9.968 L 0,0 Z" RenderTransformOrigin="0.5,0.5" >
+                            <Path.RenderTransform>
+                                <CompositeTransform Rotation="-90"/>
+                            </Path.RenderTransform>
+                        </Path>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate x:Name="imageGriddatatemplate" x:DataType="ac:subpostUWP">
+                <Grid Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{x:Bind Title, Mode=OneTime}" FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
+                    <TextBlock Text="{x:Bind OP}" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
+                    <TextBlock FontSize="12" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" TextAlignment="Center">
+                    /r/<Run Text="{x:Bind subreddit}"/>
+                    </TextBlock>
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="auto" Height="13" Grid.Row="2" Margin="0,0,5,5" Orientation="Horizontal">
+
+                        <ToggleButton Height="13" Width="13"  VerticalAlignment="Center" Style="{StaticResource upvotebutton}"  IsThreeState="False" IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}" />
+                        <TextBlock Text="{x:Bind score}" FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
+                        <ToggleButton   Height="13" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource downvotebutton}"  IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" IsThreeState="False" Command="{x:Bind changedownvote}"/>
+                    </StackPanel>
+                    <Button Grid.Row="1" Height="auto" Width="460" Padding="0"  Command="{x:Bind previewCommand}">
+                        <Grid>
+                            <Image Height="auto" Width="460" Stretch="UniformToFill">
+                                <Image.Source>
+                                    <BitmapImage UriSource="{x:Bind previewURI}"/>
+                                </Image.Source>
+                            </Image>
+                            <Path Fill="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Data="{x:Bind Converter={StaticResource pathdataconvz}, Path=contentType, Mode=OneWay}" MaxHeight="70" MaxWidth="70"  Stretch="Fill" UseLayoutRounding="False"   HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="#CCFFFFFF" />
+                        </Grid>
+                    </Button>
+                    <Grid Grid.Row="1" Margin="2,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Width="auto" Height="20">
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" x:Name="hello" Foreground="White" Padding="0,0,8,0" Margin="2,0,0,0">
+                            <Run Text="Comments:" FontWeight="Light"/>
+        			        <Run Text="{x:Bind num_comments}"/>
+                        </TextBlock>
+                    </Grid>
+
+
+
+
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Name="selfGridTemplate" x:DataType="ac:subpostUWP">
+                <Grid Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{x:Bind Title, Mode=OneTime}" FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
+                    <TextBlock Text="{x:Bind OP}" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
+                    <TextBlock FontSize="12" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" TextAlignment="Center">
+                    /r/<Run Text="{x:Bind subreddit}"/>
+                    </TextBlock>
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="auto" Height="13" Grid.Row="2" Margin="0,0,5,5" Orientation="Horizontal">
+
+                        <ToggleButton Height="13" Width="13"  VerticalAlignment="Center" Style="{StaticResource upvotebutton}"  IsThreeState="False" IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}" />
+                        <TextBlock Text="{x:Bind score}" FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
+                        <ToggleButton   Height="13" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource downvotebutton}"  IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" IsThreeState="False" Command="{x:Bind changedownvote}"/>
+                    </StackPanel>
+                    <TextBlock Grid.Row="1" Height="auto" Width="460" Padding="0" Text="{x:Bind selftext_html, Converter={StaticResource htmlPrev}}"/>
+                    <Grid Grid.Row="1" Margin="2,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Width="auto" Height="20">
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" x:Name="hello" Foreground="White" Padding="0,0,8,0" Margin="2,0,0,0">
+                            <Run Text="Comments:" FontWeight="Light"/>
+        			        <Run Text="{x:Bind num_comments}"/>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <CommandBar x:Name="commandBar" OverflowButtonVisibility="Auto" Background="{x:Bind subInfo.key_color, Converter={StaticResource brushify}, Mode=OneWay}">
+            <AppBarToggleButton Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False"/>
+            <AppBarButton Icon="PreviewLink" Label="Wiki"/>
+            <AppBarButton Icon="Filter" x:Name="timeButton" Label="Filter Posts By:">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            <ListView Header="Posts from:" SelectedValuePath="Tag" Visibility="{x:Bind Sort, Converter={StaticResource rangeVisConv}, Mode=OneWay}" x:Name="timeSelector"  SelectionChanged="rangeSelector_SelectionChanged" >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <TextBlock Text="Past Hour">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>hour</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past 24 Hours">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>day</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past Week">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>week</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past Month">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>month</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past Year">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>year</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="All Time">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>all</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                            </ListView>
+                            <MenuFlyoutSeparator Visibility="{x:Bind Sort, Converter={StaticResource rangeVisConv}, Mode=OneWay}"/>
+                            <ToggleMenuFlyoutItem Text="Show NSFW posts" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem Text="Show Spoilers" IsChecked="True"/>
+                        </StackPanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton Icon="Add" Label="Post">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Link" Icon="Link"/>
+                        <MenuFlyoutItem Text="Text" Icon="AlignLeft"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <CommandBar.Content>
+                <StackPanel Orientation="Horizontal">
+                    <ListView SelectionMode="Single" SelectedValuePath="Tag" x:Name="sortSelector" SelectionChanged="sortSelector_SelectionChanged">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <TextBlock Text="Hot">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    hot
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="New">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    New
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Rising">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    rising
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Controversial">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    controversial
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Top">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    top
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                    </ListView>
+                </StackPanel>
+            </CommandBar.Content>
+
+        </CommandBar>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="subInfopanel">
+            <TextBlock Text="{x:Bind subInfo.pname, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}"/>
+            <AppBarSeparator/>
+            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" x:Name="subTextblock">
+                <Run Text="{x:Bind subInfo.subscribers, Mode=OneWay}"/> Subscribers
+            </TextBlock>
+        </StackPanel>
+        <SplitView x:Name="splitSide" DisplayMode="Overlay" PanePlacement="Right" Grid.Row="1" IsPaneOpen="{x:Bind sideBarButton.IsChecked, Converter={StaticResource boxConv}, Mode=TwoWay}">
+            <SplitView.Pane>
+                <WebView x:Name="sidebarWebview"/>
+            </SplitView.Pane>
+            <Grid>
+                <GridView x:Name="listGrid" ItemsSource="{x:Bind posts, Mode=OneWay}" IsItemClickEnabled="True" ItemClick="listGrid_ItemClick" ChoosingItemContainer="listGrid_ChoosingItemContainer" x:Load="{x:Bind viewMode, Converter={StaticResource boolFlipper}, Mode=OneWay}"/>
+                <ListView x:Name="listView" ItemsSource="{x:Bind posts, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource listSubPost}"  x:Load="{x:Bind viewMode, Mode=OneWay}"/>
+            </Grid>
+        </SplitView>
+    </Grid>
+</Page>

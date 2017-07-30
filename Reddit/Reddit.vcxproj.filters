@@ -8,17 +8,82 @@
       <UniqueIdentifier>200111eb-622a-4633-bf42-2449e46f8494</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
-    <Image Include="Assets\Logo.scale-100.png">
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="MainPage.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AccountInterface.cpp" />
+    <ClCompile Include="comment.cpp" />
+    <ClCompile Include="commentUWPitem.cpp" />
+    <ClCompile Include="DelegateCommand.cpp" />
+    <ClCompile Include="globalvars.cpp" />
+    <ClCompile Include="serviceHelpers.cpp" />
+    <ClCompile Include="subpost.cpp" />
+    <ClCompile Include="subpostUWP.cpp" />
+    <ClCompile Include="VotableThing.cpp" />
+    <ClCompile Include="CommentView.xaml.cpp" />
+    <ClCompile Include="CommentViewPage.xaml.cpp" />
+    <ClCompile Include="SubRedditViewPage.xaml.cpp" />
+    <ClCompile Include="subpostContentResizingPlaceholder.xaml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="MainPage.xaml.h" />
+    <ClInclude Include="AccountInterface.h" />
+    <ClInclude Include="comment.h" />
+    <ClInclude Include="commentUWPitem.h" />
+    <ClInclude Include="converters.h" />
+    <ClInclude Include="DelegateCommand.h" />
+    <ClInclude Include="globalvars.h" />
+    <ClInclude Include="NavStates.h" />
+    <ClInclude Include="serviceHelpers.h" />
+    <ClInclude Include="subpost.h" />
+    <ClInclude Include="subpostUWP.h" />
+    <ClInclude Include="VotableThing.h" />
+    <ClInclude Include="CommentView.xaml.h" />
+    <ClInclude Include="CommentViewPage.xaml.h" />
+    <ClInclude Include="SubRedditViewPage.xaml.h" />
+    <ClInclude Include="subpostContentResizingPlaceholder.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\SmallLogo.scale-100.png">
+    <Image Include="Assets\SplashScreen.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\StoreLogo.scale-100.png">
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\SplashScreen.scale-100.png">
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Reddit_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainPage.xaml" />
+    <Page Include="CommentView.xaml" />
+    <Page Include="CommentViewPage.xaml" />
+    <Page Include="SubRedditViewPage.xaml" />
+    <Page Include="subpostContentResizingPlaceholder.xaml" />
   </ItemGroup>
 </Project>

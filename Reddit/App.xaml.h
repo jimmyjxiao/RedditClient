@@ -6,7 +6,7 @@
 #pragma once
 
 #include "App.g.h"
-
+#include "subpostUWP.h"
 namespace Reddit
 {
 	/// <summary>

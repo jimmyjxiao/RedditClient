@@ -5,7 +5,7 @@
 
 #include "pch.h"
 #include "MainPage.xaml.h"
-
+#include "globalvars.h"
 using namespace Reddit;
 
 using namespace Platform;
@@ -29,6 +29,30 @@ using namespace Windows::UI::Xaml::Navigation;
 App::App()
 {
     InitializeComponent();
+	html2xaml::Properties::registerhtmlproperty();
+	globalvars::generalHttp = ref new Windows::Web::Http::HttpClient();
+	globalvars::generalHttp->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("I heard you liked user agents"));
+	globalvars::imgurHttp = ref new Windows::Web::Http::HttpClient();
+	globalvars::imgurHttp->DefaultRequestHeaders->Authorization = ref new Windows::Web::Http::Headers::HttpCredentialsHeaderValue("Client-ID", "713b63d6f4df36b");
+	InitializeComponent();
+	Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
+	auto credvault = ref new Windows::Security::Credentials::PasswordVault();
+	try
+	{
+		auto acccreds = credvault->FindAllByResource("reddit_refresh_token");
+		for (auto x : acccreds)
+		{
+			x->RetrievePassword();
+			auto accclass = new account::AccountInterface(x->Password);
+			globalvars::accounts.insert(std::make_pair(x->UserName->Data(), accclass));
+			globalvars::currentacc = accclass;
+		}
+	}
+	catch (...)
+	{
+
+		OutputDebugString(L"No users logged in");
+	}
     Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
 }
 

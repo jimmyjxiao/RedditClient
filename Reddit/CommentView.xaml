@@ -1,0 +1,86 @@
+﻿<UserControl
+    x:Class="Reddit.CommentView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:tree="using:TreeViewControl"
+    xmlns:acc="using:account"
+    xmlns:common="using:html2xaml"
+    xmlns:converters="using:converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <converters:downvotechecked x:Key="downvoteconverter"/>
+        <converters:upvotechecked x:Key="upvoteconverter"/>
+        <tree:IntegerToIndentationConverter x:Key="IntToIndConverter"/>
+        <converters:InverseBool x:Key="inverseBoolConverter"/>
+        <DataTemplate x:DataType="tree:TreeNode" x:Key="commentTemplate" >
+            <Grid Margin="{x:Bind Depth, Converter={StaticResource IntToIndConverter}}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <HyperlinkButton x:Name="user" Content="{x:Bind ((acc:CommentUWPitem)Data).author, FallbackValue=username}" FontSize="16" VerticalAlignment="Bottom"/>
+                    <TextBlock FontSize="16" VerticalAlignment="Center">
+                        <Run Text="{x:Bind ((acc:CommentUWPitem)Data).score, FallbackValue=30}"/> points
+                    </TextBlock>
+                    <TextBlock x:Name="time"/>
+                </StackPanel>
+                <RichTextBlock Name="comment" Grid.Row="1" common:Properties.Html="{x:Bind ((acc:CommentUWPitem)Data).htmltext}"/>
+
+                <CommandBar HorizontalAlignment="Stretch" Grid.Row="2" Template="{StaticResource leftAlignNoContentCommandBar}" OverflowButtonVisibility="Collapsed" IsDynamicOverflowEnabled="True" >
+                    <AppBarToggleButton Label="Upvote" IsChecked="{x:Bind ((acc:CommentUWPitem)Data).Liked, Converter={StaticResource upvoteconverter}, Mode=OneWay}" Command="{x:Bind ((acc:CommentUWPitem)Data).changeupvote}">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE70E;" FontWeight="ExtraBold"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton Label="Downvote" IsChecked="{x:Bind ((acc:CommentUWPitem)Data).Liked, Converter={StaticResource downvoteconverter}, Mode=OneWay}" Command="{x:Bind ((acc:CommentUWPitem)Data).changedownvote}">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE70D;" FontWeight="ExtraBold"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarToggleButton Icon="Save" Label="Save" IsChecked="{x:Bind ((acc:CommentUWPitem)Data).saved, Mode=TwoWay}" IsThreeState="False"/>
+                    <AppBarButton Icon="Important" Label="Report">
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <Grid Background="Red"/>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarButton Icon="Edit" Label="Edit" Visibility="{x:Bind ((acc:CommentUWPitem)Data).isMine}"/>
+                    <AppBarButton Icon="Share" Label="Share"/>
+                    <AppBarToggleButton Icon="HideBcc" Label="Hide Replies" IsChecked="{x:Bind IsExpanded, Converter={StaticResource inverseBoolConverter}, Mode=TwoWay}"/>
+                    <AppBarButton Label="Reply">
+                        <AppBarButton.Icon>
+                            <FontIcon Glyph="&#xE97A;" FontWeight="ExtraBold"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+
+                </CommandBar>
+
+
+            </Grid>
+
+        </DataTemplate>
+        <DataTemplate x:DataType="tree:TreeNode" x:Key="loadmorebutton">
+            <HyperlinkButton Margin="{x:Bind Depth, Converter={StaticResource IntToIndConverter}}">
+                <TextBlock>
+                    Load More Comments (<Run Text="3"/>)
+                </TextBlock>
+            </HyperlinkButton>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <tree:TreeView x:Name="commentTree" SelectionMode="None" ChoosingItemContainer="commentTree_ChoosingItemContainer">
+        
+    </tree:TreeView>
+
+
+</UserControl>
