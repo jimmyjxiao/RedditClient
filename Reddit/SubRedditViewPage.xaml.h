@@ -10,7 +10,7 @@
 #include "AccountInterface.h"
 #include "subpost.h"
 #include "subpostUWP.h"
-#include "subpostContentResizingPlaceholder.xaml.h"
+#include "MyResources.xaml.h"
 namespace Reddit
 {
 	/// <summary>
@@ -21,12 +21,23 @@ namespace Reddit
 		content, self, ad
 	};
 	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class SubRedditViewPage sealed : Windows::UI::Xaml::Data::INotifyPropertyChanged
+	public ref class SubRedditViewPage sealed : Windows::UI::Xaml::Data::INotifyPropertyChanged,  NavIndexed
 	{
 	public:
+		property bool SidebarUseCSS
+		{
+			bool get();
+			void set(bool a);
+		}
+		virtual ~SubRedditViewPage();
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ PropertyChanged;
 		SubRedditViewPage();
-		property Windows::Foundation::Collections::IVector<account::subpostUWP^>^ posts;
+		property Windows::Foundation::Collections::IVector<account::subpostUWP^>^ posts
+		{
+			Windows::Foundation::Collections::IVector<account::subpostUWP^>^ get() {
+				return _posts;
+			}
+		}
 		property account::subredditInfo subInfo { account::subredditInfo get() { return _subInfo; }}
 		property bool viewMode
 		{
@@ -36,10 +47,14 @@ namespace Reddit
 			}
 			void set(bool newa)
 			{
-				listingType = (ViewMode)newa;
-				ContentItemRecycle.clear();
-				SelfItemRecycle.clear();
-				AdItemRecycle.clear();
+				//if (pageLoaded && (newa != ((bool)listingType)))
+				//{
+					listingType = (ViewMode)newa;
+					ContentItemRecycle.clear();
+					SelfItemRecycle.clear();
+					AdItemRecycle.clear();
+					PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("viewMode"));
+				//}
 			}
 		}
 		property Platform::String^ Subreddit
@@ -56,15 +71,37 @@ namespace Reddit
 			account::timerange get() { return _rng; }
 			void set(account::timerange newrange);
 		}
+		// Inherited via NavIndexed
+		virtual property int NavigationIndex
+		{
+			int get()
+			{
+				return navIndex;
+			}
+		}
+		// Inherited via NavIndexed
+		virtual property Windows::UI::Xaml::Interop::TypeName PageType
+		{
+			Windows::UI::Xaml::Interop::TypeName get()
+			{
+				return SubRedditViewPage::typeid;
+			}
+		}
 	protected:
 		void OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e) override;
 		void OnNavigatingFrom(Windows::UI::Xaml::Navigation::NavigatingCancelEventArgs^ e) override;
 	private:
+		int navIndex;
+		void updateSidebar();
+		bool useCss = true;
+		std::unique_ptr<account::subredditlisting> lPtr;
+		Platform::Collections::Vector<account::subpostUWP^>^ _posts;
+		bool pageLoaded = false;
 		enum class ViewMode : bool
 		{
 			grid = false, list = true
 		};
-		ViewMode listingType;
+		ViewMode listingType = ViewMode::list;
 		std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> ContentItemRecycle;
 		std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> SelfItemRecycle;
 		std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> AdItemRecycle;
@@ -77,6 +114,12 @@ namespace Reddit
 		void rangeSelector_SelectionChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e);
 		void listGrid_ItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e);
 		void listGrid_ChoosingItemContainer(Windows::UI::Xaml::Controls::ListViewBase^ sender, Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^ args);
+		void AppBarButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+
+		
+
+		
+
 	};
 	public ref class sortToTimeRangeVis sealed : Windows::UI::Xaml::Data::IValueConverter
 	{
@@ -112,14 +155,13 @@ namespace Reddit
 			L"M454.889 121.303v303.255H90.978V121.303H454.889 M485.211 90.977H60.651v363.909h424.56V90.977L485.211 90.977z    M121.304 363.905h303.257l-60.653-181.951l-90.976 121.302l-60.65-60.651L121.304 363.905z M151.628 181.954   c-16.762 0-30.324 13.565-30.324 30.327s13.562 30.324 30.324 30.324c16.762 0 30.327-13.562 30.327-30.324   S168.393 181.954 151.628 181.954z M0 30.326v363.91h30.327V60.65h394.235V30.326H0z",
 			L"M0 48v416h512V48H0z M480 432H32V80h448V432z M352 160c0 26.51 21.49 48 48 48s48-21.49 48-48s-21.49-48-48-48   S352 133.49 352 160z M448 400H64l96-256l128 160l64-48L448 400z" //tochange
 		};
+		const wchar_t selfpath[172] = L"M0 48v416h512V48H0z M480 432H32V80h448V432z M352 160c0 26.51 21.49 48 48 48s48-21.49 48-48s-21.49-48-48-48   S352 133.49 352 160z M448 400H64l96-256l128 160l64-48L448 400z";
 	public:
 		virtual Platform::Object^ Convert(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
 			Platform::Object^ parameter, Platform::String^ language)
 		{
 
 			auto contentType = (account::postContentType)value;
-
-
 			return safe_cast<Windows::UI::Xaml::Media::PathGeometry^>(Windows::UI::Xaml::Markup::XamlReader::Load(Platform::StringReference((L"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"
 				+ pathstr[(int)contentType] + L"</Geometry>").data())));
 

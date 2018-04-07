@@ -16,5 +16,5 @@ namespace TreeViewControl {
     protected:
 
         Windows::UI::Xaml::Automation::Peers::AutomationPeer^ OnCreateAutomationPeer() override;
-    };
+	};
 }

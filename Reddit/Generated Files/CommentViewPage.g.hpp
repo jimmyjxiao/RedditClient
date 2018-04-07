@@ -27,26 +27,219 @@ void ::Reddit::CommentViewPage::InitializeComponent()
     ::Windows::UI::Xaml::Application::LoadComponent(this, resourceLocator, ::Windows::UI::Xaml::Controls::Primitives::ComponentResourceLocation::Application);
 }
 
+
+/// <summary>
+/// Auto generated class for compiled bindings.
+/// </summary>
+class Reddit::CommentViewPage::CommentViewPage_obj1_Bindings 
+    : public ::XamlBindingInfo::ReferenceTypeXamlBindings<::Reddit::CommentViewPage, ::XamlBindingInfo::XamlBindingTrackingBase>
+    , public ::XamlBindingInfo::IXamlBindingTracking
+{
+            ::Windows::UI::Xaml::ResourceDictionary^ localResources;
+            ::Platform::WeakReference converterLookupRoot;
+public:
+    CommentViewPage_obj1_Bindings()
+    {
+        InitializeTracking(this);
+    }
+
+private:
+    ~CommentViewPage_obj1_Bindings()
+    {
+        ReleaseAllListeners();
+    }
+
+public:
+
+    void Connect(int __connectionId, ::Platform::Object^ __target)
+    {
+        switch(__connectionId)
+        {
+            case 2: // CommentViewPage.xaml line 17
+                this->obj2 = safe_cast<::Windows::UI::Xaml::Controls::CommandBar^>(__target);
+                break;
+            case 3: // CommentViewPage.xaml line 82
+                this->obj3 = safe_cast<::Windows::UI::Xaml::Controls::SplitView^>(__target);
+                this->obj3->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::SplitView::IsPaneOpenProperty,
+                    ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
+                        [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
+                        {
+                            if (this->IsInitialized())
+                            {
+                                // Update Two Way binding
+                                this->GetDataRoot()->sideBarButton->IsChecked = safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("boxConv")->ConvertBack(this->obj3->IsPaneOpen, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr));
+                            }
+                        }));
+                break;
+        }
+    }
+
+    void DisconnectUnloadedObject(int connectionId)
+    {
+        throw ref new ::Platform::InvalidArgumentException("No unloadable elements to disconnect.");
+    }
+
+    void SetConverterLookupRoot(::Windows::UI::Xaml::FrameworkElement^ rootElement)
+    {
+        this->converterLookupRoot = rootElement;
+    }
+
+    ::Windows::UI::Xaml::Data::IValueConverter^ LookupConverter(::Platform::String^ key)
+    {
+        if (this->localResources == nullptr)
+        {
+            this->localResources = this->converterLookupRoot.Resolve<::Windows::UI::Xaml::FrameworkElement>()->Resources;
+            this->converterLookupRoot = nullptr;
+            }
+        return safe_cast<::Windows::UI::Xaml::Data::IValueConverter^>(this->localResources->HasKey(key) ? this->localResources->Lookup(key) : ::Windows::UI::Xaml::Application::Current->Resources->Lookup(key));
+    }
+
+private:
+    // Fields for each control that has bindings.
+    ::Windows::UI::Xaml::Controls::CommandBar^ obj2;
+    ::Windows::UI::Xaml::Controls::SplitView^ obj3;
+    
+    // Fields for binding tracking.
+    ::Windows::UI::Xaml::DependencyObject^ cacheDPC_sideBarButton_IsChecked = nullptr;
+    __int64 tokenDPC_sideBarButton_IsChecked = 0;
+
+    // Update methods for each path node used in binding steps.
+    void Update_(::Reddit::CommentViewPage^ obj, int phase)
+    {
+        if (obj != nullptr)
+        {
+            if ((phase & (NOT_PHASED | (1 << 0))) != 0)
+            {
+                this->Update_subInfo(obj->subInfo, phase);
+            }
+            if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
+            {
+                this->Update_sideBarButton(obj->sideBarButton, phase);
+            }
+        }
+    }
+    void Update_subInfo(::account::subredditInfo obj, int phase)
+    {
+            if ((phase & (NOT_PHASED | (1 << 0))) != 0)
+            {
+                this->Update_subInfo_key_color(obj.key_color, phase);
+            }
+    }
+    void Update_subInfo_key_color(::Windows::UI::Color obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
+        {
+            // CommentViewPage.xaml line 17
+            Set_Windows_UI_Xaml_FrameworkElement_RequestedTheme(this->obj2, safe_cast<::Windows::UI::Xaml::ElementTheme>(this->LookupConverter("themeConv")->Convert(obj, ::Windows::UI::Xaml::ElementTheme::typeid, nullptr, nullptr)));
+            // CommentViewPage.xaml line 17
+            Set_Windows_UI_Xaml_Controls_Control_Background(this->obj2, safe_cast<::Windows::UI::Xaml::Media::Brush^>(this->LookupConverter("brushify")->Convert(obj, ::Windows::UI::Xaml::Media::Brush::typeid, nullptr, nullptr)), nullptr);
+        }
+    }
+    void Update_sideBarButton(::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj, int phase)
+    {
+        this->_bindingsTracking->UpdateDependencyPropertyChangedListener(obj, ::Windows::UI::Xaml::Controls::AppBarToggleButton::IsCheckedProperty, &this->cacheDPC_sideBarButton_IsChecked, &this->tokenDPC_sideBarButton_IsChecked);
+        if (obj != nullptr)
+        {
+            if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
+            {
+                this->Update_sideBarButton_IsChecked(obj->IsChecked, phase);
+            }
+        }
+    }
+    void Update_sideBarButton_IsChecked(::Platform::IBox<::Platform::Boolean>^ obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
+        {
+            // CommentViewPage.xaml line 82
+            Set_Windows_UI_Xaml_Controls_SplitView_IsPaneOpen(this->obj3, safe_cast<::Platform::Boolean>(this->LookupConverter("boxConv")->Convert(obj, ::Platform::Boolean::typeid, nullptr, nullptr)));
+        }
+    }
+
+    virtual void ReleaseAllListeners() override
+    {
+        this->_bindingsTracking->UpdateDependencyPropertyChangedListener(nullptr, ::Windows::UI::Xaml::Controls::AppBarToggleButton::IsCheckedProperty, &this->cacheDPC_sideBarButton_IsChecked, &this->tokenDPC_sideBarButton_IsChecked);
+    }
+
+    virtual void PropertyChanged(Platform::Object^ sender, ::Windows::UI::Xaml::Data::PropertyChangedEventArgs^ e) override
+    {
+    }
+
+    void CollectionChanged(::Platform::Object^ sender, ::Windows::UI::Xaml::Interop::NotifyCollectionChangedEventArgs^ e)
+    {
+    }
+
+    void VectorChanged(::Platform::Object^ sender, ::Windows::Foundation::Collections::IVectorChangedEventArgs^ e)
+    {
+    }
+
+    void MapChanged(::Platform::Object^ sender, ::Windows::Foundation::Collections::IMapChangedEventArgs<::Platform::String^>^ e)
+    {
+    }
+
+    void DependencyPropertyChanged(::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
+    {
+        if (sender != nullptr)
+        {
+            if (sender->Equals(this->cacheDPC_sideBarButton_IsChecked) && ::Windows::UI::Xaml::Controls::AppBarToggleButton::IsCheckedProperty->Equals(prop))
+            {
+                ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(sender);
+                if (obj != nullptr)
+                {
+                    this->Update_sideBarButton_IsChecked(obj->IsChecked, DATA_CHANGED);
+                }
+            }
+        }
+    }
+    static void Set_Windows_UI_Xaml_FrameworkElement_RequestedTheme(::Windows::UI::Xaml::FrameworkElement^ obj, ::Windows::UI::Xaml::ElementTheme value)
+    {
+        obj->RequestedTheme = value;
+    }
+    static void Set_Windows_UI_Xaml_Controls_Control_Background(::Windows::UI::Xaml::Controls::Control^ obj, ::Windows::UI::Xaml::Media::Brush^ value, ::Platform::String^ targetNullValue)
+    {
+        if (value == nullptr && targetNullValue != nullptr)
+        {
+            value = (::Windows::UI::Xaml::Media::Brush^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Windows::UI::Xaml::Media::Brush::typeid, targetNullValue);
+        }
+        obj->Background = value;
+    }
+    static void Set_Windows_UI_Xaml_Controls_SplitView_IsPaneOpen(::Windows::UI::Xaml::Controls::SplitView^ obj, ::Platform::Boolean value)
+    {
+        obj->IsPaneOpen = value;
+    }
+};
+
 void ::Reddit::CommentViewPage::Connect(int __connectionId, ::Platform::Object^ __target)
 {
     switch (__connectionId)
     {
-    case 1:
+    case 2:
         {
             this->commandBar = safe_cast<::Windows::UI::Xaml::Controls::CommandBar^>(__target);
         }
         break;
-    case 2:
+    case 4:
+        {
+            this->sideBarWebView = safe_cast<::Windows::UI::Xaml::Controls::WebView^>(__target);
+        }
+        break;
+    case 5:
         {
             this->commentControl = safe_cast<::Reddit::CommentView^>(__target);
         }
         break;
-    case 3:
+    case 6:
         {
             this->sideBarButton = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
         }
         break;
-    case 4:
+    case 7:
+        {
+            ::Windows::UI::Xaml::Controls::AppBarButton^ element7 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element7))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::CommentViewPage::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&CommentViewPage::AppBarButton_Click);
+        }
+        break;
+    case 8:
         {
             this->sortSelector = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::ListView^>(this->sortSelector))->SelectionChanged += ref new ::Windows::UI::Xaml::Controls::SelectionChangedEventHandler(this, (void (::Reddit::CommentViewPage::*)
@@ -59,9 +252,22 @@ void ::Reddit::CommentViewPage::Connect(int __connectionId, ::Platform::Object^ 
 
 ::Windows::UI::Xaml::Markup::IComponentConnector^ ::Reddit::CommentViewPage::GetBindingConnector(int __connectionId, ::Platform::Object^ __target)
 {
-    __connectionId;         // unreferenced
-    __target;               // unreferenced
-    return nullptr;
+    ::XamlBindingInfo::XamlBindings^ bindings = nullptr;
+    switch (__connectionId)
+    {
+        case 1: // CommentViewPage.xaml line 1
+            {
+                ::Windows::UI::Xaml::Controls::Page^ element1 = safe_cast<::Windows::UI::Xaml::Controls::Page^>(__target);
+                CommentViewPage_obj1_Bindings* objBindings = new CommentViewPage_obj1_Bindings();
+                objBindings->SetDataRoot(this);
+                objBindings->SetConverterLookupRoot(this);
+                bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
+                this->Bindings = bindings;
+                element1->Loading += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::FrameworkElement^, ::Platform::Object^>(bindings, &::XamlBindingInfo::XamlBindings::Loading);
+            }
+            break;
+    }
+    return bindings;
 }
 
 #pragma warning(pop)

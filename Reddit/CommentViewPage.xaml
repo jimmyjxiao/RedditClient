@@ -5,6 +5,7 @@
     xmlns:local="using:Reddit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    NavigationCacheMode="Disabled"
     xmlns:ac="using:account"
     mc:Ignorable="d">
 
@@ -13,9 +14,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <CommandBar x:Name="commandBar" OverflowButtonVisibility="Auto">
+        <CommandBar x:Name="commandBar" RequestedTheme="{x:Bind subInfo.key_color, Mode=OneTime, Converter={StaticResource themeConv}}" Background="{x:Bind subInfo.key_color, Converter={StaticResource brushify}}" OverflowButtonVisibility="Auto">
             <AppBarToggleButton Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False"/>
-            <AppBarButton Icon="List" Label="Other Discussions"/>
+            <AppBarButton Icon="List" Label="Other Discussions" Click="AppBarButton_Click"/>
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal">
                     <ListView SelectionMode="Single" SelectedValuePath="Tag" x:Name="sortSelector" SelectionChanged="sortSelector_SelectionChanged" >
@@ -31,17 +32,17 @@
                                 </ac:commentSort>
                             </TextBlock.Tag>
                         </TextBlock>
+                        <TextBlock Text="Top">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    top
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
                         <TextBlock Text="New">
                             <TextBlock.Tag>
                                 <ac:commentSort>
                                     New
-                                </ac:commentSort>
-                            </TextBlock.Tag>
-                        </TextBlock>
-                        <TextBlock Text="Old">
-                            <TextBlock.Tag>
-                                <ac:commentSort>
-                                    old
                                 </ac:commentSort>
                             </TextBlock.Tag>
                         </TextBlock>
@@ -52,10 +53,10 @@
                                 </ac:commentSort>
                             </TextBlock.Tag>
                         </TextBlock>
-                        <TextBlock Text="Top">
+                        <TextBlock Text="Old">
                             <TextBlock.Tag>
                                 <ac:commentSort>
-                                    top
+                                    old
                                 </ac:commentSort>
                             </TextBlock.Tag>
                         </TextBlock>
@@ -78,9 +79,12 @@
             </CommandBar.Content>
 
         </CommandBar>
-        <local:CommentView x:Name="commentControl" Grid.Row="2"/>
-
-
+        <SplitView IsPaneOpen="{x:Bind sideBarButton.IsChecked, Mode=TwoWay, Converter={StaticResource boxConv}}" Grid.Row="2">
+            <SplitView.Pane>
+                <WebView x:Name="sideBarWebView"/>
+            </SplitView.Pane>
+            <local:CommentView x:Name="commentControl" />
+        </SplitView>
     </Grid>
 
 

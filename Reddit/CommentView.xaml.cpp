@@ -8,6 +8,8 @@
 #include "commentUWPitem.h"
 #include "globalvars.h"
 #include "converters.h"
+#include "ReplyBox.xaml.h"
+#include <ppl.h>
 using namespace Reddit;
 
 using namespace Platform;
@@ -25,17 +27,29 @@ using namespace Windows::UI::Xaml::Navigation;
 
 CommentView::CommentView()
 {
+	reportingReasons = ref new Platform::Collections::Vector<account::reportReason>();
+	Resources->Insert("reportReasonsResource", reportingReasons);
 	InitializeComponent();
-	CommentDataTemplate = static_cast<Windows::UI::Xaml::DataTemplate^>(this->Resources->Lookup("commentTemplate"));
-	GetMoreDataTemplate = static_cast<Windows::UI::Xaml::DataTemplate^>(this->Resources->Lookup("loadmorebutton"));
+	
+
+}
+void Reddit::CommentView::setHeaderpost(account::subpostUWP ^ post)
+{
+	this->commentTree->Header = post;
+
 }
 void Reddit::CommentView::SetVec(std::vector<account::CommentUWPitem^> vec)
 {
 	//std::thread t([&vec, this]() {
+	/*Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
+		Windows::UI::Core::CoreDispatcherPriority::Idle,
+		ref new Windows::UI::Core::DispatchedHandler([this, vec]()
+	{*/
+	auto newroot = ref new TreeViewControl::TreeNode();
 		for (auto x : vec)
 		{
 			auto node = ref new TreeViewControl::TreeNode();
-			
+
 			node->Data = x;
 			if (x->hasReplies)
 			{
@@ -49,15 +63,52 @@ void Reddit::CommentView::SetVec(std::vector<account::CommentUWPitem^> vec)
 				else
 				{
 					auto moreNode = ref new TreeViewControl::TreeNode();
+					x->replies->more->parentTreeNode = node;
 					moreNode->Data = x->replies->more;
 					node->Append(moreNode);
 				}
 			}
-			commentTree->RootNode->Append(node);
+			//commentTree->RootNode->Append(node);
+			newroot->Append(node);
 		}
+		commentTree->RootNode = newroot;
+	//}));
+
 	//});
 	//t.detach();
 }
+
+void Reddit::CommentView::OnApplyTemplate()
+{
+	auto x = commentTree->FindName("contentExpander");
+	__debugbreak();
+}
+
+ExpanderControl::Expander^ Reddit::CommentView::findExpanderRecurse(Windows::UI::Xaml::FrameworkElement^ parent)
+{
+	if (parent == nullptr)
+	{
+		return nullptr;
+	}
+	if (parent->Name == "contentExpander")
+	{
+		return (ExpanderControl::Expander^)parent;
+	}
+	unsigned int count = VisualTreeHelper::GetChildrenCount(parent);
+	ExpanderControl::Expander^ returning = nullptr;
+	for (int i = 0; i < count; i++)
+	{
+		FrameworkElement^ child = (FrameworkElement^)VisualTreeHelper::GetChild(parent, i);
+		auto z = findExpanderRecurse(child);
+		if (z != nullptr)
+		{
+			returning = z;
+			break;
+		}
+	}
+	return returning;
+}
+
 void Reddit::CommentView::recursiveNode(TreeViewControl::TreeNode ^ par, account::CommentUWPitem ^ com)
 {
 
@@ -82,6 +133,7 @@ void Reddit::CommentView::recursiveNode(TreeViewControl::TreeNode ^ par, account
 			if (com->replies->more != nullptr)
 			{
 				auto moreNode = ref new TreeViewControl::TreeNode();
+				com->replies->more->parentTreeNode = newnode;
 				moreNode->Data = com->replies->more;
 				newnode->Append(moreNode);
 			}
@@ -90,40 +142,12 @@ void Reddit::CommentView::recursiveNode(TreeViewControl::TreeNode ^ par, account
 		{
 			auto moreNode = ref new TreeViewControl::TreeNode();
 			moreNode->Data = com->replies->more;
+			com->replies->more->parentTreeNode = newnode;
 			newnode->Append(moreNode);
 		}
 	}
 }
-void CommentView::postID::set(Platform::String^ in)
-{
-	
-	_postID = in;
-	globalvars::currentacc->getCommentAsyncVec(in).then([this](account::commentUWPlisting z) {
-		for (auto x : z.commentList)
-		{
-			auto node = ref new TreeViewControl::TreeNode();
-			
-			node->Data = x;
-			if (x->hasReplies)
-			{
-				if (!x->reply_is_only_more)
-				{
-					for (auto ve : x->replies->commentList)
-					{
-						recursiveNode(node, ve);
-					}
-				}
-				else
-				{
-					auto moreNode = ref new TreeViewControl::TreeNode();
-					moreNode->Data = x->replies->more;
-					node->Append(moreNode);
-				}
-			}
-			commentTree->RootNode->Append(node);
-		}
-	});
-}
+
 
 void Reddit::CommentView::commentTree_ChoosingItemContainer(Windows::UI::Xaml::Controls::ListViewBase^ sender, Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^ args)
 {
@@ -158,7 +182,7 @@ void Reddit::CommentView::commentTree_ChoosingItemContainer(Windows::UI::Xaml::C
 				newitem->BorderBrush = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Black);
 				newitem->BorderThickness = itemBorder;
 				
-				newitem->ContentTemplate = CommentDataTemplate;
+				newitem->ContentTemplate = commentTemplate;
 				newitem->Tag = true;
 				args->ItemContainer = newitem;
 			}
@@ -190,7 +214,7 @@ void Reddit::CommentView::commentTree_ChoosingItemContainer(Windows::UI::Xaml::C
 			else
 			{
 				TreeViewControl::TreeViewItem^ newitem = ref new TreeViewControl::TreeViewItem();
-				newitem->ContentTemplate = GetMoreDataTemplate;
+				newitem->ContentTemplate = loadmorebutton;
 				newitem->Tag = false;
 				args->ItemContainer = newitem;
 			}
@@ -199,4 +223,90 @@ void Reddit::CommentView::commentTree_ChoosingItemContainer(Windows::UI::Xaml::C
 	else
 		__debugbreak();
 	args->IsContainerPrepared = true;
+}
+
+
+
+
+void Reddit::CommentView::commentTree_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	if (commentTree->Header != nullptr)
+	{
+		auto x = findExpanderRecurse(commentTree);
+		auto v = static_cast<account::subpostUWP^>(commentTree->Header);
+		if (v->contentType != account::postContentType::selftype && v->contentType != account::postContentType::linktype)
+		{
+			x->IsExpanded = true;
+		}
+		else
+		{
+			x->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+			x->IsExpanded = false;
+		}
+	}
+
+}
+
+
+void Reddit::CommentView::replyButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	auto rbutton = static_cast<AppBarToggleButton^>(sender);
+	if (rbutton->IsChecked->Value)
+	{
+		if (rbutton->Tag == nullptr)
+		{
+			int i = 0;
+			DependencyObject^ x = (DependencyObject^)sender;
+			for (int ii = 0; i < 8; i++)
+			{
+				x = VisualTreeHelper::GetParent(x);
+			}
+
+			auto g = static_cast<Grid^>(x);
+			auto node = static_cast<TreeViewControl::TreeNode^>(g->Tag);
+			auto item = static_cast<account::CommentUWPitem^>(node->Data);
+			auto vvvvv = &item->helper;
+			
+			auto rbox = ref new ReplyBox(vvvvv);
+			rbox->Tag = node;
+			rbox->CommentSubmitted += ref new Windows::Foundation::EventHandler<account::CommentUWPitem ^>([s = Platform::WeakReference(sender)](Platform::Object ^ sender, account::CommentUWPitem ^) {
+				s.Resolve<AppBarToggleButton>()->IsChecked = false;
+				static_cast<ReplyBox^>(sender)->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+			});
+			rbox->CommentSubmitted += ref new Windows::Foundation::EventHandler<account::CommentUWPitem ^>(this, &Reddit::CommentView::OnCommentSubmitted);
+			g->Children->Append(rbox);
+			g->SetRow(rbox, 3);
+			rbutton->Tag = rbox;
+		}
+		else
+		{
+			static_cast<ReplyBox^>(rbutton->Tag)->Visibility = Windows::UI::Xaml::Visibility::Visible;
+		}
+	}
+	else
+	{
+		if (rbutton->Tag != nullptr)
+		{
+			static_cast<ReplyBox^>(rbutton->Tag)->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+		}
+	}
+}
+
+
+
+
+void Reddit::CommentView::OnCommentSubmitted(Platform::Object ^sender, account::CommentUWPitem ^args)
+{
+	auto node = static_cast<TreeViewControl::TreeNode^>(static_cast<ReplyBox^>(sender)->Tag);
+	auto data = static_cast<account::CommentUWPitem^>(node->Data);
+	if (data->replies == nullptr)
+	{
+		data->replies = new account::commentUWPlisting();
+	}
+	//data->replies->commentList.push_front(args);
+	auto newnode = ref new TreeViewControl::TreeNode();
+	newnode->Data = args;
+	node->InsertAt(0, newnode);
+
+	
 }

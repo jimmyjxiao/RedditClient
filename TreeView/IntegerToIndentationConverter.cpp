@@ -8,11 +8,6 @@ using namespace Windows::UI::Xaml::Interop;
 
 namespace TreeViewControl {
 
-    IntegerToIndentationConverter::IntegerToIndentationConverter()
-    {
-        //default
-        indentMultiplier = 20;
-    }
 
     Object^ IntegerToIndentationConverter::Convert(Object^ value, TypeName targetType, Object^ parameter, String^ language)
     {

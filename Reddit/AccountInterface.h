@@ -1,24 +1,23 @@
 #pragma once
+#include "accountEnums.h"
 #include "commentUWPitem.h"
 #include <string>
 #include <queue>
 #include <ppltasks.h>
 #include "subpost.h"
 #include "subpostUWP.h"
+#include <functional>
 namespace account
 {
 	
-	public enum class timerange
+	struct NewAccountLoginFailure : std::exception
 	{
-		hour, day, week, month, year, all, Default
-	};
-	public enum class postSort
-	{
-		hot, New, rising, controversial, top, gilded, Defaultsort
-	};
-	public enum class commentSort
-	{
-		best, top, New, controversial, old, qa, default, random
+		enum class reason : char{
+			UserCanceled, networkerror
+		}Reason;
+		std::wstring message;
+		NewAccountLoginFailure(reason r) : Reason(r) {}
+		NewAccountLoginFailure(reason r, std::wstring str) : Reason(r), message(str) {}
 	};
 	public value struct AccountInfo sealed
 	{
@@ -28,7 +27,6 @@ namespace account
 		bool has_gold;
 		bool has_mail;
 	};
-
 	class AccountInterface sealed
 	{
 	private:
@@ -53,29 +51,45 @@ namespace account
 			Windows::Web::Http::Filters::IHttpFilter^ innerFilter;
 		};
 
-		concurrency::task<AccountInfo> getinfo();
+		
 		static AccountInfo jsontoinfo(Windows::Data::Json::JsonObject^ jsoninfo);
 		static const std::wstring apibase;
 		static Platform::String^ baseURI;
 		concurrency::task<Windows::Data::Json::JsonObject^> getJsonAsync(Windows::Foundation::Uri^ requestUri);
 	public:
+		concurrency::task<void> updateInfo();
 		Concurrency::task<void> changeSave(Platform::String^ fullname, bool dir);
 		concurrency::task<Windows::Data::Json::JsonObject^> getJsonFromBasePath(Platform::String^ path);
+		concurrency::task<std::vector<reportReason>> getRules(Platform::String^ subreddit);
 		AccountInfo me;
 		AccountInterface();
+		AccountInterface(Platform::String^ refresh, AccountInfo cachedInfo);
 		AccountInterface(Platform::String^ refresh);
 		AccountInterface(Platform::String^ refresh, Platform::String^ currentauth);
 		Concurrency::task<void> vote(Platform::IBox<bool>^ dir, Platform::String^ id);
-
+		concurrency::task<Windows::Web::Http::HttpResponseMessage^> comment(Platform::String^ ID, Platform::String^ md);
 		static Concurrency::task<AccountInterface*> LoginNewAcc();
 		concurrency::task<Windows::Data::Json::JsonObject^> getObjectInfo(Platform::String^ fullname);
 		concurrency::task<Windows::Data::Json::JsonObject^> getObjectInfo(std::queue<Platform::String^> fullnames);
 		concurrency::task<commentUWPlisting> getCommentAsyncVec(Platform::String^ ID);
 		concurrency::task<commentUWPlisting> getCommentAsyncVec(Platform::String^ ID, commentSort sort);
-		std::shared_ptr<subredditlisting> getsubredditAsyncVec(); //assume get frontpage if no subreddit argument
-		std::shared_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit);
-		std::shared_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit, postSort sort, timerange range); //returns an empty vector that async populates
+		concurrency::task<commentUWPlisting> getmorecomments(moreComments^ more, Platform::String^ link_id, Platform::String^ parent_id);
+		std::unique_ptr<subredditlisting> getsubredditAsyncVec(); //assume get frontpage if no subreddit argument
+		std::unique_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit);
+		std::unique_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit, postSort sort, timerange range); //returns an empty vector that async populates
 		Windows::Web::Http::HttpClient^ httpClient;
+	
 	};
 
+}
+namespace std
+{
+	template<>
+	struct std::equal_to<account::AccountInfo> sealed
+	{
+		bool operator () (const account::AccountInfo &  a, const account::AccountInfo & b)
+		{
+			return a.username == b.username;
+		}
+	};
 }

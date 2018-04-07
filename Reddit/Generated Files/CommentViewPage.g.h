@@ -6,12 +6,14 @@
 //     the code is regenerated.
 //------------------------------------------------------------------------------
 
+#include "XamlBindingInfo.g.h"
 
 namespace Windows {
     namespace UI {
         namespace Xaml {
             namespace Controls {
                 ref class CommandBar;
+                ref class WebView;
                 ref class AppBarToggleButton;
                 ref class ListView;
             }
@@ -41,8 +43,11 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
+        class CommentViewPage_obj1_Bindings;
     
+        ::XamlBindingInfo::XamlBindings^ Bindings;
         private: ::Windows::UI::Xaml::Controls::CommandBar^ commandBar;
+        private: ::Windows::UI::Xaml::Controls::WebView^ sideBarWebView;
         private: ::Reddit::CommentView^ commentControl;
         private: ::Windows::UI::Xaml::Controls::AppBarToggleButton^ sideBarButton;
         private: ::Windows::UI::Xaml::Controls::ListView^ sortSelector;

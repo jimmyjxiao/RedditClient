@@ -5,9 +5,28 @@
 
 namespace account
 {
-	account::comment::comment(Windows::Data::Json::JsonObject ^ json) : VotableThing(json), RedditCreated(json)
+	account::comment::comment(Windows::Data::Json::JsonObject ^ json, Platform::String^ plink) : VotableThing(json), RedditCreated(json)
 	{
-		htmltext = json->GetNamedString("body_html");
-		controversial = (bool)json->GetNamedNumber("controversiality");
+		try {
+			htmltext = json->GetNamedString("body_html");
+			controversial = (bool)json->GetNamedNumber("controversiality");
+			markdown = json->GetNamedString("body");
+			if (plink == nullptr)
+			{
+				plink_id = json->GetNamedString("link_id");
+			}
+			else
+			{
+				plink_id = plink;
+			}
+		}
+		catch (...)
+		{
+			__debugbreak();
+		}
+	}
+	comment::~comment()
+	{
+		//__debugbreak();
 	}
 }

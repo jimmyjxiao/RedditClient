@@ -8,6 +8,13 @@
 
 #include "XamlBindingInfo.g.h"
 
+namespace Windows {
+    namespace UI {
+        namespace Xaml {
+            ref class DataTemplate;
+        }
+    }
+}
 namespace TreeViewControl {
     ref class TreeView;
 }
@@ -31,11 +38,13 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
-        class CommentView_obj1_Bindings;
-        class CommentView_obj2_Bindings;
+        class CommentView_obj3_Bindings;
+        class CommentView_obj5_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
-        private: ::TreeViewControl::TreeView^ commentTree;
+        private: ::Windows::UI::Xaml::DataTemplate^ commentTemplate;
+        private: ::Windows::UI::Xaml::DataTemplate^ loadmorebutton;
+        internal: ::TreeViewControl::TreeView^ commentTree;
     };
 }
 

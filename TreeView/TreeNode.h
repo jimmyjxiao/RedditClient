@@ -7,10 +7,12 @@ namespace TreeViewControl {
     /// </summary>
     [Windows::UI::Xaml::Data::Bindable]
     [Windows::Foundation::Metadata::WebHostHidden]
+	//NOTE TO SELF: Do not attempt to change to an IVector<TreeNode^> Inheritance, it will not work because C4462!
     public ref class TreeNode sealed : Windows::UI::Xaml::Interop::IBindableObservableVector, Windows::UI::Xaml::Data::INotifyPropertyChanged
     {
     public:
         TreeNode();
+		Windows::Foundation::Collections::IObservableVector<TreeNode^>^ getFoundationVec();
 
         virtual void Append(Object^ value);
 
@@ -89,12 +91,13 @@ namespace TreeViewControl {
         }
 
         event Windows::UI::Xaml::Interop::BindableVectorChangedEventHandler^ TreeNodeChanged;
-
+	internal:
+		Platform::Collections::Vector<TreeNode^>^ childrenVector = ref new Platform::Collections::Vector<TreeNode^>();
     private:
         TreeNode^ parentNode = nullptr;
         Object^ data = nullptr;
         bool isExpanded = true;
-        Platform::Collections::Vector<TreeNode^>^ childrenVector = ref new Platform::Collections::Vector<TreeNode^>();
+        
         void ChildrenVectorChanged(Windows::Foundation::Collections::IObservableVector<TreeNode^>^ sender, Windows::Foundation::Collections::IVectorChangedEventArgs^ e);
     };
 }

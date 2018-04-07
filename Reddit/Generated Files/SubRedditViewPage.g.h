@@ -11,13 +11,6 @@
 namespace Windows {
     namespace UI {
         namespace Xaml {
-            ref class DataTemplate;
-        }
-    }
-}
-namespace Windows {
-    namespace UI {
-        namespace Xaml {
             namespace Controls {
                 ref class CommandBar;
                 ref class StackPanel;
@@ -52,15 +45,9 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
-        class SubRedditViewPage_obj2_Bindings;
-        class SubRedditViewPage_obj9_Bindings;
-        class SubRedditViewPage_obj18_Bindings;
-        class SubRedditViewPage_obj27_Bindings;
         class SubRedditViewPage_obj1_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
-        private: ::Windows::UI::Xaml::DataTemplate^ imageGriddatatemplate;
-        private: ::Windows::UI::Xaml::DataTemplate^ selfGridTemplate;
         private: ::Windows::UI::Xaml::Controls::CommandBar^ commandBar;
         private: ::Windows::UI::Xaml::Controls::StackPanel^ subInfopanel;
         private: ::Windows::UI::Xaml::Controls::SplitView^ splitSide;

@@ -7,8 +7,8 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
-    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.16190.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.16190.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.16299.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,7 +70,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <PlatformToolset>v141</PlatformToolset>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
@@ -99,44 +99,94 @@
   <PropertyGroup>
     <PackageCertificateKeyFile>Reddit_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>MODERN_SQLITE_STD_OPTIONAL_SUPPORT;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>winsqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>MODERN_SQLITE_STD_OPTIONAL_SUPPORT;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>winsqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>MODERN_SQLITE_STD_OPTIONAL_SUPPORT;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>winsqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>MODERN_SQLITE_STD_OPTIONAL_SUPPORT;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>winsqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>MODERN_SQLITE_STD_OPTIONAL_SUPPORT;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>winsqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>MODERN_SQLITE_STD_OPTIONAL_SUPPORT;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>winsqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="accountEnums.h" />
     <ClInclude Include="AccountInterface.h" />
+    <ClInclude Include="ApplicationDataHelper.h" />
     <ClInclude Include="comment.h" />
     <ClInclude Include="commentUWPitem.h" />
     <ClInclude Include="CommentView.xaml.h">
@@ -145,22 +195,29 @@
     <ClInclude Include="CommentViewPage.xaml.h">
       <DependentUpon>CommentViewPage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="contentResizer.h" />
     <ClInclude Include="converters.h" />
     <ClInclude Include="DelegateCommand.h" />
     <ClInclude Include="globalvars.h" />
+    <ClInclude Include="linkhandler.h" />
+    <ClInclude Include="MyResources.xaml.h">
+      <DependentUpon>MyResources.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="NavStates.h" />
+    <ClInclude Include="NoToggleBehaviorButton.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="MainPage.xaml.h">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <ClInclude Include="ReplyBox.xaml.h">
+      <DependentUpon>ReplyBox.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="reportFlyout.h" />
+    <ClInclude Include="rootWindowGrid.xaml.h">
+      <DependentUpon>rootWindowGrid.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="serviceHelpers.h" />
     <ClInclude Include="subpost.h" />
-    <ClInclude Include="subpostContentResizingPlaceholder.xaml.h">
-      <DependentUpon>subpostContentResizingPlaceholder.xaml</DependentUpon>
-    </ClInclude>
     <ClInclude Include="subpostUWP.h" />
     <ClInclude Include="SubRedditViewPage.xaml.h">
       <DependentUpon>SubRedditViewPage.xaml</DependentUpon>
@@ -173,13 +230,15 @@
     </ApplicationDefinition>
     <Page Include="CommentView.xaml" />
     <Page Include="CommentViewPage.xaml" />
-    <Page Include="MainPage.xaml">
+    <Page Include="MyResources.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="subpostContentResizingPlaceholder.xaml">
+    <Page Include="ReplyBox.xaml" />
+    <Page Include="rootWindowGrid.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SubRedditViewPage.xaml" />
+    <Page Include="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -201,6 +260,7 @@
     <ClCompile Include="App.xaml.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="ApplicationDataHelper.cpp" />
     <ClCompile Include="comment.cpp" />
     <ClCompile Include="commentUWPitem.cpp" />
     <ClCompile Include="CommentView.xaml.cpp">
@@ -209,11 +269,15 @@
     <ClCompile Include="CommentViewPage.xaml.cpp">
       <DependentUpon>CommentViewPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="contentResizer.cpp" />
+    <ClCompile Include="converters.cpp" />
     <ClCompile Include="DelegateCommand.cpp" />
     <ClCompile Include="globalvars.cpp" />
-    <ClCompile Include="MainPage.xaml.cpp">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <ClCompile Include="linkhandler.cpp" />
+    <ClCompile Include="MyResources.xaml.cpp">
+      <DependentUpon>MyResources.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="NoToggleBehaviorButton.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -222,11 +286,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ReplyBox.xaml.cpp">
+      <DependentUpon>ReplyBox.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="reportFlyout.cpp" />
+    <ClCompile Include="rootWindowGrid.xaml.cpp">
+      <DependentUpon>rootWindowGrid.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="serviceHelpers.cpp" />
     <ClCompile Include="subpost.cpp" />
-    <ClCompile Include="subpostContentResizingPlaceholder.xaml.cpp">
-      <DependentUpon>subpostContentResizingPlaceholder.xaml</DependentUpon>
-    </ClCompile>
     <ClCompile Include="subpostUWP.cpp" />
     <ClCompile Include="SubRedditViewPage.xaml.cpp">
       <DependentUpon>SubRedditViewPage.xaml</DependentUpon>
@@ -234,17 +302,14 @@
     <ClCompile Include="VotableThing.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\RichMarkdownBox\RichMarkdownBox.csproj">
-      <Project>{86b23452-e8d1-4bb1-8de2-07f5964cf446}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\ExpanderControl\ExpanderControl.csproj">
       <Project>{5fedf244-c801-458c-bc7d-cd394550f907}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\RichTextBlock.Html2Xaml\RichTextBlock.Html2Xaml.csproj">
-      <Project>{d3408113-4ef7-4056-9ec9-d383306514b8}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\TreeView\TreeViewControl.vcxproj">
       <Project>{003839ef-fc81-523c-90e7-4c549425e4eb}</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\jimmy\source\repos\mdblock\mdblock\mdblock.vcxproj">
+      <Project>{67016182-e5ca-4bf0-a85f-c04a1730538a}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

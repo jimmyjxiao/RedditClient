@@ -4,8 +4,12 @@
 //
 
 #include "pch.h"
-#include "MainPage.xaml.h"
 #include "globalvars.h"
+#include "serviceHelpers.h"
+#include "ApplicationDataHelper.h"
+#include "SubRedditViewPage.xaml.h"
+#include "rootWindowGrid.xaml.h"
+#include <deque>
 using namespace Reddit;
 
 using namespace Platform;
@@ -26,34 +30,21 @@ using namespace Windows::UI::Xaml::Navigation;
 /// Initializes the singleton application object.  This is the first line of authored code
 /// executed, and as such is the logical equivalent of main() or WinMain().
 /// </summary>
+Windows::UI::Xaml::Navigation::PageStackEntry^ App::CurrentManualFrameContent = nullptr;
 App::App()
 {
     InitializeComponent();
-	html2xaml::Properties::registerhtmlproperty();
+	listTemplateRes = ref new MyResources();
+	
+	mdblock::mdRichProperties::registerProperties();
+	//__debugbreak();
+	ApplicationDataHelper::initializeAppDB();
 	globalvars::generalHttp = ref new Windows::Web::Http::HttpClient();
 	globalvars::generalHttp->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("I heard you liked user agents"));
 	globalvars::imgurHttp = ref new Windows::Web::Http::HttpClient();
 	globalvars::imgurHttp->DefaultRequestHeaders->Authorization = ref new Windows::Web::Http::Headers::HttpCredentialsHeaderValue("Client-ID", "713b63d6f4df36b");
 	InitializeComponent();
 	Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
-	auto credvault = ref new Windows::Security::Credentials::PasswordVault();
-	try
-	{
-		auto acccreds = credvault->FindAllByResource("reddit_refresh_token");
-		for (auto x : acccreds)
-		{
-			x->RetrievePassword();
-			auto accclass = new account::AccountInterface(x->Password);
-			globalvars::accounts.insert(std::make_pair(x->UserName->Data(), accclass));
-			globalvars::currentacc = accclass;
-		}
-	}
-	catch (...)
-	{
-
-		OutputDebugString(L"No users logged in");
-	}
-    Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
 }
 
 /// <summary>
@@ -63,55 +54,64 @@ App::App()
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e)
 {
-    auto rootFrame = dynamic_cast<Frame^>(Window::Current->Content);
+	this->Resources->MergedDictionaries->Append(listTemplateRes);
+	AppBarToggleColoredButton::registerDependencyProperty();
+	navCore = dynamic_cast<rootWindowGrid^ > (Window::Current->Content);
+   
 
-    // Do not repeat app initialization when the Window already has content,
-    // just ensure that the window is active
-    if (rootFrame == nullptr)
-    {
-        // Create a Frame to act as the navigation context and associate it with
-        // a SuspensionManager key
-        rootFrame = ref new Frame();
+	if (navCore == nullptr)
+	{
+		navCore = ref new rootWindowGrid();
+		navCore->rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler(this, &App::OnNavigated);
+		Window::Current->Content = navCore;
+		Window::Current->Activate();
+	}
+    //if (rootFrame == nullptr)
+    //{
+    //    // Create a Frame to act as the navigation context and associate it with
+    //    // a SuspensionManager key
+ 
+    //}
+    //else
+    //{
+    //    if (e->PrelaunchActivated == false)
+    //    {
+    //        if (rootFrame->Content == nullptr)
+    //        {
+    //            // When the navigation stack isn't restored navigate to the first page,
+    //            // configuring the new page by passing required information as a navigation
+    //            // parameter
+				//if (e->Arguments == nullptr)
+				//{
+				//	rootFrame->Navigate(TypeName(SubRedditViewPage::typeid), globalvars::addNav(new subredditNavstate()));
+				//}
+				//else
+				//{
+				//	__debugbreak();
+				//}
+    //        }
+    //        // Ensure the current window is active
+    //        Window::Current->Activate();
+    //    }
+    //}
+	Windows::UI::Core::SystemNavigationManager::GetForCurrentView()->
+		BackRequested += ref new Windows::Foundation::EventHandler<
+		Windows::UI::Core::BackRequestedEventArgs^>(
+			this, &App::App_BackRequested);
 
-        rootFrame->NavigationFailed += ref new Windows::UI::Xaml::Navigation::NavigationFailedEventHandler(this, &App::OnNavigationFailed);
 
-        if (e->PreviousExecutionState == ApplicationExecutionState::Terminated)
-        {
-            // TODO: Restore the saved session state only when appropriate, scheduling the
-            // final launch steps after the restore is complete
+}
 
-        }
-
-        if (e->PrelaunchActivated == false)
-        {
-            if (rootFrame->Content == nullptr)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame->Navigate(TypeName(MainPage::typeid), e->Arguments);
-            }
-            // Place the frame in the current Window
-            Window::Current->Content = rootFrame;
-            // Ensure the current window is active
-            Window::Current->Activate();
-        }
-    }
-    else
-    {
-        if (e->PrelaunchActivated == false)
-        {
-            if (rootFrame->Content == nullptr)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame->Navigate(TypeName(MainPage::typeid), e->Arguments);
-            }
-            // Ensure the current window is active
-            Window::Current->Activate();
-        }
-    }
+void Reddit::App::OnNavigated(Platform::Object ^ sender, Windows::UI::Xaml::Navigation::NavigationEventArgs^ e)
+{
+	if (e->NavigationMode == Windows::UI::Xaml::Navigation::NavigationMode::New)
+	{
+		if (CurrentManualFrameContent != nullptr)
+		{
+			static_cast<Windows::UI::Xaml::Controls::Frame^>(sender)->BackStack->Append(std::move(CurrentManualFrameContent));
+			CurrentManualFrameContent = nullptr;
+		}
+	}
 }
 
 /// <summary>
@@ -137,4 +137,74 @@ void App::OnSuspending(Object^ sender, SuspendingEventArgs^ e)
 void App::OnNavigationFailed(Platform::Object ^sender, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs ^e)
 {
     throw ref new FailureException("Failed to load Page " + e->SourcePageType.Name);
+}
+
+
+
+void Reddit::App::App_BackRequested(Platform::Object ^ sender, Windows::UI::Core::BackRequestedEventArgs ^ e)
+{
+	if (navCore == nullptr)
+		return;
+	if (navCore->rootFrame->CanGoBack && e->Handled == false)
+	{
+		
+		e->Handled = true;
+		auto backstack = ref new Platform::Collections::Vector<Windows::UI::Xaml::Navigation::PageStackEntry^>(Windows::Foundation::Collections::begin(navCore->rootFrame->BackStack), Windows::Foundation::Collections::end(navCore->rootFrame->BackStack));
+		auto forwardstack = ref new Platform::Collections::Vector<Windows::UI::Xaml::Navigation::PageStackEntry^>(Windows::Foundation::Collections::begin(navCore->rootFrame->ForwardStack), Windows::Foundation::Collections::end(navCore->rootFrame->ForwardStack));
+		const auto & pagestack = navCore->rootFrame->BackStack->GetAt(navCore->rootFrame->BackStack->Size - 1);
+		const auto & i = static_cast<baseNavState*>(globalvars::NavState[static_cast<unsigned char>(pagestack->Parameter)].second.c);
+		
+		auto const & currentPage = static_cast<NavIndexed^>(navCore->rootFrame->Content);
+		int currentIndex = currentPage->NavigationIndex;
+		
+		if (i->pageState == nullptr)
+		{
+			navCore->rootFrame->GoBack();
+			if ((CurrentManualFrameContent != nullptr) && (currentIndex == static_cast<unsigned char>(CurrentManualFrameContent->Parameter)))
+			{
+				navCore->rootFrame->ForwardStack->InsertAt(0, CurrentManualFrameContent);
+				CurrentManualFrameContent = nullptr;
+			}
+		}
+		else
+		{
+			
+			if ((CurrentManualFrameContent != nullptr) && (currentIndex == static_cast<unsigned char>(CurrentManualFrameContent->Parameter)))
+			{
+				navCore->rootFrame->ForwardStack->InsertAt(0, CurrentManualFrameContent);
+			}
+			else
+			{
+				navCore->rootFrame->ForwardStack->InsertAt(0, ref new Windows::UI::Xaml::Navigation::PageStackEntry(navCore->rootFrame->CurrentSourcePageType, static_cast<unsigned char>(currentIndex), nullptr));
+			}
+			CurrentManualFrameContent = pagestack;
+			navCore->rootFrame->BackStack->RemoveAtEnd();
+			navCore->rootFrame->Content = i->pageState;
+		}
+	}
+}
+
+
+
+
+void Reddit::App::recursiveInline(Windows::UI::Xaml::Documents::InlineCollection ^ in, std::vector<std::tuple<Windows::UI::Xaml::Documents::InlineCollection^, unsigned int, Windows::Foundation::Uri^>>& vec)
+{
+	unsigned int index = 0;
+	for (auto &&x : in)
+	{
+		auto spanCast = dynamic_cast<Windows::UI::Xaml::Documents::Span^>(static_cast<Platform::Object^>(x));
+		if (spanCast)
+		{
+			auto hcast = dynamic_cast<Windows::UI::Xaml::Documents::Hyperlink^>(spanCast);
+			if (hcast)
+			{
+				vec.emplace_back(in, index, hcast->NavigateUri);
+			}
+			else
+			{
+				recursiveInline(spanCast->Inlines, vec);
+			}
+		}
+		index++;
+	}
 }

@@ -1,0 +1,179 @@
+﻿<ResourceDictionary
+    x:Class="Reddit.MyResources"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:ac="using:account"
+    xmlns:converters="using:converters"
+    xmlns:ex="using:ExpanderControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="using:mdblock"
+    mc:Ignorable="d"
+    >
+
+    <converters:HasPreview x:Key="prevConv"/>
+    <converters:ScoreText x:Key="scoreVis"/>
+    <ControlTemplate x:Key="thumbnailTemplate" TargetType="ContentControl">
+        <Image Source="{TemplateBinding Content}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+    </ControlTemplate>
+    <ControlTemplate x:Key="selfIconTemplate" TargetType="ContentControl">
+        <PathIcon Foreground="{TemplateBinding Foreground}">
+            <PathIcon.Data>
+                <GeometryGroup>
+                    <RectangleGeometry Rect="-50, -50,100,28"/>
+                    <RectangleGeometry Rect="-50, -14,100,28"/>
+                    <RectangleGeometry Rect="-50,  22,100,28"/>
+                    <EllipseGeometry RadiusX="100" RadiusY="100" Center="0,0"/>
+                </GeometryGroup>
+            </PathIcon.Data>
+        </PathIcon>
+    </ControlTemplate>
+    <local:subPostControlIconTemplateSelector x:Key="thumbnailHelper" selfTemplate="{StaticResource selfIconTemplate}" thumbnailTemplate="{StaticResource thumbnailTemplate}"/>
+    <converters:unformatHtml x:Key="htmlPrev"/>
+    <local:previewIconC x:Key="pathdataconvz"/>
+    <DataTemplate x:Key="imageGriddatatemplate" x:DataType="ac:subpostUWP">
+        <Grid Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Bind Title, Mode=OneTime}" FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
+            <TextBlock Text="{x:Bind author}" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
+            <TextBlock FontSize="12" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" TextAlignment="Center">
+                    /r/<Run Text="{x:Bind subreddit}"/>
+            </TextBlock>
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="auto" Height="13" Grid.Row="2" Margin="0,0,5,5" Orientation="Horizontal">
+                <local:NoToggleBehaviorButton Height="13" Width="13"  VerticalAlignment="Center"   IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}" />
+                <TextBlock Text="{x:Bind score, Mode=OneWay}" FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
+                <local:NoToggleBehaviorButton  Height="13" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center"  IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" Command="{x:Bind changedownvote}"/>
+            </StackPanel>
+            <Button Grid.Row="1" Height="auto" Width="460" Padding="0"  Command="{x:Bind previewCommand}">
+                <Grid>
+                    <Image Height="auto" Width="460" Stretch="UniformToFill">
+                        <Image.Source>
+                            <BitmapImage UriSource="{x:Bind previewURI}"/>
+                        </Image.Source>
+                    </Image>
+                    <Path Fill="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Data="{x:Bind Converter={StaticResource pathdataconvz}, Path=contentType, Mode=OneWay}" MaxHeight="70" MaxWidth="70"  Stretch="Fill" UseLayoutRounding="False"   HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="#CCFFFFFF" />
+                </Grid>
+            </Button>
+            <Grid Grid.Row="1" Margin="2,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Width="auto" Height="20">
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" x:Name="hello" Foreground="White" Padding="0,0,8,0" Margin="2,0,0,0">
+                            <Run Text="Comments:" FontWeight="Light"/>
+        			        <Run Text="{x:Bind num_comments}"/>
+                </TextBlock>
+            </Grid>
+
+
+
+
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="selfGridTemplate" x:DataType="ac:subpostUWP">
+        <Grid Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Bind Title, Mode=OneTime}" FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
+            <TextBlock Text="{x:Bind author}" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
+            <TextBlock FontSize="12" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" TextAlignment="Center">
+                    /r/<Run Text="{x:Bind subreddit}"/>
+            </TextBlock>
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="auto" Height="20" Grid.Row="2" Margin="0,0,5,0" Orientation="Horizontal">
+                <local:NoToggleBehaviorButton Height="20" Width="20" Padding="0"  VerticalAlignment="Bottom"   IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}" >
+                    <FontIcon Glyph="&#xE74A;"  FontSize="16" />
+                    <local:NoToggleBehaviorButton.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="light">
+                                    <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="Brown"/>
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </local:NoToggleBehaviorButton.Resources>
+                </local:NoToggleBehaviorButton>
+                <TextBlock Text="{x:Bind score, Mode=OneWay}" FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
+                <local:NoToggleBehaviorButton Padding="0" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Bottom"   IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" Command="{x:Bind changedownvote}">
+                    <FontIcon Glyph="&#xE74B;"  FontSize="16" />
+                    <local:NoToggleBehaviorButton.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="light">
+                                    <StaticResource x:Key="ToggleButtonBackgroundChecked" ResourceKey="downvoteBrush"/>
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </local:NoToggleBehaviorButton.Resources>
+                </local:NoToggleBehaviorButton>
+            </StackPanel>
+            <TextBlock Grid.Row="1" Height="auto" Width="460" Padding="0" md:mdRichProperties.MD="{x:Bind selftext}" />
+            <Grid Grid.Row="1" Margin="2,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Width="auto" Height="20">
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" x:Name="hello" Foreground="White" Padding="0,0,8,0" Margin="2,0,0,0">
+                            <Run Text="Comments:" FontWeight="Light"/>
+        			        <Run Text="{x:Bind num_comments}"/>
+                </TextBlock>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+    
+    <DataTemplate x:Name="listSelfPost" x:FieldModifier="internal" x:DataType="ac:subpostUWP">
+        <Grid Name="theGrid" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Padding="0"  Grid.RowSpan="2" Content="{x:Bind thumbnail}" Command="{x:Bind previewCommand}" Width="100"/>
+            <!--<ContentControl Content="{x:Bind thumbnailURI}" Grid.RowSpan="2"  Template="{x:Bind self, Converter={StaticResource thumbnailHelper}}"  Width="100" VerticalAlignment="Center" VerticalContentAlignment="Center" />-->
+            <TextBlock Grid.Column="1" Style="{ThemeResource TitleTextBlockStyle}" Text="{x:Bind Title}" HorizontalAlignment="Left"/>
+            <!--<ContentPresenter Grid.Row="1" Grid.Column="1" Loading="ContentPresenter_Loading"/>-->
+            <ex:Expander Template="{StaticResource inlineExpanderButtoning}" IsExpanded="False" Name="contentExpander" Loaded="contentExpander_Loading" Visibility="{x:Bind Mode=OneWay, Path=contentType, Converter={StaticResource prevConv}, ConverterParameter=self}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                    <ex:Expander.Header>
+                        <SymbolIcon Symbol="HideBcc"/>
+                    </ex:Expander.Header>
+                    <local:EXplaceHolder post="{x:Bind}" HorizontalAlignment="Left" />
+                </ex:Expander>
+            <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"  HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Margin="80,0,0,0" Loaded="TextBlock_Loaded">
+                        posted by <Hyperlink Click="username_click"><Run Text="{x:Bind author}"/></Hyperlink> to <Hyperlink Click="subreddit_click">/r/<Run Text="{x:Bind subreddit}"/></Hyperlink>
+                <LineBreak/>
+                <Run Text="{x:Bind score, Converter={StaticResource scoreVis}, Mode=OneWay}" FontWeight="Bold"/>
+            </TextBlock>
+            <CommandBar Template="{StaticResource leftAlignNoContentCommandBar}" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
+                <local:AppBarToggleColoredButton CheckedBrush="{StaticResource upvoteBrush}" Label="Upvote" IsThreeState="False" IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon Glyph="&#xE70E;" FontWeight="ExtraBold"/>
+                    </AppBarToggleButton.Icon>
+                </local:AppBarToggleColoredButton>
+
+                <local:AppBarToggleColoredButton CheckedBrush="{StaticResource downvoteBrush}" Label="Downvote" IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" IsThreeState="False" Command="{x:Bind changedownvote}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon Glyph="&#xE70D;" FontWeight="ExtraBold"/>
+                    </AppBarToggleButton.Icon>
+                </local:AppBarToggleColoredButton>
+                <AppBarToggleButton  Icon="Save"  Label="Save" IsChecked="{x:Bind saved, Mode=TwoWay}" IsThreeState="False"/>
+                <AppBarButton Icon="Important" Label="Report" AllowFocusOnInteraction="True">
+                    <AppBarButton.Flyout>
+                        <local:reportFlyout subreddit="{x:Bind subreddit}" isComment="False"/>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarToggleButton Icon="OutlineStar" Label="Give Gold" />
+                <AppBarToggleButton Label="Reply" Name="replyButton" IsThreeState="False" Click="replyButton_Click">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon Glyph="&#xE97A;" FontWeight="ExtraBold"/>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+                <AppBarButton Icon="World" Loaded="AppBarButton_Loaded" DataContext="{x:Bind}" Label="Open In Browser">
+                </AppBarButton>
+            </CommandBar>
+        </Grid>
+    </DataTemplate>
+    
+</ResourceDictionary>

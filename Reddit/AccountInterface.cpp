@@ -8,6 +8,7 @@
 #include "subpostUWP.h"
 #include <pplawait.h>
 #include <ppl.h>
+#include "ApplicationDataHelper.h"
 #include "commentUWPitem.h"
 using namespace Windows::Foundation;
 using namespace Windows::Data::Json;
@@ -39,6 +40,14 @@ namespace account
 				auto message = ref new Windows::Web::Http::HttpFormUrlEncodedContent(postcontent);
 				globalvars::generalHttp->DefaultRequestHeaders->Authorization = ref new Windows::Web::Http::Headers::HttpCredentialsHeaderValue(L"basic", L"WlBGUlZSd3lBRTF1UkE6");
 				return globalvars::generalHttp->PostAsync(ref new Uri(L"https://www.reddit.com/api/v1/access_token"), message);
+			}break;
+			case wsaw::WebAuthenticationStatus::UserCancel:
+			{
+				throw NewAccountLoginFailure(NewAccountLoginFailure::reason::UserCanceled);
+			}break;
+			case wsaw::WebAuthenticationStatus::ErrorHttp:
+			{
+				throw NewAccountLoginFailure(NewAccountLoginFailure::reason::networkerror, L"Http Error: " + std::to_wstring(outcome->ResponseErrorDetail));
 			}
 			}
 		}).then([](Windows::Web::Http::HttpResponseMessage^ response) {
@@ -57,6 +66,7 @@ namespace account
 			JsonObject^ mejson;
 			JsonObject::TryParse(concurrency::create_task(acc->httpClient->GetStringAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/me").data())))).get(), &mejson);
 			acc->me = jsontoinfo(mejson);
+			ApplicationDataHelper::userHelpers::cacheMyUser(acc->me);
 			auto credvault = ref new Windows::Security::Credentials::PasswordVault();
 			credvault->Add(ref new Windows::Security::Credentials::PasswordCredential("reddit_refresh_token", acc->me.username, refreshtoken));
 		
@@ -95,20 +105,33 @@ namespace account
 		});
 	}
 
+	concurrency::task<HttpResponseMessage^> AccountInterface::comment(Platform::String ^ ID, Platform::String ^ md)
+	{
+		Platform::Collections::Map<Platform::String^, Platform::String^>^ z = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
+		z->Insert("raw_json", "1");
+		z->Insert("api_type", "json");
+		z->Insert("text", md);
+		z->Insert("thing_id", ID);
+
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(baseURI, "api/comment"), ref new HttpFormUrlEncodedContent(z)));
+	}
+
 
 	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getJsonAsync(Windows::Foundation::Uri ^ requestUri)
 	{
+		auto debugstring = requestUri->ToString();
 		return concurrency::create_task(httpClient->GetStringAsync(requestUri)).then([](Platform::String^ content) {
 			return JsonObject::Parse(content);
 		});
 	}
 
 
-	concurrency::task<AccountInfo> AccountInterface::getinfo()
+	concurrency::task<void> AccountInterface::updateInfo()
 	{
 		
 		return getJsonAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/me").data()))).then([this](Windows::Data::Json::JsonObject^ jsoninfo) {
-			return jsontoinfo(jsoninfo);
+			me =  jsontoinfo(jsoninfo);
+			ApplicationDataHelper::userHelpers::cacheMyUser(me);
 		});
 		
 	}
@@ -138,9 +161,30 @@ namespace account
 		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, path));
 	}
 
+	concurrency::task<std::vector<reportReason>> AccountInterface::getRules(Platform::String ^ subreddit)
+	{
+		return getJsonAsync(ref new Uri(baseURI, "r/" + subreddit + "/about/rules.json?raw_json=1")).then([](Windows::Data::Json::JsonObject^ json) {
+
+			auto jsonrulesarr = json->GetNamedArray("rules");
+			std::vector<reportReason> output(jsonrulesarr->Size);
+			concurrency::parallel_transform(Windows::Foundation::Collections::begin(jsonrulesarr), Windows::Foundation::Collections::end(jsonrulesarr), output.begin(), [](Windows::Data::Json::IJsonValue^ jv) {
+				return account::jsonToReport(jv->GetObject());
+			});
+			return output;
+		});
+	}
+
 	AccountInterface::AccountInterface()
 	{
 		httpClient = ref new Windows::Web::Http::HttpClient();
+	}
+
+	AccountInterface::AccountInterface(Platform::String ^ refresh, AccountInfo cachedInfo)
+	{
+		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh));
+		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
+		me = std::move(cachedInfo);
+		updateInfo();
 	}
 
 	AccountInterface::AccountInterface(Platform::String ^ refresh)
@@ -148,8 +192,8 @@ namespace account
 
 		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh));
 		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
-		getinfo();
-		//getinfo();
+		updateInfo();
+		//updateInfo();
 	}
 
 	AccountInterface::AccountInterface(Platform::String ^ refresh, Platform::String ^ currentauth)
@@ -166,7 +210,7 @@ namespace account
 
 		std::wstring reqstr = L"/comments/";
 		reqstr += ID->Data();
-		reqstr += L"/?raw_json=1&limit=400";
+		reqstr += L"?raw_json=1&limit=400";
 		switch (sort)
 		{
 		case commentSort::best:
@@ -190,50 +234,130 @@ namespace account
 		case commentSort::default:
 			break;
 		}
-		return concurrency::create_task(httpClient->GetStringAsync(ref new Uri(baseURI, Platform::StringReference(reqstr.data())))).then([](Platform::String^ jsonstr){
-			commentUWPlisting comments;
-			JsonArray^ json = Windows::Data::Json::JsonArray::Parse(jsonstr);
-			//comments.parent = ref new subpostUWP(json->GetObjectAt(0));
-			JsonObject^ data = json->GetObjectAt(1)->GetNamedObject("data");
-			JsonValue^ tempvalue = data->GetNamedValue("after");
-			
-			
-			JsonArray^ jsoncomments = data->GetNamedArray("children");
-			auto lastObject = (*(Windows::Foundation::Collections::end(jsoncomments) - 1))->GetObject();
-			if (lastObject->GetNamedString("kind") == "more")
+		return concurrency::create_task(httpClient->GetStringAsync(ref new Uri(baseURI, Platform::StringReference(reqstr.data())))).then([](Platform::String^ jsonstr) {
+			try
 			{
-				comments.commentList = std::vector<CommentUWPitem^>(jsoncomments->Size-1);
-				
-				comments.more = ref new moreComments();
-				for (auto &&x : lastObject->GetNamedObject("data")->GetNamedArray("children"))
+				commentUWPlisting comments;
+				JsonArray^ json = Windows::Data::Json::JsonArray::Parse(jsonstr);
+				//comments.parent = ref new subpostUWP(json->GetObjectAt(0));
+				JsonObject^ data = json->GetObjectAt(1)->GetNamedObject("data");
+				JsonValue^ tempvalue = data->GetNamedValue("after");
+
+
+				JsonArray^ jsoncomments = data->GetNamedArray("children");
+				auto lastObject = (*(Windows::Foundation::Collections::end(jsoncomments) - 1))->GetObject();
+				if (lastObject->GetNamedString("kind") == "more")
 				{
-					comments.more->morelist.push(x->GetString());
+					comments.commentList = std::vector<CommentUWPitem^>(jsoncomments->Size - 1);
+
+					comments.more = ref new moreComments(lastObject->GetNamedObject("data"));
+					jsoncomments->RemoveAtEnd();
 				}
-				jsoncomments->RemoveAtEnd();
+				else
+					comments.commentList = std::vector<CommentUWPitem^>(jsoncomments->Size);
+				concurrency::parallel_transform(Windows::Foundation::Collections::begin(jsoncomments), Windows::Foundation::Collections::end(jsoncomments), comments.commentList.begin(), [](Windows::Data::Json::IJsonValue^ z) {
+					return ref new CommentUWPitem(z->GetObject()->GetNamedObject("data"));
+				});
+
+				return comments;
 			}
-			else
-				comments.commentList = std::vector<CommentUWPitem^>(jsoncomments->Size);
-			concurrency::parallel_transform(Windows::Foundation::Collections::begin(jsoncomments), Windows::Foundation::Collections::end(jsoncomments), comments.commentList.begin(), [](Windows::Data::Json::IJsonValue^ z) {
-				return ref new CommentUWPitem(z->GetObject()->GetNamedObject("data"));
-			});
-			
-			return comments;
+			catch (...)
+			{
+				__debugbreak();
+			}
 			
 			
 		});
 		//throw ref new Platform::NotImplementedException();
 	}
-	std::shared_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec()
+	concurrency::task<commentUWPlisting> AccountInterface::getmorecomments(moreComments ^ more, Platform::String^ link_id, Platform::String^ parent_id)
+	{
+		std::wstring urlstr = L"api/morechildren?api_type=json&children=" + more->morelist + L"&link_id=" + link_id->Data();
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, Platform::StringReference(urlstr.data()))).then([link_id, parent_id](Windows::Data::Json::JsonObject^ j) {
+			auto arr = j->GetNamedObject("json")->GetNamedObject("data")->GetNamedArray("things");
+			commentUWPlisting reps;
+			std::vector<CommentUWPitem^> refmap;
+			CommentUWPitem^ r;
+			
+			auto lastObject = (*(Windows::Foundation::Collections::end(arr) - 1))->GetObject();
+			if (lastObject->GetNamedString("kind") == "more")
+			{
+				reps.more = ref new moreComments(lastObject->GetNamedObject("data"));
+				arr->RemoveAtEnd();
+			}
+			const wchar_t* pwchar = parent_id->Data();
+			for (auto &&a : arr)
+			{
+				auto j = a->GetObject();
+				CommentUWPitem^ pItem = nullptr;
+				auto data = j->GetNamedObject("data");
+				auto pid = data->GetNamedString("parent_id");
+				if (wcscmp(pwchar, pid->Data()+3) == 0)
+				{
+					pItem = nullptr;
+				}
+				else if (wcscmp(r->helper.id->Data(), pid->Data() + 3) == 0)
+				{
+					if (r->replies == nullptr)
+					{
+						r->replies = new commentUWPlisting;
+					}
+					pItem = r;
+				}
+				else
+				{
+					auto it = std::find_if(refmap.rbegin(), refmap.rend(), [pid](CommentUWPitem^ c) {
+						return (wcscmp(c->helper.id->Data(), pid->Data()+3) == 0);
+					});
+					if (it == refmap.rend())
+						__debugbreak();
+					else
+					{
+						if ((*it)->replies == nullptr)
+						{
+							(*it)->replies = new commentUWPlisting;
+						}
+						pItem = *it;
+					}
+				}
+
+				if (j->GetNamedString("kind") == "more")
+				{
+					try { pItem->replies->more = ref new moreComments(data); }
+					catch(...)
+					{
+						__debugbreak();
+					}
+				}
+				else
+				{
+					r = ref new CommentUWPitem(data, link_id, false);
+					if (pItem == nullptr)
+					{
+						reps.commentList.push_back(r);
+					}
+					else
+					{
+						pItem->replies->commentList.push_back(r);
+					}
+					refmap.push_back(r);
+				}
+				
+			}
+			return reps;
+		});
+	}
+	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec()
 	{
 		return getsubredditAsyncVec("");
 	}
-	std::shared_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit)
+	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit)
 	{
 
 		return getsubredditAsyncVec(subreddit, postSort::Defaultsort, timerange::Default);
 		
 	}
-	std::shared_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit, postSort sort, timerange range)
+	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit, postSort sort, timerange range)
 	{
 		if (subreddit != "")
 		{
@@ -289,36 +413,56 @@ namespace account
 		default:
 			__assume(0);
 		}
-		std::shared_ptr<subredditlisting>listing = std::make_shared<subredditlisting>();
+		subredditlisting*listing = new subredditlisting();
 		listing->listing = ref new Platform::Collections::Vector<subpostUWP^>();
+		
 		listing->getTask = getJsonAsync(ref new Uri(baseURI, Platform::StringReference(urlstr.data()))).then([listing](Windows::Data::Json::JsonObject^ json) {
 			auto data = json->GetNamedObject("data");
 			try
 			{
-				listing->before = data->GetNamedString("before");
+				auto v = data->GetNamedValue("before");
+				if (v->ValueType == Windows::Data::Json::JsonValueType::String)
+				{
+					listing->before = v->GetString();
+				}
+				else
+				{
+					listing->before = nullptr;
+				}
 			}
 			catch (...)
 			{
-				listing->before = "";
+				listing->before = nullptr;
 			}
 			try
 			{
-				listing->after = data->GetNamedString("after");
+				auto v = data->GetNamedValue("after");
+				if (v->ValueType == Windows::Data::Json::JsonValueType::String)
+				{
+					listing->after = v->GetString();
+				}
+				else
+				{
+					listing->after = nullptr;
+				}
 			}
 			catch (...)
 			{
-				listing->after = "";
+				listing->after = nullptr;
 			}
+			
 			auto jsonPosts = data->GetNamedArray("children");
+			
 			for (auto x : jsonPosts)
 			{
 				auto jsonpost = x->GetObject()->GetNamedObject("data");
 				subpostUWP^ addingpost= ref new subpostUWP(jsonpost);
 				listing->listing->Append(addingpost);
+				
 			}
 			return listing->listing;
 		}), concurrency::task_continuation_context::use_arbitrary;
-		return listing;
+		return std::unique_ptr<subredditlisting>(listing);
 	}
 	
 

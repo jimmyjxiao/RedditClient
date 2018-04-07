@@ -8,47 +8,94 @@
       <UniqueIdentifier>200111eb-622a-4633-bf42-2449e46f8494</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
+    <Filter Include="account">
+      <UniqueIdentifier>{aaca6758-9947-47f8-a003-5680306b37b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.xaml.cpp" />
-    <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="AccountInterface.cpp" />
-    <ClCompile Include="comment.cpp" />
-    <ClCompile Include="commentUWPitem.cpp" />
     <ClCompile Include="DelegateCommand.cpp" />
     <ClCompile Include="globalvars.cpp" />
-    <ClCompile Include="serviceHelpers.cpp" />
-    <ClCompile Include="subpost.cpp" />
-    <ClCompile Include="subpostUWP.cpp" />
-    <ClCompile Include="VotableThing.cpp" />
     <ClCompile Include="CommentView.xaml.cpp" />
     <ClCompile Include="CommentViewPage.xaml.cpp" />
     <ClCompile Include="SubRedditViewPage.xaml.cpp" />
-    <ClCompile Include="subpostContentResizingPlaceholder.xaml.cpp" />
+    <ClCompile Include="comment.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="commentUWPitem.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="serviceHelpers.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="subpost.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="subpostUWP.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="VotableThing.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationDataHelper.cpp" />
+    <ClCompile Include="MyResources.xaml.cpp" />
+    <ClCompile Include="converters.cpp" />
+    <ClCompile Include="NoToggleBehaviorButton.cpp" />
+    <ClCompile Include="contentResizer.cpp" />
+    <ClCompile Include="reportFlyout.cpp" />
+    <ClCompile Include="rootWindowGrid.xaml.cpp" />
+    <ClCompile Include="linkhandler.cpp" />
+    <ClCompile Include="ReplyBox.xaml.cpp" />
+    <ClCompile Include="AccountInterface.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
-    <ClInclude Include="MainPage.xaml.h" />
-    <ClInclude Include="AccountInterface.h" />
-    <ClInclude Include="comment.h" />
-    <ClInclude Include="commentUWPitem.h" />
     <ClInclude Include="converters.h" />
     <ClInclude Include="DelegateCommand.h" />
     <ClInclude Include="globalvars.h" />
     <ClInclude Include="NavStates.h" />
-    <ClInclude Include="serviceHelpers.h" />
-    <ClInclude Include="subpost.h" />
-    <ClInclude Include="subpostUWP.h" />
-    <ClInclude Include="VotableThing.h" />
     <ClInclude Include="CommentView.xaml.h" />
     <ClInclude Include="CommentViewPage.xaml.h" />
     <ClInclude Include="SubRedditViewPage.xaml.h" />
-    <ClInclude Include="subpostContentResizingPlaceholder.xaml.h" />
+    <ClInclude Include="AccountInterface.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="comment.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="commentUWPitem.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="serviceHelpers.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="subpost.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="subpostUWP.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="VotableThing.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationDataHelper.h" />
+    <ClInclude Include="accountEnums.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="MyResources.xaml.h" />
+    <ClInclude Include="NoToggleBehaviorButton.h" />
+    <ClInclude Include="contentResizer.h" />
+    <ClInclude Include="reportFlyout.h" />
+    <ClInclude Include="rootWindowGrid.xaml.h" />
+    <ClInclude Include="linkhandler.h" />
+    <ClInclude Include="ReplyBox.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
@@ -80,10 +127,12 @@
     <None Include="Reddit_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainPage.xaml" />
     <Page Include="CommentView.xaml" />
     <Page Include="CommentViewPage.xaml" />
     <Page Include="SubRedditViewPage.xaml" />
-    <Page Include="subpostContentResizingPlaceholder.xaml" />
+    <Page Include="MyResources.xaml" />
+    <Page Include="Themes\Generic.xaml" />
+    <Page Include="rootWindowGrid.xaml" />
+    <Page Include="ReplyBox.xaml" />
   </ItemGroup>
 </Project>

@@ -8,8 +8,11 @@ namespace account
 	{
 	public:
 		Platform::String^ htmltext;
+		Platform::String^ plink_id;
+		Platform::String^ markdown;
 		bool controversial;
-		comment(Windows::Data::Json::JsonObject^ json);
+		comment(Windows::Data::Json::JsonObject^ json, Platform::String^ plink = nullptr);
+		~comment();
 	};
 
 }

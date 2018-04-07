@@ -45,6 +45,7 @@ namespace TreeViewControl {
         property TreeNode^ RootNode
         {
             TreeNode^ get() { return rootNode; };
+			void set(TreeNode^ newRoot);
         }
 
         void TreeView_OnItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ args);

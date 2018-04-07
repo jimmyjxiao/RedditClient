@@ -1,6 +1,7 @@
 #pragma once
 #include "subpost.h"
 #include "subpostUWP.h"
+#include <deque> 
 #include <queue>
 #include "comment.h"
 
@@ -9,14 +10,17 @@ namespace account
 
 	struct commentUWPlisting;
 	public ref class CommentUWPitem sealed :
-		public Windows::UI::Xaml::Data::INotifyPropertyChanged
+		public Windows::UI::Xaml::Data::INotifyPropertyChanged, IRedditTypeIdentifier
 	{
 	private:
-		comment helper;
+		mdblock::refMDElements^ mdCmds = nullptr;
 		void _changedownvote(Platform::Object^);
 		void _changeupvote(Platform::Object^);
 	internal:
+		comment helper;
 		commentUWPlisting* replies = nullptr;
+		void cacheMDElements();
+		CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncomment, Platform::String^ pid = nullptr, bool handleReplies = true);
 	public:
 		property bool hasReplies
 		{
@@ -72,6 +76,24 @@ namespace account
 				return helper.author;
 			}
 		}
+		property mdblock::refMDElements^ mdElements
+		{
+			mdblock::refMDElements^ get()
+			{
+				if (mdCmds == nullptr)
+				{
+					cacheMDElements();
+				}
+				return mdCmds;
+			}
+		}
+		property Platform::String^ markdowntext
+		{
+			Platform::String^ get()
+			{
+				return helper.markdown;
+			}
+		}
 		property bool isMine
 		{
 			bool get()
@@ -80,15 +102,33 @@ namespace account
 			}
 		}
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ PropertyChanged;
-		CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncomment);
+		
 		virtual ~CommentUWPitem();
+
+		// Inherited via IRedditTypeIdentifier
+		virtual property RedditType rType
+		{
+			RedditType get()
+			{
+				return RedditType::comment;
+			}
+		}
 	};
 	public ref struct moreComments sealed
 	{
 	public:
-		property unsigned int count;
+		property unsigned int count
+		{
+			unsigned int get() { return c; }
+		}
+		void clickedFunc();
+		moreComments(Windows::Data::Json::JsonObject^ moreobject);
 	internal:
-		std::queue<Platform::String^> morelist;
+		Platform::WeakReference parentTreeNode;
+		std::wstring morelist;
+	private:
+		unsigned int c;
+		
 	};
 	struct commentUWPlisting
 	{

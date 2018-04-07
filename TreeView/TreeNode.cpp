@@ -142,7 +142,10 @@ namespace TreeViewControl {
             return childrenVector->SetAt(index, targetNode);
         }
     }
-
+	Windows::Foundation::Collections::IObservableVector<TreeNode^>^ TreeNode::getFoundationVec()
+	{
+		return childrenVector;
+	}
     void TreeNode::ChildrenVectorChanged(IObservableVector<TreeNode^>^ sender, IVectorChangedEventArgs^ e)
     {
         VectorChanged(this, e);

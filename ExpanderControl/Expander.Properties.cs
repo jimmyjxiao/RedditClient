@@ -7,7 +7,7 @@ namespace ExpanderControl
         /// Identifies the <see cref="Header"/> dependency property.
         /// </summary>
         private static readonly DependencyProperty headerProperty =
-            DependencyProperty.Register(nameof(Header), typeof(string), typeof(Expander), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Header), typeof(object), typeof(Expander), new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="HeaderTemplate"/> dependency property.
@@ -24,9 +24,9 @@ namespace ExpanderControl
         /// <summary>
         /// Gets or sets a value indicating whether the Header of the control.
         /// </summary>
-        public string Header
+        public object Header
         {
-            get { return (string)GetValue(HeaderProperty); }
+            get { return GetValue(HeaderProperty); }
             set { SetValue(HeaderProperty, value); }
         }
 

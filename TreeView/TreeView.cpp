@@ -12,14 +12,10 @@ namespace TreeViewControl {
     {
         flatViewModel = ref new ViewModel;
         rootNode = ref new TreeNode();
-
-        flatViewModel->ExpandNode(rootNode);
-
-       
-
-        rootNode->VectorChanged += ref new BindableVectorChangedEventHandler(flatViewModel, &ViewModel::TreeNodeVectorChanged);
+		flatViewModel->ExpandNode(rootNode);
+		rootNode->VectorChanged += ref new BindableVectorChangedEventHandler(flatViewModel, &ViewModel::TreeNodeVectorChanged);
         ItemClick += ref new Windows::UI::Xaml::Controls::ItemClickEventHandler(this, &TreeView::TreeView_OnItemClick);
-        ItemsSource = flatViewModel;
+		//ItemsSource flatViewModel;
     }
 
     void TreeView::TreeView_OnItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ args)
@@ -42,7 +38,15 @@ namespace TreeViewControl {
             }
         }*/
     }
-
+	void TreeView::RootNode::set(TreeNode^ newroot)
+	{
+		flatViewModel = ref new ViewModel(newroot->childrenVector);
+		rootNode = newroot;
+		flatViewModel->ExpandNode(rootNode);
+		rootNode->VectorChanged += ref new BindableVectorChangedEventHandler(flatViewModel, &ViewModel::TreeNodeVectorChanged);
+		ItemClick += ref new Windows::UI::Xaml::Controls::ItemClickEventHandler(this, &TreeView::TreeView_OnItemClick);
+		ItemsSource = flatViewModel;
+	}
    
 
 
@@ -69,4 +73,5 @@ namespace TreeViewControl {
         TreeViewItem^ targetItem = ref new TreeViewItem();
         return (DependencyObject^)targetItem;
     }
+
 }

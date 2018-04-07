@@ -1,3 +1,7 @@
+
+
+
+
 #pragma once
 #include "pch.h"
 #include "ViewModel.h"
@@ -8,443 +12,464 @@ using namespace Windows::UI::Xaml::Interop;
 using namespace Windows::UI::Xaml::Data;
 
 namespace TreeViewControl {
-    ViewModel::ViewModel()
-    {
-        flatVectorRealizedItems->VectorChanged += ref new VectorChangedEventHandler<TreeNode ^>(this, &ViewModel::UpdateTreeView);
-    }
+	ViewModel::ViewModel()
+	{
+		flatVectorRealizedItems = ref new Platform::Collections::Vector<TreeNode^>();
+		flatVectorRealizedItems->VectorChanged += ref new VectorChangedEventHandler<TreeNode ^>(this, &ViewModel::UpdateTreeView);
+	}
 
-    void ViewModel::Append(Object^ value)
-    {
-        TreeNode^ targetNode = (TreeNode^)value;
-        flatVectorRealizedItems->Append(targetNode);
+	ViewModel::ViewModel(Platform::Collections::Vector<TreeNode^>^ rootnode)
+	{
+		flatVectorRealizedItems = ref new Platform::Collections::Vector<TreeNode^>();
+		nodeRecurse(rootnode);
+		flatVectorRealizedItems->VectorChanged += ref new VectorChangedEventHandler<TreeNode ^>(this, &ViewModel::UpdateTreeView);
+	}
 
-        collectionChangedEventTokenVector.push_back(targetNode->VectorChanged += ref new BindableVectorChangedEventHandler(this, &ViewModel::TreeNodeVectorChanged));
-        propertyChangedEventTokenVector.push_back(targetNode->PropertyChanged += ref new Windows::UI::Xaml::Data::PropertyChangedEventHandler(this, &ViewModel::TreeNodePropertyChanged));
-    }
+	void ViewModel::Append(Object^ value)
+	{
+		TreeNode^ targetNode = (TreeNode^)value;
+		flatVectorRealizedItems->Append(targetNode);
 
-    void ViewModel::Clear()
-    {
+		collectionChangedEventTokenVector.push_back(targetNode->VectorChanged += ref new BindableVectorChangedEventHandler(this, &ViewModel::TreeNodeVectorChanged));
+		propertyChangedEventTokenVector.push_back(targetNode->PropertyChanged += ref new Windows::UI::Xaml::Data::PropertyChangedEventHandler(this, &ViewModel::TreeNodePropertyChanged));
+	}
 
-        while (flatVectorRealizedItems->Size != 0)
-        {
-            RemoveAtEnd();
-        }
-    }
+	void ViewModel::Clear()
+	{
 
-    IBindableIterator^ ViewModel::First()
-    {
-        return dynamic_cast<IBindableIterator^>(flatVectorRealizedItems->First());
-    }
+		while (flatVectorRealizedItems->Size != 0)
+		{
+			RemoveAtEnd();
+		}
+	}
 
-    Object^ ViewModel::GetAt(unsigned int index)
-    {
-        if ((int)index > -1 && (int)index < flatVectorRealizedItems->Size)
-        {
-            return flatVectorRealizedItems->GetAt(index);
-        }
+	IBindableIterator^ ViewModel::First()
+	{
+		return dynamic_cast<IBindableIterator^>(flatVectorRealizedItems->First());
+	}
 
-        return nullptr;
-    }
+	Object^ ViewModel::GetAt(unsigned int index)
+	{
+		if ((int)index > -1 && (int)index < flatVectorRealizedItems->Size)
+		{
+			return flatVectorRealizedItems->GetAt(index);
+		}
 
-    IBindableVectorView^ ViewModel::GetView()
-    {
-        return safe_cast<IBindableVectorView^>(flatVectorRealizedItems->GetView());
-    }
+		return nullptr;
+	}
 
-    bool ViewModel::IndexOf(Object^ value, unsigned int* index)
-    {
-        return flatVectorRealizedItems->IndexOf((TreeNode^)value, index);
-    }
+	IBindableVectorView^ ViewModel::GetView()
+	{
+		return safe_cast<IBindableVectorView^>(flatVectorRealizedItems->GetView());
+	}
 
-    void ViewModel::InsertAt(unsigned int index, Object^ value)
-    {
-        if ((int)index > -1 && (int)index <= flatVectorRealizedItems->Size)
-        {
-            TreeNode^ targetNode = (TreeNode^)value;
-            flatVectorRealizedItems->InsertAt(index, targetNode);
+	bool ViewModel::IndexOf(Object^ value, unsigned int* index)
+	{
+		return flatVectorRealizedItems->IndexOf((TreeNode^)value, index);
+	}
 
-            auto eventIndex = collectionChangedEventTokenVector.begin() + index;
-            collectionChangedEventTokenVector.insert(eventIndex, targetNode->VectorChanged += ref new BindableVectorChangedEventHandler(this, &ViewModel::TreeNodeVectorChanged));
+	void ViewModel::InsertAt(unsigned int index, Object^ value)
+	{
+		if ((int)index > -1 && (int)index <= flatVectorRealizedItems->Size)
+		{
+			TreeNode^ targetNode = (TreeNode^)value;
+			flatVectorRealizedItems->InsertAt(index, targetNode);
 
-            eventIndex = propertyChangedEventTokenVector.begin() + index;
-            propertyChangedEventTokenVector.insert(eventIndex,targetNode->PropertyChanged += ref new Windows::UI::Xaml::Data::PropertyChangedEventHandler(this, &ViewModel::TreeNodePropertyChanged));
-        }
-    }
+			auto eventIndex = collectionChangedEventTokenVector.begin() + index;
+			collectionChangedEventTokenVector.insert(eventIndex, targetNode->VectorChanged += ref new BindableVectorChangedEventHandler(this, &ViewModel::TreeNodeVectorChanged));
 
-    void ViewModel::RemoveAt(unsigned int index)
-    {
-        if ((int)index > -1 && (int)index < flatVectorRealizedItems->Size)
-        {
-            TreeNode^ targetNode = flatVectorRealizedItems->GetAt(index);
-            flatVectorRealizedItems->RemoveAt(index);
+			eventIndex = propertyChangedEventTokenVector.begin() + index;
+			propertyChangedEventTokenVector.insert(eventIndex, targetNode->PropertyChanged += ref new Windows::UI::Xaml::Data::PropertyChangedEventHandler(this, &ViewModel::TreeNodePropertyChanged));
+		}
+	}
 
-            auto eventIndex = collectionChangedEventTokenVector.begin() + index;
-            targetNode->VectorChanged -= collectionChangedEventTokenVector[index];
-            collectionChangedEventTokenVector.erase(eventIndex);
+	void ViewModel::RemoveAt(unsigned int index)
+	{
+		if ((int)index > -1 && (int)index < flatVectorRealizedItems->Size)
+		{
+			TreeNode^ targetNode = flatVectorRealizedItems->GetAt(index);
+			flatVectorRealizedItems->RemoveAt(index);
 
-            eventIndex = propertyChangedEventTokenVector.begin() + index;
-            targetNode->PropertyChanged -= propertyChangedEventTokenVector[index];
-            propertyChangedEventTokenVector.erase(eventIndex);
-        }
-    }
+			auto eventIndex = collectionChangedEventTokenVector.begin() + index;
+			targetNode->VectorChanged -= collectionChangedEventTokenVector[index];
+			collectionChangedEventTokenVector.erase(eventIndex);
 
-    void ViewModel::RemoveAtEnd()
-    {
-        int index = flatVectorRealizedItems->Size - 1;
-        if (index >= 0)
-        {
-            TreeNode^ targetNode = flatVectorRealizedItems->GetAt(index);
-            flatVectorRealizedItems->RemoveAt(index);
+			eventIndex = propertyChangedEventTokenVector.begin() + index;
+			targetNode->PropertyChanged -= propertyChangedEventTokenVector[index];
+			propertyChangedEventTokenVector.erase(eventIndex);
+		}
+	}
 
-            auto eventIndex = collectionChangedEventTokenVector.begin() + index;
-            targetNode->VectorChanged -= collectionChangedEventTokenVector[index];
-            collectionChangedEventTokenVector.erase(eventIndex);
+	void ViewModel::RemoveAtEnd()
+	{
+		int index = flatVectorRealizedItems->Size - 1;
+		if (index >= 0)
+		{
+			TreeNode^ targetNode = flatVectorRealizedItems->GetAt(index);
+			flatVectorRealizedItems->RemoveAt(index);
 
-            eventIndex = propertyChangedEventTokenVector.begin() + index;
-            targetNode->PropertyChanged -= propertyChangedEventTokenVector[index];
-            propertyChangedEventTokenVector.erase(eventIndex);
-        }
-    }
+			auto eventIndex = collectionChangedEventTokenVector.begin() + index;
+			targetNode->VectorChanged -= collectionChangedEventTokenVector[index];
+			collectionChangedEventTokenVector.erase(eventIndex);
 
-    void ViewModel::SetAt(unsigned int index, Object^ value)
-    {
-        if ((int)index > -1 && (int)index < flatVectorRealizedItems->Size)
-        {
-            TreeNode^ targetNode = (TreeNode^)value;
-            TreeNode^ removeNode = flatVectorRealizedItems->GetAt(index);
-            flatVectorRealizedItems->SetAt(index, targetNode);
+			eventIndex = propertyChangedEventTokenVector.begin() + index;
+			targetNode->PropertyChanged -= propertyChangedEventTokenVector[index];
+			propertyChangedEventTokenVector.erase(eventIndex);
+		}
+	}
 
-            auto eventIndex = collectionChangedEventTokenVector.begin() + index;
-            removeNode->VectorChanged -= collectionChangedEventTokenVector[index];
-            collectionChangedEventTokenVector.erase(eventIndex);
-            collectionChangedEventTokenVector.insert(eventIndex, targetNode->VectorChanged += ref new BindableVectorChangedEventHandler(this, &ViewModel::TreeNodeVectorChanged));
+	void ViewModel::SetAt(unsigned int index, Object^ value)
+	{
+		if ((int)index > -1 && (int)index < flatVectorRealizedItems->Size)
+		{
+			TreeNode^ targetNode = (TreeNode^)value;
+			TreeNode^ removeNode = flatVectorRealizedItems->GetAt(index);
+			flatVectorRealizedItems->SetAt(index, targetNode);
 
-            eventIndex = propertyChangedEventTokenVector.begin() + index;
-            targetNode->PropertyChanged -= propertyChangedEventTokenVector[index];
-            propertyChangedEventTokenVector.erase(eventIndex);
-            propertyChangedEventTokenVector.insert(eventIndex, targetNode->PropertyChanged += ref new Windows::UI::Xaml::Data::PropertyChangedEventHandler(this, &ViewModel::TreeNodePropertyChanged));
-        }
-    }
+			auto eventIndex = collectionChangedEventTokenVector.begin() + index;
+			removeNode->VectorChanged -= collectionChangedEventTokenVector[index];
+			collectionChangedEventTokenVector.erase(eventIndex);
+			collectionChangedEventTokenVector.insert(eventIndex, targetNode->VectorChanged += ref new BindableVectorChangedEventHandler(this, &ViewModel::TreeNodeVectorChanged));
 
-    void ViewModel::ExpandNode(TreeNode^ targetNode)
-    {
-        if (!targetNode->IsExpanded)
-        {
-            targetNode->IsExpanded = true;
-        }
-    }
+			eventIndex = propertyChangedEventTokenVector.begin() + index;
+			targetNode->PropertyChanged -= propertyChangedEventTokenVector[index];
+			propertyChangedEventTokenVector.erase(eventIndex);
+			propertyChangedEventTokenVector.insert(eventIndex, targetNode->PropertyChanged += ref new Windows::UI::Xaml::Data::PropertyChangedEventHandler(this, &ViewModel::TreeNodePropertyChanged));
+		}
+	}
 
-    void ViewModel::CollapseNode(TreeNode^ targetNode)
-    {
-        if (targetNode->IsExpanded)
-        {
-            targetNode->IsExpanded = false;
-        }
-    }
+	void ViewModel::ExpandNode(TreeNode^ targetNode)
+	{
+		if (!targetNode->IsExpanded)
+		{
+			targetNode->IsExpanded = true;
+		}
+	}
 
-    void ViewModel::AddNodeToView(TreeNode^ targetNode, int index)
-    {
-        InsertAt(index, targetNode);
-    }
+	void ViewModel::CollapseNode(TreeNode^ targetNode)
+	{
+		if (targetNode->IsExpanded)
+		{
+			targetNode->IsExpanded = false;
+		}
+	}
 
-    int ViewModel::AddNodeDescendantsToView(TreeNode^ targetNode, int index, int offset)
-    {
-        if (targetNode->IsExpanded)
-        {
-            TreeNode^ childNode;
-            for (int i = 0; i < (int)targetNode->Size; i++)
-            {
-                childNode = (TreeNode^)targetNode->GetAt(i);
-                offset++;
-                AddNodeToView(childNode, index + offset);
-                offset = AddNodeDescendantsToView(childNode, index, offset);
-            }
+	void ViewModel::AddNodeToView(TreeNode^ targetNode, int index)
+	{
+		InsertAt(index, targetNode);
+	}
 
-            return offset;
-        }
+	int ViewModel::AddNodeDescendantsToView(TreeNode^ targetNode, int index, int offset)
+	{
+		if (targetNode->IsExpanded)
+		{
+			TreeNode^ childNode;
+			for (int i = 0; i < (int)targetNode->Size; i++)
+			{
+				childNode = (TreeNode^)targetNode->GetAt(i);
+				offset++;
+				AddNodeToView(childNode, index + offset);
+				offset = AddNodeDescendantsToView(childNode, index, offset);
+			}
 
-        return offset;
-    }
+			return offset;
+		}
 
-    void ViewModel::RemoveNodeAndDescendantsFromView(TreeNode^ targetNode)
-    {
-        if (targetNode->IsExpanded)
-        {
-            TreeNode^ childNode;
-            for (int i = 0; i < (int)targetNode->Size; i++)
-            {
-                childNode = (TreeNode^)targetNode->GetAt(i);
-                RemoveNodeAndDescendantsFromView(childNode);
-            }
-        }
+		return offset;
+	}
 
-        int index = IndexOf(targetNode);
-        RemoveAt(index);
-    }
+	void ViewModel::RemoveNodeAndDescendantsFromView(TreeNode^ targetNode)
+	{
+		if (targetNode->IsExpanded)
+		{
+			TreeNode^ childNode;
+			for (int i = 0; i < (int)targetNode->Size; i++)
+			{
+				childNode = (TreeNode^)targetNode->GetAt(i);
+				RemoveNodeAndDescendantsFromView(childNode);
+			}
+		}
 
-    int ViewModel::CountDescendants(TreeNode^ targetNode)
-    {
-        int descendantCount = 0;
-        TreeNode^ childNode;
-        for (int i = 0; i < (int)targetNode->Size; i++)
-        {
-            childNode = (TreeNode^)targetNode->GetAt(i);
-            descendantCount++;
-            if (childNode->IsExpanded)
-            {
-                descendantCount = descendantCount + CountDescendants(childNode);
-            }
-        }
+		int index = IndexOf(targetNode);
+		RemoveAt(index);
+	}
 
-        return descendantCount;
-    }
+	int ViewModel::CountDescendants(TreeNode^ targetNode)
+	{
+		int descendantCount = 0;
+		TreeNode^ childNode;
+		for (int i = 0; i < (int)targetNode->Size; i++)
+		{
+			childNode = (TreeNode^)targetNode->GetAt(i);
+			descendantCount++;
+			if (childNode->IsExpanded)
+			{
+				descendantCount = descendantCount + CountDescendants(childNode);
+			}
+		}
 
-    int ViewModel::IndexOf(TreeNode^ targetNode)
-    {
-        unsigned int index;
-        bool isIndexed = IndexOf(targetNode, &index);
-        if (isIndexed)
-        {
-            return (int)index;
-        }
-        else
-        {
-            return -1;
-        }
-    }
+		return descendantCount;
+	}
 
-    void ViewModel::UpdateTreeView(IObservableVector<TreeNode^>^ sender, IVectorChangedEventArgs^ e)
-    {
-        VectorChanged(this, e);
-    }
+	int ViewModel::IndexOf(TreeNode^ targetNode)
+	{
+		unsigned int index;
+		bool isIndexed = IndexOf(targetNode, &index);
+		if (isIndexed)
+		{
+			return (int)index;
+		}
+		else
+		{
+			return -1;
+		}
+	}
 
-    void ViewModel::TreeNodeVectorChanged(IBindableObservableVector^ sender, Platform::Object^ e)
-    {
-        CollectionChange CC = ((IVectorChangedEventArgs^)e)->CollectionChange;
-        switch (CC)
-        {
-            //Reset case, commonly seen when a TreeNode is cleared.
-            //removes all nodes that need removing then 
-            //toggles a collapse / expand to ensure order.
-        case (CollectionChange::Reset) :
-        {
-            TreeNode^ resetNode = (TreeNode^)sender;
-            int resetIndex = IndexOf(resetNode);
-            if (resetIndex != Size - 1 && resetNode->IsExpanded)
-            {
-                TreeNode^ childNode = resetNode;
-                TreeNode^ parentNode = resetNode->ParentNode;
-                int stopIndex;
-                bool isLastRelativeChild = true;
-                while (parentNode != nullptr && isLastRelativeChild)
-                {
-                    unsigned int relativeIndex;
-                    parentNode->IndexOf(childNode, &relativeIndex);
-                    if (parentNode->Size - 1 != relativeIndex)
-                    {
-                        isLastRelativeChild = false;
-                    }
-                    else
-                    {
-                        childNode = parentNode;
-                        parentNode = parentNode->ParentNode;
-                    }
-                }
+	void ViewModel::UpdateTreeView(IObservableVector<TreeNode^>^ sender, IVectorChangedEventArgs^ e)
+	{
+		VectorChanged(this, e);
+	}
 
-                if (parentNode != nullptr)
-                {
-                    unsigned int siblingIndex;
-                    parentNode->IndexOf(childNode, &siblingIndex);
-                    TreeNode^ siblingNode = (TreeNode^)parentNode->GetAt(siblingIndex + 1);
-                    stopIndex = IndexOf(siblingNode);
-                }
-                else
-                {
-                    stopIndex = Size;
-                }
+	void ViewModel::TreeNodeVectorChanged(IBindableObservableVector^ sender, Platform::Object^ e)
+	{
+		CollectionChange CC = ((IVectorChangedEventArgs^)e)->CollectionChange;
+		switch (CC)
+		{
+			//Reset case, commonly seen when a TreeNode is cleared.
+			//removes all nodes that need removing then 
+			//toggles a collapse / expand to ensure order.
+		case (CollectionChange::Reset):
+		{
+			TreeNode^ resetNode = (TreeNode^)sender;
+			int resetIndex = IndexOf(resetNode);
+			if (resetIndex != Size - 1 && resetNode->IsExpanded)
+			{
+				TreeNode^ childNode = resetNode;
+				TreeNode^ parentNode = resetNode->ParentNode;
+				int stopIndex;
+				bool isLastRelativeChild = true;
+				while (parentNode != nullptr && isLastRelativeChild)
+				{
+					unsigned int relativeIndex;
+					parentNode->IndexOf(childNode, &relativeIndex);
+					if (parentNode->Size - 1 != relativeIndex)
+					{
+						isLastRelativeChild = false;
+					}
+					else
+					{
+						childNode = parentNode;
+						parentNode = parentNode->ParentNode;
+					}
+				}
 
-                for (int i = stopIndex - 1; i > resetIndex; i--)
-                {
-                    if ((flatVectorRealizedItems->GetAt(i))->ParentNode == nullptr)
-                    {
-                        RemoveNodeAndDescendantsFromView(flatVectorRealizedItems->GetAt(i));
-                    }
-                }
+				if (parentNode != nullptr)
+				{
+					unsigned int siblingIndex;
+					parentNode->IndexOf(childNode, &siblingIndex);
+					TreeNode^ siblingNode = (TreeNode^)parentNode->GetAt(siblingIndex + 1);
+					stopIndex = IndexOf(siblingNode);
+				}
+				else
+				{
+					stopIndex = Size;
+				}
 
-                if (resetNode->IsExpanded)
-                {
-                    CollapseNode(resetNode);
-                    ExpandNode(resetNode);
-                }
-            }
+				for (int i = stopIndex - 1; i > resetIndex; i--)
+				{
+					if ((flatVectorRealizedItems->GetAt(i))->ParentNode == nullptr)
+					{
+						RemoveNodeAndDescendantsFromView(flatVectorRealizedItems->GetAt(i));
+					}
+				}
 
-            break;
-        }
+				if (resetNode->IsExpanded)
+				{
+					CollapseNode(resetNode);
+					ExpandNode(resetNode);
+				}
+			}
 
-                                       //Inserts the TreeNode into the correct index of the ViewModel
-        case (CollectionChange::ItemInserted) :
-        {
-            //We will find the correct index of insertion by first checking if the
-            //node we are inserting into is expanded. If it is we will start walking
-            //down the tree and counting the open items. This is to ensure we place
-            //the inserted item in the correct index. If along the way we bump into
-            //the item being inserted, we insert there then return, because we don't
-            //need to do anything further.
-            unsigned int index = ((IVectorChangedEventArgs^)e)->Index;
-            TreeNode^ targetNode = (TreeNode^)sender->GetAt(index);
-            TreeNode^ parentNode = targetNode->ParentNode;
-            TreeNode^ childNode;
-            int parentIndex = IndexOf(parentNode);
-            int allOpenedDescendantsCount = 0;
-            if (parentNode->IsExpanded)
-            {
-                for (int i = 0; i < (int)parentNode->Size; i++)
-                {
-                    childNode = (TreeNode^)parentNode->GetAt(i);
-                    if (childNode == targetNode)
-                    {
-                        AddNodeToView(targetNode, (parentIndex + i + 1 + allOpenedDescendantsCount));
-                        if (targetNode->IsExpanded)
-                        {
-                            AddNodeDescendantsToView(targetNode, parentIndex + i + 1, allOpenedDescendantsCount);
-                        }
+			break;
+		}
 
-                        return;
-                    }
+		//Inserts the TreeNode into the correct index of the ViewModel
+		case (CollectionChange::ItemInserted):
+		{
+			//We will find the correct index of insertion by first checking if the
+			//node we are inserting into is expanded. If it is we will start walking
+			//down the tree and counting the open items. This is to ensure we place
+			//the inserted item in the correct index. If along the way we bump into
+			//the item being inserted, we insert there then return, because we don't
+			//need to do anything further.
+			unsigned int index = ((IVectorChangedEventArgs^)e)->Index;
+			TreeNode^ targetNode = (TreeNode^)sender->GetAt(index);
+			TreeNode^ parentNode = targetNode->ParentNode;
+			TreeNode^ childNode;
+			int parentIndex = IndexOf(parentNode);
+			int allOpenedDescendantsCount = 0;
+			if (parentNode->IsExpanded)
+			{
+				for (int i = 0; i < (int)parentNode->Size; i++)
+				{
+					childNode = (TreeNode^)parentNode->GetAt(i);
+					if (childNode == targetNode)
+					{
+						AddNodeToView(targetNode, (parentIndex + i + 1 + allOpenedDescendantsCount));
+						if (targetNode->IsExpanded)
+						{
+							AddNodeDescendantsToView(targetNode, parentIndex + i + 1, allOpenedDescendantsCount);
+						}
 
-                    if (childNode->IsExpanded)
-                    {
-                        allOpenedDescendantsCount += CountDescendants(childNode);
-                    }
-                }
+						return;
+					}
 
-                AddNodeToView(targetNode, (parentIndex + parentNode->Size + allOpenedDescendantsCount));
-                if (targetNode->IsExpanded)
-                {
-                    AddNodeDescendantsToView(targetNode, parentIndex + parentNode->Size, allOpenedDescendantsCount);
-                }
-            }
+					if (childNode->IsExpanded)
+					{
+						allOpenedDescendantsCount += CountDescendants(childNode);
+					}
+				}
 
-            break;
-        }
+				AddNodeToView(targetNode, (parentIndex + parentNode->Size + allOpenedDescendantsCount));
+				if (targetNode->IsExpanded)
+				{
+					AddNodeDescendantsToView(targetNode, parentIndex + parentNode->Size, allOpenedDescendantsCount);
+				}
+			}
 
-                                              //Removes a node from the ViewModel when a TreeNode
-                                              //removes a child.
-        case (CollectionChange::ItemRemoved) :
-        {
-            TreeNode^ removeNode = (TreeNode^)sender;
-            int removeIndex = IndexOf(removeNode);
+			break;
+		}
 
-            if (removeIndex != Size - 1 && removeNode->IsExpanded)
-            {
-                TreeNode^ childNode = removeNode;
-                TreeNode^ parentNode = removeNode->ParentNode;
-                int stopIndex;
-                bool isLastRelativeChild = true;
-                while (parentNode != nullptr && isLastRelativeChild)
-                {
-                    unsigned int relativeIndex;
-                    parentNode->IndexOf(childNode, &relativeIndex);
-                    if (parentNode->Size - 1 != relativeIndex)
-                    {
-                        isLastRelativeChild = false;
-                    }
-                    else
-                    {
-                        childNode = parentNode;
-                        parentNode = parentNode->ParentNode;
-                    }
-                }
+		//Removes a node from the ViewModel when a TreeNode
+		//removes a child.
+		case (CollectionChange::ItemRemoved):
+		{
+			TreeNode^ removeNode = (TreeNode^)sender;
+			int removeIndex = IndexOf(removeNode);
 
-                if (parentNode != nullptr)
-                {
-                    unsigned int siblingIndex;
-                    parentNode->IndexOf(childNode, &siblingIndex);
-                    TreeNode^ siblingNode = (TreeNode^)parentNode->GetAt(siblingIndex + 1);
-                    stopIndex = IndexOf(siblingNode);
-                }
-                else
-                {
-                    stopIndex = Size;
-                }
+			if (removeIndex != Size - 1 && removeNode->IsExpanded)
+			{
+				TreeNode^ childNode = removeNode;
+				TreeNode^ parentNode = removeNode->ParentNode;
+				int stopIndex;
+				bool isLastRelativeChild = true;
+				while (parentNode != nullptr && isLastRelativeChild)
+				{
+					unsigned int relativeIndex;
+					parentNode->IndexOf(childNode, &relativeIndex);
+					if (parentNode->Size - 1 != relativeIndex)
+					{
+						isLastRelativeChild = false;
+					}
+					else
+					{
+						childNode = parentNode;
+						parentNode = parentNode->ParentNode;
+					}
+				}
 
-                for (int i = stopIndex - 1; i > removeIndex; i--)
-                {
-                    if ((flatVectorRealizedItems->GetAt(i))->ParentNode == nullptr)
-                    {
-                        RemoveNodeAndDescendantsFromView(flatVectorRealizedItems->GetAt(i));
-                    }
-                }
-            }
+				if (parentNode != nullptr)
+				{
+					unsigned int siblingIndex;
+					parentNode->IndexOf(childNode, &siblingIndex);
+					TreeNode^ siblingNode = (TreeNode^)parentNode->GetAt(siblingIndex + 1);
+					stopIndex = IndexOf(siblingNode);
+				}
+				else
+				{
+					stopIndex = Size;
+				}
 
-            break;
-        }
+				for (int i = stopIndex - 1; i > removeIndex; i--)
+				{
+					if ((flatVectorRealizedItems->GetAt(i))->ParentNode == nullptr)
+					{
+						RemoveNodeAndDescendantsFromView(flatVectorRealizedItems->GetAt(i));
+					}
+				}
+			}
 
-                                             //Triggered by a replace such as SetAt.
-                                             //Updates the TreeNode that changed in the ViewModel.
-        case (CollectionChange::ItemChanged) :
-        {
-            unsigned int index = ((IVectorChangedEventArgs^)e)->Index;
-            TreeNode^ targetNode = (TreeNode^)sender->GetAt(index);
-            TreeNode^ parentNode = targetNode->ParentNode;
-            TreeNode^ childNode;
-            int allOpenedDescendantsCount = 0;
-            int parentIndex = IndexOf(parentNode);
+			break;
+		}
 
-            for (int i = 0; i < (int)parentNode->Size; i++)
-            {
-                childNode = (TreeNode^)parentNode->GetAt(i);
-                if (childNode->IsExpanded)
-                {
-                    allOpenedDescendantsCount += CountDescendants(childNode);
-                }
-            }
+		//Triggered by a replace such as SetAt.
+		//Updates the TreeNode that changed in the ViewModel.
+		case (CollectionChange::ItemChanged):
+		{
+			unsigned int index = ((IVectorChangedEventArgs^)e)->Index;
+			TreeNode^ targetNode = (TreeNode^)sender->GetAt(index);
+			TreeNode^ parentNode = targetNode->ParentNode;
+			TreeNode^ childNode;
+			int allOpenedDescendantsCount = 0;
+			int parentIndex = IndexOf(parentNode);
 
-            TreeNode^ removeNode = (TreeNode^)GetAt(parentIndex + index + allOpenedDescendantsCount + 1);
-            if (removeNode->IsExpanded)
-            {
-                CollapseNode(removeNode);
-            }
+			for (int i = 0; i < (int)parentNode->Size; i++)
+			{
+				childNode = (TreeNode^)parentNode->GetAt(i);
+				if (childNode->IsExpanded)
+				{
+					allOpenedDescendantsCount += CountDescendants(childNode);
+				}
+			}
 
-            RemoveAt(parentIndex + index + allOpenedDescendantsCount + 1);
-            InsertAt(parentIndex + index + allOpenedDescendantsCount + 1, targetNode);
+			TreeNode^ removeNode = (TreeNode^)GetAt(parentIndex + index + allOpenedDescendantsCount + 1);
+			if (removeNode->IsExpanded)
+			{
+				CollapseNode(removeNode);
+			}
 
-            break;
-        }
+			RemoveAt(parentIndex + index + allOpenedDescendantsCount + 1);
+			InsertAt(parentIndex + index + allOpenedDescendantsCount + 1, targetNode);
 
-        }
-    }
+			break;
+		}
 
-    void ViewModel::TreeNodePropertyChanged(Object^ sender, PropertyChangedEventArgs^ e)
-    {        
-        if (e->PropertyName == "IsExpanded")
-        {
-            TreeNode^ targetNode = (TreeNode^)sender;
-            if (targetNode->IsExpanded)
-            {
-                if (targetNode->Size != 0)
-                {
-                    int openedDescendantOffset = 0;
-                    int index = IndexOf(targetNode);
-                    index = index + 1;
-                    TreeNode^ childNode;
-                    for (int i = 0; i < (int)targetNode->Size; i++)
-                    {
-                        childNode = (TreeNode^)targetNode->GetAt(i);
-                        AddNodeToView(childNode, ((int)index + i + openedDescendantOffset));
-                        openedDescendantOffset = AddNodeDescendantsToView(childNode, (index + i), openedDescendantOffset);
-                    }
-                }
-            }
-            else
-            {
-                TreeNode^ childNode;
-                for (int i = 0; i < (int)targetNode->Size; i++)
-                {
-                    childNode = (TreeNode^)targetNode->GetAt(i);
-                    RemoveNodeAndDescendantsFromView(childNode);
-                }
-            }
-        }
-    }
+		}
+	}
+
+	void ViewModel::TreeNodePropertyChanged(Object^ sender, PropertyChangedEventArgs^ e)
+	{
+		if (e->PropertyName == "IsExpanded")
+		{
+			TreeNode^ targetNode = (TreeNode^)sender;
+			if (targetNode->IsExpanded)
+			{
+				if (targetNode->Size != 0)
+				{
+					int openedDescendantOffset = 0;
+					int index = IndexOf(targetNode);
+					index = index + 1;
+					TreeNode^ childNode;
+					for (int i = 0; i < (int)targetNode->Size; i++)
+					{
+						childNode = (TreeNode^)targetNode->GetAt(i);
+						AddNodeToView(childNode, ((int)index + i + openedDescendantOffset));
+						openedDescendantOffset = AddNodeDescendantsToView(childNode, (index + i), openedDescendantOffset);
+					}
+				}
+			}
+			else
+			{
+				TreeNode^ childNode;
+				for (int i = 0; i < (int)targetNode->Size; i++)
+				{
+					childNode = (TreeNode^)targetNode->GetAt(i);
+					RemoveNodeAndDescendantsFromView(childNode);
+				}
+			}
+		}
+	}
+	void ViewModel::nodeRecurse(Platform::Collections::Vector<TreeNode^>^ children)
+	{
+		for (auto && x : children)
+		{
+			flatVectorRealizedItems->Append(x);
+			collectionChangedEventTokenVector.push_back(x->VectorChanged += ref new BindableVectorChangedEventHandler(this, &ViewModel::TreeNodeVectorChanged));
+			propertyChangedEventTokenVector.push_back(x->PropertyChanged += ref new Windows::UI::Xaml::Data::PropertyChangedEventHandler(this, &ViewModel::TreeNodePropertyChanged));
+			if (x->childrenVector->Size != 0)
+			{
+				nodeRecurse(x->childrenVector);
+			}
+		}
+	}
 }
