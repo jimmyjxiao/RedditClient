@@ -9,11 +9,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TreeViewControl", "TreeView
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpanderControl", "ExpanderControl\ExpanderControl.csproj", "{5FEDF244-C801-458C-BC7D-CD394550F907}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mdblock", "C:\Users\jimmy\source\repos\mdblock\mdblock\mdblock.vcxproj", "{67016182-E5CA-4BF0-A85F-C04A1730538A}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "cacheupdater", "cacheupdater\cacheupdater.pyproj", "{B27F9A63-5C1B-42D0-90E4-2EF141C51B24}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "md4clib", "md4clib\md4clib.vcxproj", "{620A027A-A692-424F-94BD-807BD4494FDC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mdblock", "..\..\..\source\repos\mdblock\mdblock\mdblock.vcxproj", "{67016182-E5CA-4BF0-A85F-C04A1730538A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,20 +77,6 @@ Global
 		{5FEDF244-C801-458C-BC7D-CD394550F907}.Release|x64.Build.0 = Release|x64
 		{5FEDF244-C801-458C-BC7D-CD394550F907}.Release|x86.ActiveCfg = Release|x86
 		{5FEDF244-C801-458C-BC7D-CD394550F907}.Release|x86.Build.0 = Release|x86
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|Any CPU.ActiveCfg = Release|Win32
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|ARM.ActiveCfg = Release|ARM
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|ARM.Build.0 = Release|ARM
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x64.ActiveCfg = Debug|x64
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x64.Build.0 = Debug|x64
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x86.ActiveCfg = Debug|Win32
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x86.Build.0 = Debug|Win32
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|Any CPU.ActiveCfg = Release|Win32
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|ARM.ActiveCfg = Release|ARM
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|ARM.Build.0 = Release|ARM
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x64.ActiveCfg = Release|x64
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x64.Build.0 = Release|x64
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x86.ActiveCfg = Release|Win32
-		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x86.Build.0 = Release|Win32
 		{B27F9A63-5C1B-42D0-90E4-2EF141C51B24}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{B27F9A63-5C1B-42D0-90E4-2EF141C51B24}.Debug|ARM.ActiveCfg = Release|Any CPU
 		{B27F9A63-5C1B-42D0-90E4-2EF141C51B24}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -113,6 +99,20 @@ Global
 		{620A027A-A692-424F-94BD-807BD4494FDC}.Release|x64.Build.0 = Release|x64
 		{620A027A-A692-424F-94BD-807BD4494FDC}.Release|x86.ActiveCfg = Release|Win32
 		{620A027A-A692-424F-94BD-807BD4494FDC}.Release|x86.Build.0 = Release|Win32
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|ARM.Build.0 = Debug|ARM
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x64.ActiveCfg = Debug|x64
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x64.Build.0 = Debug|x64
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x86.ActiveCfg = Debug|Win32
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Debug|x86.Build.0 = Debug|Win32
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|Any CPU.ActiveCfg = Release|Win32
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|ARM.ActiveCfg = Release|ARM
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|ARM.Build.0 = Release|ARM
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x64.ActiveCfg = Release|x64
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x64.Build.0 = Release|x64
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x86.ActiveCfg = Release|Win32
+		{67016182-E5CA-4BF0-A85F-C04A1730538A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

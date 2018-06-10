@@ -47,6 +47,7 @@ namespace account
 	class VotableThing
 	{
 	public:
+		concurrency::task<void> giveGold();
 		bool isMine;
 		bool saved;
 		unsigned int gilded;

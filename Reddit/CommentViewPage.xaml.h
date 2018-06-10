@@ -6,7 +6,6 @@
 #pragma once
 #include "AccountInterface.h"
 #include "CommentView.xaml.h"
-#include "NavStates.h"
 #include "CommentViewPage.g.h"
 #include "subpostUWP.h"
 #include "converters.h"

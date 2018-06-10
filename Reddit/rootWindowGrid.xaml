@@ -48,7 +48,7 @@
                         <local:comboboxTemplateSelector.closedTemplate>
                             <DataTemplate x:DataType="ac:AccountInfo">
                                 <TextBlock FontWeight="Bold">
-                                /u/<Run Text="{x:Bind username}"/> <Hyperlink FontWeight="Normal">(<Run Text="{x:Bind link_karma}"/> | <Run Text="{x:Bind comment_karma}"/>)</Hyperlink>
+                                /u/<Run Text="{x:Bind username}"/> <Hyperlink FontWeight="Normal" Click="Hyperlink_Click">(<Run Text="{x:Bind link_karma}"/> | <Run Text="{x:Bind comment_karma}"/>)</Hyperlink>
                                 </TextBlock>
                             </DataTemplate>
                         </local:comboboxTemplateSelector.closedTemplate>
@@ -63,9 +63,23 @@
                     </local:comboboxTemplateSelector>
                 </ComboBox.ItemTemplateSelector>
             </ComboBox>
-            <Button>
+            <local:NoToggleBehaviorButton IsChecked="{x:Bind Has_mail, Mode=OneWay}" Click="Flyout_Open">
+                <local:NoToggleBehaviorButton.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.ThemeDictionaries>
+                            <ResourceDictionary x:Key="Light">
+                                <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Green"/>
+                            </ResourceDictionary>
+                        </ResourceDictionary.ThemeDictionaries>
+                    </ResourceDictionary>
+                </local:NoToggleBehaviorButton.Resources>
+                <FlyoutBase.AttachedFlyout>
+                    <Flyout Opening="Flyout_Opening" >
+
+                    </Flyout>
+                </FlyoutBase.AttachedFlyout>
                 <SymbolIcon Symbol="Mail"/>
-            </Button>
+            </local:NoToggleBehaviorButton>
         </StackPanel>
         <AutoSuggestBox PlaceholderText="Go To/Search" Padding="0" Margin="0" TextChanged="AutoSuggestBox_TextChanged" Grid.Column="2" TextMemberPath="pname" x:Name="searchBox" QuerySubmitted="AutoSuggestBox_QuerySubmitted">
             <AutoSuggestBox.ItemContainerStyle>

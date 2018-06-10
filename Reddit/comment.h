@@ -7,11 +7,12 @@ namespace account
 		public VotableThing, RedditCreated
 	{
 	public:
-		Platform::String^ htmltext;
+		//Platform::String^ htmltext;
 		Platform::String^ plink_id;
 		Platform::String^ markdown;
+		Platform::String^ parent_subreddit;
 		bool controversial;
-		comment(Windows::Data::Json::JsonObject^ json, Platform::String^ plink = nullptr);
+		comment(Windows::Data::Json::JsonObject^ json, Platform::String^ plink = nullptr, Platform::String^ subreddit = nullptr);
 		~comment();
 	};
 

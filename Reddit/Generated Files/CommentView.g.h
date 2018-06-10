@@ -38,8 +38,8 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
-        class CommentView_obj3_Bindings;
-        class CommentView_obj5_Bindings;
+        class CommentView_obj4_Bindings;
+        class CommentView_obj6_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
         private: ::Windows::UI::Xaml::DataTemplate^ commentTemplate;

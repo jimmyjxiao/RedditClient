@@ -5,8 +5,6 @@
 
 #include "pch.h"
 #include "CommentViewPage.xaml.h"
-#include "NavStates.h"
-#include "globalvars.h"
 #include "ApplicationDataHelper.h"
 #include "converters.h"
 #include "serviceHelpers.h"
@@ -37,7 +35,7 @@ CommentViewPage::CommentViewPage()
 void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs ^ e)
 {
 	navIndex = static_cast<unsigned char>(e->Parameter);
-	nav = globalvars::NavState.at(navIndex).second.c;
+	nav = static_cast<commentNavstate*>(globalvars::NavState.at(navIndex).second);
 	nav->pageState = this;
 	auto list = globalvars::currentacc->getCommentAsyncVec(nav->postID, nav->sort);
 	const char16_t* substr = (const char16_t*)nav->post->subreddit->Data();
@@ -82,7 +80,7 @@ void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Navig
 				item->cacheMDElements();
 				for (auto && a : item->mdElements->Links)
 				{
-					linkHandler::urlLookupTasks.insert(std::make_pair<int, concurrency::task<std::pair<account::postContentType, account::serviceHelpers::previewHelperbase*>>>(a->GetHashCode(), account::serviceHelpers::urlHelper(a)));
+					//linkHandler::urlLookupTasks.insert(std::make_pair<int, concurrency::task<std::pair<account::postContentType, account::serviceHelpers::previewHelperbase*>>>(a->GetHashCode(), account::serviceHelpers::urlHelper(a)));
 				}
 			}
 			catch (...)
@@ -108,7 +106,13 @@ void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Navig
 		}
 		if (nav->post == nullptr)
 		{
-			_subInfo = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache((const char16_t*)z.parent->subreddit->Data());
+			try {
+				_subInfo = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache((const char16_t*)z.parent->subreddit->Data());
+			}
+			catch (...)
+			{
+				__debugbreak();
+			}
 			commentControl->setHeaderpost(z.parent);
 		}
 

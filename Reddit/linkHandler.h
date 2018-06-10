@@ -14,6 +14,8 @@ namespace Reddit
 		static linkHandler ^ _inst;
 		linkHandler();
 		~linkHandler();
+		void OnPointerEntered(Platform::Object ^sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs ^e);
+		void OnPointerExited(Platform::Object ^sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs ^e);
 	};
 
 }

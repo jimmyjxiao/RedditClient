@@ -9,9 +9,38 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="using:mdblock"
+    xmlns:UI="using:Microsoft.Advertising.WinRT.UI"
     mc:Ignorable="d"
     >
+    <ControlTemplate TargetType="ex:Expander" x:Name="inlineExpanderButtoning">
+        <StackPanel>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="ExpandedStates">
+                    <VisualState x:Name="Expanded">
+                        <VisualState.Setters>
+                            <Setter Target="PART_MainContent.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Collapsed" />
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
 
+
+            <AppBarToggleButton Icon="{TemplateBinding Header}"
+                    x:Name="PART_ExpanderToggleButton" Height="40"
+                                          TabIndex="0"
+                                          AutomationProperties.Name="Expand"
+                                          VerticalAlignment="Top" HorizontalAlignment="Left"
+                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+            <ContentPresenter  x:Name="PART_MainContent"
+                                              Background="{TemplateBinding Background}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Visibility="Collapsed" />
+        </StackPanel>
+    </ControlTemplate>
     <converters:HasPreview x:Key="prevConv"/>
     <converters:ScoreText x:Key="scoreVis"/>
     <ControlTemplate x:Key="thumbnailTemplate" TargetType="ContentControl">
@@ -29,11 +58,58 @@
             </PathIcon.Data>
         </PathIcon>
     </ControlTemplate>
+    <DataTemplate x:DataType="ac:CommentUWPitem" x:Key="SingleCommentTemplate" >
+        <Grid Tag="{x:Bind}"  HorizontalAlignment="Stretch" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <HyperlinkButton x:Name="user" Content="{x:Bind  author, FallbackValue=username}" FontSize="16" VerticalAlignment="Bottom"/>
+                <TextBlock FontSize="16" VerticalAlignment="Center" Text="{x:Bind  score, Mode=OneWay, Converter={StaticResource scoreVis}}">
+                </TextBlock>
+                <TextBlock x:Name="time"/>
+            </StackPanel>
+            <!--<RichTextBlock Name="comment" Grid.Row="1" common:Properties.Html="{x:Bind  htmltext}"/>-->
+            <RichTextBlock Grid.Row="1" md:mdRichProperties.MDElements="{x:Bind  mdElements}"/>
+            <!--<md:mdRichblock Grid.Row="1" Markdown="{x:Bind  markdowntext}"/>-->
+            <CommandBar HorizontalAlignment="Stretch" Grid.Row="2" Template="{StaticResource leftAlignNoContentCommandBar}" OverflowButtonVisibility="Collapsed" IsDynamicOverflowEnabled="True"  >
+                <local:AppBarToggleColoredButton CheckedBrush="#FF8b60" IsThreeState="False"  Label="Upvote" IsChecked="{x:Bind  Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind  changeupvote}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon Glyph="&#xE70E;" FontWeight="ExtraBold"/>
+                    </AppBarToggleButton.Icon>
+                </local:AppBarToggleColoredButton>
+                <local:AppBarToggleColoredButton CheckedBrush="#9494FF" IsThreeState="False" Label="Downvote" IsChecked="{x:Bind  Liked, Converter={StaticResource downvoteconvert}, Mode=OneWay}" Command="{x:Bind  changedownvote}">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon Glyph="&#xE70D;" FontWeight="ExtraBold"/>
+                    </AppBarToggleButton.Icon>
+                </local:AppBarToggleColoredButton>
+                <AppBarToggleButton Icon="Save" Label="Save" IsChecked="{x:Bind  saved, Mode=TwoWay}" IsThreeState="False"/>
+                <AppBarButton Icon="Important" Label="Report">
+                    <AppBarButton.Flyout>
+                        <local:reportFlyout  subreddit="{x:Bind ParentSubreddit}" isComment="True"/>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Icon="Edit" Label="Edit" Visibility="{x:Bind isMine}"/>
+                <AppBarButton Icon="ReShare" Label="Share"/>
+                <AppBarToggleButton Label="Reply" Name="replyButton" Click="replyButton_Click" IsThreeState="False">
+                    <AppBarToggleButton.Icon>
+                        <FontIcon Glyph="&#xE97A;" FontWeight="ExtraBold"/>
+                    </AppBarToggleButton.Icon>
+                </AppBarToggleButton>
+
+            </CommandBar>
+
+        </Grid>
+
+    </DataTemplate>
     <local:subPostControlIconTemplateSelector x:Key="thumbnailHelper" selfTemplate="{StaticResource selfIconTemplate}" thumbnailTemplate="{StaticResource thumbnailTemplate}"/>
     <converters:unformatHtml x:Key="htmlPrev"/>
     <local:previewIconC x:Key="pathdataconvz"/>
     <DataTemplate x:Key="imageGriddatatemplate" x:DataType="ac:subpostUWP">
-        <Grid Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}" >
+        <Grid Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}"  >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -49,6 +125,7 @@
                 <TextBlock Text="{x:Bind score, Mode=OneWay}" FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
                 <local:NoToggleBehaviorButton  Height="13" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center"  IsChecked="{x:Bind Converter={StaticResource downvoteconvert}, Mode=OneWay, Path=Liked}" Command="{x:Bind changedownvote}"/>
             </StackPanel>
+            
             <Button Grid.Row="1" Height="auto" Width="460" Padding="0"  Command="{x:Bind previewCommand}">
                 <Grid>
                     <Image Height="auto" Width="460" Stretch="UniformToFill">
@@ -65,10 +142,6 @@
         			        <Run Text="{x:Bind num_comments}"/>
                 </TextBlock>
             </Grid>
-
-
-
-
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="selfGridTemplate" x:DataType="ac:subpostUWP">
@@ -89,8 +162,8 @@
                     <local:NoToggleBehaviorButton.Resources>
                         <ResourceDictionary>
                             <ResourceDictionary.ThemeDictionaries>
-                                <ResourceDictionary x:Key="light">
-                                    <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="Brown"/>
+                                <ResourceDictionary x:Key="Light">
+                                    <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Green"/>
                                 </ResourceDictionary>
                             </ResourceDictionary.ThemeDictionaries>
                         </ResourceDictionary>
@@ -102,8 +175,8 @@
                     <local:NoToggleBehaviorButton.Resources>
                         <ResourceDictionary>
                             <ResourceDictionary.ThemeDictionaries>
-                                <ResourceDictionary x:Key="light">
-                                    <StaticResource x:Key="ToggleButtonBackgroundChecked" ResourceKey="downvoteBrush"/>
+                                <ResourceDictionary x:Key="Light">
+                                    <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Green"/>
                                 </ResourceDictionary>
                             </ResourceDictionary.ThemeDictionaries>
                         </ResourceDictionary>
@@ -175,5 +248,15 @@
             </CommandBar>
         </Grid>
     </DataTemplate>
-    
+    <DataTemplate x:Key="inlineNativeAd">
+        <RelativePanel Loading="adcontainer_loading">
+            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" Name="title" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBlock Name="desc" RelativePanel.Below="title"/>
+        </RelativePanel>
+    </DataTemplate>
+    <DataTemplate x:Key="GridBannerAd">
+        <Grid Background="White" Height="360" Width="460">
+            <UI:AdControl Background="Red" ApplicationId="d25517cb-12d4-4699-8bdc-52040c712cab" AdUnitId="10043058" Height="250" Width="300" Loaded="AdControl_Loaded" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

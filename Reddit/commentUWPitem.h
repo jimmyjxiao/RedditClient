@@ -7,21 +7,33 @@
 
 namespace account
 {
-
 	struct commentUWPlisting;
 	public ref class CommentUWPitem sealed :
-		public Windows::UI::Xaml::Data::INotifyPropertyChanged, IRedditTypeIdentifier
+		public Windows::UI::Xaml::Data::INotifyPropertyChanged, IRedditTypeIdentifier, VotableInterface
 	{
 	private:
+		Windows::UI::Xaml::Input::ICommand^ _changeupvoteCommand;
+		Windows::UI::Xaml::Input::ICommand^ _changedownvoteCommand;
 		mdblock::refMDElements^ mdCmds = nullptr;
 		void _changedownvote(Platform::Object^);
 		void _changeupvote(Platform::Object^);
 	internal:
 		comment helper;
-		commentUWPlisting* replies = nullptr;
+		union
+		{
+			commentUWPlisting* replies = nullptr;
+			void* linkparent;
+		};
 		void cacheMDElements();
-		CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncomment, Platform::String^ pid = nullptr, bool handleReplies = true);
+		CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncomment, Platform::String^ pid = nullptr,const bool handleReplies = true, Platform::String^ subreddit = nullptr);
 	public:
+		property Platform::String^ ParentSubreddit
+		{
+			Platform::String^ get()
+			{
+				return helper.parent_subreddit;
+			}
+		}
 		property bool hasReplies
 		{
 			bool get()
@@ -40,7 +52,7 @@ namespace account
 				return helper.controversial;
 			}
 		}
-		property Platform::IBox<bool>^ Liked
+		virtual property Platform::IBox<bool>^ Liked
 		{
 			Platform::IBox<bool>^ get()
 			{
@@ -48,28 +60,34 @@ namespace account
 			}
 			void set(Platform::IBox<bool>^ newvalue);
 		}
-		property Windows::UI::Xaml::Input::ICommand^ changeupvote;
-		property Windows::UI::Xaml::Input::ICommand^ changedownvote;
-		property bool saved
+		virtual property Windows::UI::Xaml::Input::ICommand^ changeupvote
+		{
+			Windows::UI::Xaml::Input::ICommand^ get()
+			{
+				return _changeupvoteCommand;
+			}
+		}
+		virtual property Windows::UI::Xaml::Input::ICommand^ changedownvote
+		{
+			Windows::UI::Xaml::Input::ICommand^ get()
+			{
+				return _changedownvoteCommand;
+			}
+		}
+		virtual property bool saved
 		{
 			bool get() { return helper.saved; }
 			void set(bool s);
 		}
-		property int score
+		virtual property int score
 		{
 			int get()
 			{
 				return helper.score;
 			}
 		}
-		property Platform::String^ htmltext
-		{
-			Platform::String^ get()
-			{
-				return helper.htmltext;
-			}
-		}
-		property Platform::String^ author
+
+		virtual property Platform::String^ author
 		{
 			Platform::String^ get() 
 			{
@@ -113,7 +131,23 @@ namespace account
 				return RedditType::comment;
 			}
 		}
-	};
+
+		// Inherited via VotableInterface
+		virtual property Windows::Foundation::Uri ^ link
+		{
+			Windows::Foundation::Uri^ get()
+			{
+				return ref new Windows::Foundation::Uri(L"https://www.reddit.com", helper.permalink);
+			}
+		}
+		virtual property unsigned int Golds
+		{
+			unsigned int get()
+			{
+				return helper.gilded;
+			}
+		}
+};
 	public ref struct moreComments sealed
 	{
 	public:

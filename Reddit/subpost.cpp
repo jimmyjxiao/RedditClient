@@ -111,7 +111,7 @@ namespace account
 			num_comments = json->GetNamedNumber("num_comments");
 			if (self)
 				contentType = postContentType::selftype;
-			else if (json->GetNamedValue("media")->ValueType != Windows::Data::Json::JsonValueType::Null)
+			/*else if (json->GetNamedValue("media")->ValueType != Windows::Data::Json::JsonValueType::Null)
 			{
 				try {
 					auto obj = json->GetNamedObject("media");
@@ -155,11 +155,7 @@ namespace account
 				{
 					contentType = postContentType::linktype;
 				}
-			}
-			else
-			{
-				contentType = postContentType::linktype;
-			}
+			}*/
 		}
 		catch (...)
 		{

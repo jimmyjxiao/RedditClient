@@ -1,0 +1,170 @@
+﻿<Page x:ConnectionId='1'
+    x:Class="Reddit.SubRedditViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:converters"
+    xmlns:ac="using:account"
+    NavigationCacheMode="Disabled"
+    mc:Ignorable="d">
+    <Page.Resources>
+        
+        
+        <converters:InverseBool x:Key="boolFlipper"/>
+        
+        <local:sortToTimeRangeVis x:Key="rangeVisConv"/>
+        
+        
+
+        
+    </Page.Resources>
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <CommandBar x:ConnectionId='2' x:Name="commandBar"                                                                                                OverflowButtonVisibility="Auto"                                                                                          >
+            <AppBarToggleButton x:ConnectionId='12' Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False" />
+            <AppBarToggleButton x:ConnectionId='13'                                            />
+            <AppBarButton Icon="PreviewLink" Label="Wiki" />
+            <AppBarButton x:ConnectionId='14' Icon="Filter" x:Name="timeButton" Label="Filter Posts By:">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            <ListView x:ConnectionId='16' Header="Posts from:" SelectedValuePath="Tag"                                                                                  x:Name="timeSelector"                                                    >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <TextBlock Text="Past Hour">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>hour</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past 24 Hours">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>day</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past Week">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>week</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past Month">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>month</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="Past Year">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>year</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                                <TextBlock Text="All Time">
+                                    <TextBlock.Tag>
+                                        <ac:timerange>all</ac:timerange>
+                                    </TextBlock.Tag>
+                                </TextBlock>
+                            </ListView>
+                            <MenuFlyoutSeparator x:ConnectionId='17'                                                                                 />
+                            <ToggleMenuFlyoutItem Text="Show NSFW posts" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem Text="Show Spoilers" IsChecked="True"/>
+                        </StackPanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton x:ConnectionId='15' Icon="Add" Label="Post"                         >
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Link" Icon="Link"/>
+                        <MenuFlyoutItem Text="Text" Icon="AlignLeft"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <CommandBar.Content>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                    <ListView x:ConnectionId='18' SelectionMode="Single" VerticalAlignment="Stretch" Padding="0" SelectedValuePath="Tag" x:Name="sortSelector"                                                 >
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal" Padding="0"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <TextBlock Text="Hot">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    hot
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="New">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    New
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Rising">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    rising
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Controversial">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    controversial
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Top">
+                            <TextBlock.Tag>
+                                <ac:postSort>
+                                    top
+                                </ac:postSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                    </ListView>
+                </StackPanel>
+            </CommandBar.Content>
+
+        </CommandBar>
+        <StackPanel x:ConnectionId='3' Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="subInfopanel"                                                                                                >
+            <TextBlock x:ConnectionId='9'                                            Style="{ThemeResource TitleTextBlockStyle}"/>
+            <AppBarSeparator/>
+            <TextBlock x:ConnectionId='10' Style="{ThemeResource TitleTextBlockStyle}" x:Name="subTextblock">
+                <Run x:ConnectionId='11'                                                 /> Subscribers
+            </TextBlock>
+        </StackPanel>
+        <SplitView x:ConnectionId='4' x:Name="splitSide" OpenPaneLength="312" DisplayMode="Overlay" PanePlacement="Right" Grid.Row="1"                                                                                                PaneBackground="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}">
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <ToggleSwitch x:ConnectionId='5' Header="Use CSS to view sidebar"                                            />
+                    <WebView x:ConnectionId='6' x:Name="sidebarWebview" DefaultBackgroundColor="Transparent" Grid.Row="1"/>
+                </Grid>
+                
+
+            </SplitView.Pane>
+            <Grid>
+                <GridView x:ConnectionId='7' x:Name="listGrid"                                           IsItemClickEnabled="True"                                                                                       x:Load="False"                                                                 />
+                <ListView x:ConnectionId='8' x:Name="listView"                                           SelectionMode="None"  x:Load="False"                          IsItemClickEnabled="True"                                                                                       >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+        </SplitView>
+    </Grid>
+</Page>
+

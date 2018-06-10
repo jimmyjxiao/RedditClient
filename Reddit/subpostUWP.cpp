@@ -39,19 +39,35 @@ using namespace account;
 
 	void account::subpostUWP::previewDialog(Platform::Object ^)
 	{
-
-		auto dialog = ref new Windows::UI::Xaml::Controls::ContentDialog();
-		dialog->Content = contentHelper->viewerControl();
-		dialog->PrimaryButtonText = "Go to Comments";
-		dialog->CloseButtonText = "Close";
-		dialog->ShowAsync();
+		if (std::holds_alternative<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(contentHelper))
+		{
+			nonC:
+			auto dialog = ref new Windows::UI::Xaml::Controls::ContentDialog();
+			dialog->Content = std::get<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(contentHelper)->viewerControl();
+			dialog->PrimaryButtonText = "Go to Comments";
+			dialog->CloseButtonText = "Close";
+			dialog->ShowAsync();
+		}
+		else
+		{
+			try {
+				std::get<concurrency::task<serviceHelpers::previewHelperbase*>>(contentHelper).then([](account::serviceHelpers::previewHelperbase* p) {
+					Windows::ApplicationModel::Core::CoreApplication::MainView->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::High, ref new Windows::UI::Core::DispatchedHandler([p]() {
+						auto dialog = ref new Windows::UI::Xaml::Controls::ContentDialog();
+						dialog->Content = p->viewerControl();
+						dialog->PrimaryButtonText = "Go to Comments";
+						dialog->CloseButtonText = "Close";
+						dialog->ShowAsync();
+					}));
+				});
+			}
+			catch (std::bad_variant_access& b)
+			{
+				goto nonC;
+			}
+		}
 	}
 
-	account::subpostUWP::~subpostUWP()
-	{
-		
-		delete contentHelper;
-	}
 
 	concurrency::task<Windows::Data::Json::JsonObject^> account::subpostUWP::getComments()
 	{
@@ -79,7 +95,8 @@ using namespace account;
 	{
 		if (!helper.self)
 		{
-			contentTask = serviceHelpers::jsonHelper(data).then([this](std::pair<postContentType, serviceHelpers::previewHelperbase*> x) {
+			/*contentTask = serviceHelpers::jsonHelper(data);
+			contentTask.then([this](std::pair<postContentType, serviceHelpers::previewHelperbase*> x) {
 				
 				contentHelper = x.second;
 				if (contentType != x.first)
@@ -89,11 +106,46 @@ using namespace account;
 					}));
 				}
 				return x.second;
-			});
+			});*/
+			auto prelim = account::serviceHelpers::prelimContentHelper(data);
+			contentType = std::get<0>(prelim);
+			if (std::get<1>(prelim) == nullptr && contentType != postContentType::linktype)
+			{
+				if (std::get<2>(prelim) != nullptr)
+				{
+					contentHelper = (*std::get<2>(prelim))(data, std::get<0>(prelim)).then([this](std::pair<postContentType, serviceHelpers::previewHelperbase*> x) {
+						if (contentType != x.first)
+						{
+							Windows::ApplicationModel::Core::CoreApplication::MainView->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::High, ref new Windows::UI::Core::DispatchedHandler([this, x]() {
+								contentType = x.first;
+							}));
+						}
+						contentHelper = std::unique_ptr<account::serviceHelpers::previewHelperbase>(x.second);
+						return x.second;
+					});
+				}
+				else
+				{
+					contentHelper = account::serviceHelpers::jsonHelper(data).then([this](std::pair<postContentType, serviceHelpers::previewHelperbase*> x) {
+						if (contentType != x.first)
+						{
+							Windows::ApplicationModel::Core::CoreApplication::MainView->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::High, ref new Windows::UI::Core::DispatchedHandler([this, x]() {
+								contentType = x.first;
+							}));
+						}
+						contentHelper = std::unique_ptr<account::serviceHelpers::previewHelperbase>(x.second);
+						return x.second;
+					});
+				}
+			}
+			else
+			{
+				contentHelper = std::unique_ptr<account::serviceHelpers::previewHelperbase>(std::get<1>(prelim));
+			}
 		}
 		else if (helper.self && (helper.selftext != ""))
 		{
-			contentHelper = new serviceHelpers::selfDisplay(helper.selftext);
+			contentHelper = std::make_unique<serviceHelpers::selfDisplay>(helper.selftext);
 		}
 		try
 		{

@@ -53,6 +53,12 @@
     <ClCompile Include="AccountInterface.cpp">
       <Filter>account</Filter>
     </ClCompile>
+    <ClCompile Include="MixedContentSorter.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="MixedRedditTypeControl.xaml.cpp" />
+    <ClCompile Include="TestPage.xaml.cpp" />
+    <ClCompile Include="UserPage.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -96,6 +102,12 @@
     <ClInclude Include="rootWindowGrid.xaml.h" />
     <ClInclude Include="linkhandler.h" />
     <ClInclude Include="ReplyBox.xaml.h" />
+    <ClInclude Include="MixedContentSorter.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="MixedRedditTypeControl.xaml.h" />
+    <ClInclude Include="TestPage.xaml.h" />
+    <ClInclude Include="UserPage.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
@@ -125,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Reddit_TemporaryKey.pfx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="CommentView.xaml" />
@@ -134,5 +147,10 @@
     <Page Include="Themes\Generic.xaml" />
     <Page Include="rootWindowGrid.xaml" />
     <Page Include="ReplyBox.xaml" />
+    <Page Include="TestPage.xaml" />
+    <Page Include="UserPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ToDo.txt" />
   </ItemGroup>
 </Project>

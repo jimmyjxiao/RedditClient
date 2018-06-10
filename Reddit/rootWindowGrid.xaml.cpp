@@ -6,8 +6,8 @@
 #include "pch.h"
 #include "rootWindowGrid.xaml.h"
 #include "SubRedditViewPage.xaml.h"
-#include "globalvars.h"
 #include "ApplicationDataHelper.h"
+#include "UserPage.xaml.h"
 using namespace Reddit;
 
 using namespace Platform;
@@ -28,7 +28,11 @@ const account::AccountInfo lastItem =
 	INT_MIN,
 	INT_MIN
 };
-
+bool rootWindowGrid::Has_mail::get()
+{
+	//return globalvars::currentacc->me.has_mail;
+	return true;
+}
 rootWindowGrid::rootWindowGrid()
 {
 	singleT = this;
@@ -71,18 +75,19 @@ rootWindowGrid::rootWindowGrid()
 				Windows::UI::Core::CoreDispatcherPriority::Normal,
 				ref new Windows::UI::Core::DispatchedHandler([this]()
 			{
-				rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(new subredditNavstate(nullptr)));
+				rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(nullptr)));
 			})); 
 		});
 	}
 	globalvars::UpdateAccountsTask().then([this]() {
 		this->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this]() {
 			this->updateAccountsToComboBox();
+			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("Has_mail"));
 		}));
 	});
 	if (globalvars::currentacc != nullptr)
 	{
-		rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(new subredditNavstate(nullptr)));
+		rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(nullptr)));
 	}
 }
 rootWindowGrid^ Reddit::rootWindowGrid::singleT;
@@ -100,6 +105,16 @@ void Reddit::rootWindowGrid::updateAccountsToComboBox()
 	accounts->Append(lastItem);
 	accountBox->ItemsSource = accounts;
 	accountBox->SelectedItem = globalvars::currentacc->me;
+}
+
+void Reddit::rootWindowGrid::NavigateToNewPage(const Windows::UI::Xaml::Interop::TypeName&const type, Platform::Object ^ args)
+{
+	rootFrame->Navigate(type, args);
+	if (App::CurrentManualFrameContent != nullptr)
+	{
+		rootFrame->BackStack->Append(App::CurrentManualFrameContent);
+		App::CurrentManualFrameContent = nullptr;
+	}
 }
 
 bool Reddit::rootWindowGrid::wstrValidGo(const wchar_t * str, size_t size)
@@ -213,7 +228,7 @@ void Reddit::rootWindowGrid::AutoSuggestBox_QuerySubmitted(Windows::UI::Xaml::Co
 				{
 					if (wstrValidGo(wstr + 3, sender->Text->Length() - 3))
 					{
-						rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(new subredditNavstate{ ref new Platform::String(wstr + 3, sender->Text->Length() - 3) }));
+						rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate{ ref new Platform::String(wstr + 3, sender->Text->Length() - 3) }));
 					}
 				}
 			}
@@ -221,12 +236,12 @@ void Reddit::rootWindowGrid::AutoSuggestBox_QuerySubmitted(Windows::UI::Xaml::Co
 		}
 		else if (wstr[0] == L'r' && wstr[1] == L'/' && (wstrValidGo(wstr + 2, sender->Text->Length() - 2)))
 		{
-			rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(new subredditNavstate(ref new Platform::String(wstr + 2, sender->Text->Length() - 2) )));
+			rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(ref new Platform::String(wstr + 2, sender->Text->Length() - 2) )));
 		}
 	}
 	else
 	{
-		rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(new subredditNavstate{static_cast<account::subredditInfo>(args->ChosenSuggestion)}));
+		rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate{static_cast<account::subredditInfo>(args->ChosenSuggestion)}));
 	}
 }
 
@@ -333,3 +348,31 @@ void Reddit::rootWindowGrid::ComboBox_SelectionChanged(Platform::Object^ sender,
 	}
 }
 
+
+
+void Reddit::rootWindowGrid::Flyout_Opening(Platform::Object^ sender, Platform::Object^ e)
+{
+	/*const auto child = static_cast<Reddit::MixedRedditTypeControl^>(static_cast<Windows::UI::Xaml::Controls::Flyout^>(sender)->Content);
+	if (child->redditContents == nullptr)
+	{
+		globalvars::currentacc->getMessages().then([child](std::pair<Platform::Collections::Vector<account::IRedditTypeIdentifier^>^, const Platform::String^> r) {
+			child->redditContents = r.first;
+		});
+	}*/
+}
+
+
+void Reddit::rootWindowGrid::Flyout_Open(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	Windows::UI::Xaml::Controls::Primitives::FlyoutBase::ShowAttachedFlyout(static_cast<NoToggleBehaviorButton^>(sender));
+}
+
+void Reddit::rootWindowGrid::Hyperlink_Click(Windows::UI::Xaml::Documents::Hyperlink^ sender, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^ args)
+{
+	auto nav = new UserNavState();
+	nav->account = static_cast<account::AccountInfo>(static_cast<Windows::UI::Xaml::Controls::TextBlock^>(VisualTreeHelper::GetParent(sender))->DataContext);
+	if (!TryNavigateToCachedPage([&nav](const navVariant& x) {
+		return (x.first.Name == ((Windows::UI::Xaml::Interop::TypeName)(UserPage::typeid)).Name && nav->account.username == static_cast<UserNavState*>(x.second)->account.username);
+	}))
+		NavigateToNewPage(UserPage::typeid, globalvars::addNav(UserPage::typeid, std::move(nav)));
+}

@@ -42,7 +42,7 @@ bool account::CommentUWPitem::reply_is_only_more::get()
 	}
 	else return false;
 }
-account::CommentUWPitem::CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncomment, Platform::String^ pid, bool handleReplies) : helper(jsoncomment, pid)
+account::CommentUWPitem::CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncomment, Platform::String^ pid,const bool handleReplies, Platform::String^ subreddit) : helper(jsoncomment, pid, std::move(subreddit))
 {
 	try {
 		if (handleReplies)
@@ -71,20 +71,20 @@ account::CommentUWPitem::CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncom
 					this->replies->commentList = std::vector<CommentUWPitem^>(replies->Size);
 				if (replies->Size > 4)
 				{
-					concurrency::parallel_transform(Windows::Foundation::Collections::begin(replies), Windows::Foundation::Collections::end(replies), this->replies->commentList.begin(), [](Windows::Data::Json::IJsonValue^ child) {
-						return ref new CommentUWPitem(child->GetObject()->GetNamedObject("data"));
+					concurrency::parallel_transform(Windows::Foundation::Collections::begin(replies), Windows::Foundation::Collections::end(replies), this->replies->commentList.begin(), [&s = helper.parent_subreddit](Windows::Data::Json::IJsonValue^ child) {
+						return ref new CommentUWPitem(child->GetObject()->GetNamedObject("data"), nullptr, true, s);
 					});
 				}
 				else
 				{
-					std::transform(Windows::Foundation::Collections::begin(replies), Windows::Foundation::Collections::end(replies), this->replies->commentList.begin(), [](Windows::Data::Json::IJsonValue^ child) {
-						return ref new CommentUWPitem(child->GetObject()->GetNamedObject("data"));
+					std::transform(Windows::Foundation::Collections::begin(replies), Windows::Foundation::Collections::end(replies), this->replies->commentList.begin(), [&s = helper.parent_subreddit](Windows::Data::Json::IJsonValue^ child) {
+						return ref new CommentUWPitem(child->GetObject()->GetNamedObject("data"), nullptr, true, s);
 					});
 				}
 			}
 		}
-		changedownvote = ref new DelegateCommand(ref new ExecuteDelegate(this, &CommentUWPitem::_changedownvote), nullptr);
-		changeupvote = ref new DelegateCommand(ref new ExecuteDelegate(this, &CommentUWPitem::_changeupvote), nullptr);
+		_changedownvoteCommand = ref new DelegateCommand(ref new ExecuteDelegate(this, &CommentUWPitem::_changedownvote), nullptr);
+		_changeupvoteCommand = ref new DelegateCommand(ref new ExecuteDelegate(this, &CommentUWPitem::_changeupvote), nullptr);
 	}
 	catch (...)
 	{

@@ -7,9 +7,15 @@
 #include "subpost.h"
 #include "subpostUWP.h"
 #include <functional>
+#define JsonGetString(vname, jname, jobj) try{vname = jobj->GetNamedString(jname);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" String:" + jname);}
+#define JsonGetStringWithDefault(vname, jname, jobj,defaultvalue) try{vname = jobj->GetNamedString(jname, defaultvalue);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" String:" + jname);}
+#define JsonGetBool(vname, jname, jobj) try{vname = jobj->GetNamedBoolean(jname);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" Bool:" + jname);}
+#define JsonGetBooleanWithDefault(vname, jname, jobj,defaultvalue) try{vname = jobj->GetNamedBoolean(jname, defaultvalue);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" Bool" + jname);}
+#define JsonGetNumberWithDefault(vname, jname, jobj,defaultvalue) try{vname = jobj->GetNamedNumber(jname, defaultvalue);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" Number" + jname);}
+#define JsonGetNumber(vname, jname, jobj) try{vname = jobj->GetNamedNumber(jname);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" Number:" + jname);}
+
 namespace account
 {
-	
 	struct NewAccountLoginFailure : std::exception
 	{
 		enum class reason : char{
@@ -57,6 +63,11 @@ namespace account
 		static Platform::String^ baseURI;
 		concurrency::task<Windows::Data::Json::JsonObject^> getJsonAsync(Windows::Foundation::Uri^ requestUri);
 	public:
+		enum class Messages_Where : byte
+		{
+			inbox, unread, sent
+		};
+		concurrency::task<std::pair<Platform::Collections::Vector<IRedditTypeIdentifier^>^,const Platform::String^>> getMessages(Messages_Where m = Messages_Where::inbox);
 		concurrency::task<void> updateInfo();
 		Concurrency::task<void> changeSave(Platform::String^ fullname, bool dir);
 		concurrency::task<Windows::Data::Json::JsonObject^> getJsonFromBasePath(Platform::String^ path);
@@ -67,6 +78,7 @@ namespace account
 		AccountInterface(Platform::String^ refresh);
 		AccountInterface(Platform::String^ refresh, Platform::String^ currentauth);
 		Concurrency::task<void> vote(Platform::IBox<bool>^ dir, Platform::String^ id);
+		concurrency::task<void> giveGold(Platform::String^ fullname);
 		concurrency::task<Windows::Web::Http::HttpResponseMessage^> comment(Platform::String^ ID, Platform::String^ md);
 		static Concurrency::task<AccountInterface*> LoginNewAcc();
 		concurrency::task<Windows::Data::Json::JsonObject^> getObjectInfo(Platform::String^ fullname);
@@ -78,7 +90,9 @@ namespace account
 		std::unique_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit);
 		std::unique_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit, postSort sort, timerange range); //returns an empty vector that async populates
 		Windows::Web::Http::HttpClient^ httpClient;
-	
+		concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> getDomain(Platform::String^ domain);
+		concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> getMixedCollection(Platform::String^ endpoint);
+		static IRedditTypeIdentifier^ ambiguousJsonResolver(Windows::Data::Json::JsonObject^ j);
 	};
 
 }

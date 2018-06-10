@@ -8,6 +8,7 @@
 #include "rootWindowGrid.g.h"
 #include "NoToggleBehaviorButton.h"
 #include "linkHandler.h"
+
 namespace Reddit
 {
 	/// <summary>
@@ -35,12 +36,16 @@ namespace Reddit
 		Windows::UI::Xaml::DataTemplate^  SelectTemplateCore(Platform::Object^ item, Windows::UI::Xaml::DependencyObject^ container) override;
 	};
 	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class rootWindowGrid sealed
+	public ref class rootWindowGrid sealed : Windows::UI::Xaml::Data::INotifyPropertyChanged
 	{
 	public:
+		property bool Has_mail {bool get(); }
 		rootWindowGrid();
 		static rootWindowGrid^ getCurrent();
 		void updateAccountsToComboBox();
+		// Inherited via INotifyPropertyChanged
+		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler ^ PropertyChanged;
+		void NavigateToNewPage(const Windows::UI::Xaml::Interop::TypeName&const type, Platform::Object ^args);
 	private:
 
 		linkHandler ^ _linkHandler = linkHandler::getInstance();
@@ -56,5 +61,55 @@ namespace Reddit
 		void rootFrame_Navigated(Platform::Object^ sender, Windows::UI::Xaml::Navigation::NavigationEventArgs^ e);
 		void Grid_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void ComboBox_SelectionChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e);
+		
+		void Flyout_Opening(Platform::Object^ sender, Platform::Object^ e);
+		void Flyout_Open(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void Hyperlink_Click(Windows::UI::Xaml::Documents::Hyperlink^ sender, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^ args);
+	internal:
+		template <typename func> bool TryNavigateToCachedPage(func&& CompareFunc);
+		
+		
 	};
+
+		
+	template<typename func>
+	inline bool rootWindowGrid::TryNavigateToCachedPage(func && CompareFunc)
+	{
+		{
+			if (globalvars::NavState.size() > 1)
+			{
+				std::vector<navVariant>::const_reverse_iterator rend;
+				if (globalvars::NavState.size() > 3)
+				{
+					rend = globalvars::NavState.crbegin() + 3;
+				}
+				else
+				{
+					rend = globalvars::NavState.crend();
+				}
+				auto res = std::find_if(globalvars::NavState.crbegin(), rend, CompareFunc);
+				if (res != rend)
+				{
+					if (App::CurrentManualFrameContent != nullptr)
+					{
+						rootWindowGrid::getCurrent()->rootFrame->BackStack->Append(App::CurrentManualFrameContent);
+					}
+					else
+					{
+						rootWindowGrid::getCurrent()->rootFrame->BackStack->Append(ref new Windows::UI::Xaml::Navigation::PageStackEntry(rootWindowGrid::getCurrent()->rootFrame->CurrentSourcePageType, static_cast<unsigned char>(static_cast<NavIndexed^>(rootWindowGrid::getCurrent()->rootFrame->Content)->NavigationIndex), nullptr));
+					}
+					rootWindowGrid::getCurrent()->rootFrame->Content = res->second->pageState;
+					App::CurrentManualFrameContent = ref new Windows::UI::Xaml::Navigation::PageStackEntry(res->first, static_cast<unsigned char>(std::distance(globalvars::NavState.cbegin(), res.base())), nullptr);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+				return false;
+		}
+	}
+
 }

@@ -13,6 +13,8 @@ namespace Reddit
 		NoToggleBehaviorButton();
 	protected:
 		void OnToggle() override;
+
+		
 	};
 
 }

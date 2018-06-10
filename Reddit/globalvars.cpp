@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "globalvars.h"
+
 namespace globalvars
 {
 	settings appSettingCache;
-	
+	Windows::Foundation::Diagnostics::LoggingChannel^ LogChannel;
 	Windows::Web::Http::HttpClient^ generalHttp;
 	std::map<std::wstring, account::AccountInterface*, ci_less> accounts;
     account::AccountInterface* currentacc;
@@ -17,23 +17,17 @@ namespace globalvars
 	{
 		if (NavState.size() > 3)
 		{
-			static_cast<baseNavState*>((NavState.end() - 3)->second.s)->pageState = nullptr;
+			(NavState.end() - 3)->second->pageState = nullptr;
 		}
 	}
-	unsigned char addNav(commentNavstate * c)
+	unsigned char addNav(Windows::UI::Xaml::Interop::TypeName pageType, baseNavState * c)
 	{
 		navChar++;
-		NavState.emplace_back(NavTypes::comment,c);
+		NavState.emplace_back(pageType,c);
 		clearOldPageCaches();
 		return navChar;
 	}
-	unsigned char addNav(subredditNavstate * c)
-	{
-		navChar++;
-		NavState.emplace_back( NavTypes::subreddit,c);
-		clearOldPageCaches();
-		return navChar;
-	}
+	
 	concurrency::task<void> UpdateAccountsTask()
 	{
 		std::vector<concurrency::task<void>> updateTasks = std::vector<concurrency::task<void>>(globalvars::accounts.size());

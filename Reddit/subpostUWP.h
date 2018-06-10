@@ -61,8 +61,7 @@ namespace account
 		void previewDialog(Platform::Object^);
 	internal:
 		subpost helper;
-		serviceHelpers::previewHelperbase* contentHelper = nullptr;
-		concurrency::task<serviceHelpers::previewHelperbase*> contentTask;
+		std::variant<std::unique_ptr<serviceHelpers::previewHelperbase>, concurrency::task<serviceHelpers::previewHelperbase*>> contentHelper = nullptr;
 	public:
 		// Inherited via IRedditTypeIdentifier
 		virtual property RedditType rType
@@ -72,7 +71,6 @@ namespace account
 				return RedditType::subpost;
 			}
 		}
-		virtual ~subpostUWP();
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ PropertyChanged;
 		virtual property unsigned int Golds
 		{

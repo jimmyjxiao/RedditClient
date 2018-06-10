@@ -16,17 +16,7 @@ namespace Reddit
 	/// <summary>
 	/// Provides application-specific behavior to supplement the default Application class.
 	/// </summary>
-	public interface struct NavIndexed
-	{
-		property int NavigationIndex
-		{
-			int get();
-		}
-		property Windows::UI::Xaml::Interop::TypeName PageType
-		{
-			Windows::UI::Xaml::Interop::TypeName get();
-		}
-	};
+	
 	ref class App sealed
 	{
 	public:

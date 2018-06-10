@@ -1,0 +1,2 @@
+* Error handling. Everywhere
+* Link previews and handling in comments

@@ -8,7 +8,6 @@
     xmlns:converters="using:converters"
     xmlns:ac="using:account"
     NavigationCacheMode="Disabled"
-    xmlns:html="using:markdownEditor"
     mc:Ignorable="d">
     <Page.Resources>
         
@@ -79,7 +78,7 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
-            <AppBarButton Icon="Add" Label="Post">
+            <AppBarButton Icon="Add" Label="Post" Click="postButton_click">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Link" Icon="Link"/>
@@ -157,7 +156,7 @@
             </SplitView.Pane>
             <Grid>
                 <GridView x:Name="listGrid" ItemsSource="{x:Bind posts, Mode=OneWay}" IsItemClickEnabled="True" ItemClick="listGrid_ItemClick" ChoosingItemContainer="listGrid_ChoosingItemContainer" x:Load="{x:Bind viewMode, Converter={StaticResource boolFlipper}, Mode=OneWay}"/>
-                <ListView x:Name="listView" ItemsSource="{x:Bind posts, Mode=OneWay}" SelectionMode="None"  x:Load="{x:Bind viewMode, Mode=OneWay}" IsItemClickEnabled="True" ItemClick="listGrid_ItemClick" ItemTemplate="{StaticResource listSelfPost}">
+                <ListView x:Name="listView" ItemsSource="{x:Bind posts, Mode=OneWay}" SelectionMode="None"  x:Load="{x:Bind viewMode, Mode=OneWay}" IsItemClickEnabled="True" ItemClick="listGrid_ItemClick" ChoosingItemContainer="listView_ChoosingItemContainer" >
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />

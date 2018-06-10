@@ -30,31 +30,31 @@ void ::Reddit::ReplyBox::Connect(int __connectionId, ::Platform::Object^ __targe
 {
     switch (__connectionId)
     {
-    case 1:
+    case 2:
         {
             this->piv = safe_cast<::Windows::UI::Xaml::Controls::Pivot^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::Pivot^>(this->piv))->SelectionChanged += ref new ::Windows::UI::Xaml::Controls::SelectionChangedEventHandler(this, (void (::Reddit::ReplyBox::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::Controls::SelectionChangedEventArgs^))&ReplyBox::Pivot_SelectionChanged);
         }
         break;
-    case 2:
-        {
-            ::Windows::UI::Xaml::Controls::Button^ element2 = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::Button^>(element2))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::ReplyBox::*)
-                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&ReplyBox::submitButton_click);
-        }
-        break;
     case 3:
         {
-            this->busy = safe_cast<::Windows::UI::Xaml::Controls::ProgressRing^>(__target);
+            ::Windows::UI::Xaml::Controls::Button^ element3 = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::Button^>(element3))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::ReplyBox::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&ReplyBox::submitButton_click);
         }
         break;
     case 4:
         {
-            this->textBox = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+            this->busy = safe_cast<::Windows::UI::Xaml::Controls::ProgressRing^>(__target);
         }
         break;
     case 5:
+        {
+            this->textBox = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+        }
+        break;
+    case 6:
         {
             this->fancyBox = safe_cast<::mdblock::MDFullEnhancedEditor^>(__target);
         }

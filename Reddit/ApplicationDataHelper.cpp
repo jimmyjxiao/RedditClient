@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "ApplicationDataHelper.h"
 #include "sqlite_modern_cpp\hdr\sqlite_modern_cpp.h"
-#include "globalvars.h"
 #include <optional>
 namespace ApplicationDataHelper
 {
@@ -162,9 +161,9 @@ namespace ApplicationDataHelper
 			}
 			account::subredditInfo z =
 			{
-				Platform::StringReference((const wchar_t*)name.data()),
-				Platform::StringReference((const wchar_t*)(u"/r/" + name).data()),
-				Platform::StringReference((const wchar_t*)sidebar_html.data()),
+				ref new Platform::String((const wchar_t*)name.data()),
+				ref new Platform::String((const wchar_t*)(u"/r/" + name).data()),
+				ref new Platform::String((const wchar_t*)sidebar_html.data()),
 				nullptr,
 				inttocolor(intcolor),
 				(bool)NSFW,

@@ -1,0 +1,113 @@
+﻿<Grid x:ConnectionId='1'
+    x:Class="Reddit.rootWindowGrid"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ac="using:account"
+    Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Grid.RowDefinitions>
+        <RowDefinition x:ConnectionId='2' x:Name="titleRowDef"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid x:ConnectionId='3' Grid.Row="0" Margin="0" Padding="0" x:Name="titleGrid" Background="Transparent" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Rectangle x:ConnectionId='5' Fill="{ThemeResource SystemControlChromeHighAcrylicWindowMediumBrush}" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" x:Name="titleRec"/>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center"  Orientation="Horizontal">
+            <ComboBox x:ConnectionId='10'   PlaceholderText="Not Logged In!"                       HorizontalContentAlignment="Center"                                               x:Name="accountBox">
+                <ComboBox.ItemTemplateSelector>
+                    <local:comboboxTemplateSelector>
+                        <local:comboboxTemplateSelector.listTemplate>
+                            <DataTemplate                            >
+                                <Grid x:ConnectionId='13'>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <SymbolIcon Symbol="Contact2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
+                                    <TextBlock x:ConnectionId='14' Grid.Column="1"                          FontWeight="Bold"/>
+                                    <Border BorderBrush="{ThemeResource AppBarSeparatorForegroundThemeBrush}" BorderThickness="0,2,0,0" Grid.Column="1" Grid.Row="1" >
+                                        <TextBlock>
+                                Comment Karma: <Run x:ConnectionId='15'                              /> | Post Karma <Run x:ConnectionId='16'                           />
+                                        </TextBlock>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </local:comboboxTemplateSelector.listTemplate>
+                        <local:comboboxTemplateSelector.closedTemplate>
+                            <DataTemplate                            >
+                                <TextBlock x:ConnectionId='17' FontWeight="Bold">
+                                /u/<Run x:ConnectionId='18'                         /> <Hyperlink x:ConnectionId='19' FontWeight="Normal"                        >(<Run x:ConnectionId='20'                           /> | <Run x:ConnectionId='21'                              />)</Hyperlink>
+                                </TextBlock>
+                            </DataTemplate>
+                        </local:comboboxTemplateSelector.closedTemplate>
+                        <local:comboboxTemplateSelector.nullTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                                    <TextBlock Text="Login New Account"/>
+                                    <SymbolIcon Symbol="AddFriend"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </local:comboboxTemplateSelector.nullTemplate>
+                    </local:comboboxTemplateSelector>
+                </ComboBox.ItemTemplateSelector>
+            </ComboBox>
+            <local:NoToggleBehaviorButton x:ConnectionId='11'                                                               >
+                <local:NoToggleBehaviorButton.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.ThemeDictionaries>
+                            <ResourceDictionary x:Key="Light">
+                                <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Green"/>
+                            </ResourceDictionary>
+                        </ResourceDictionary.ThemeDictionaries>
+                    </ResourceDictionary>
+                </local:NoToggleBehaviorButton.Resources>
+                <FlyoutBase.AttachedFlyout>
+                    <Flyout x:ConnectionId='12'                          >
+
+                    </Flyout>
+                </FlyoutBase.AttachedFlyout>
+                <SymbolIcon Symbol="Mail"/>
+            </local:NoToggleBehaviorButton>
+        </StackPanel>
+        <AutoSuggestBox x:ConnectionId='6' PlaceholderText="Go To/Search" Padding="0" Margin="0"                                          Grid.Column="2" TextMemberPath="pname" x:Name="searchBox"                                               >
+            <AutoSuggestBox.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </AutoSuggestBox.ItemContainerStyle>
+            <AutoSuggestBox.ItemTemplate>
+                <DataTemplate                              >
+                    <Grid x:ConnectionId='7' HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:ConnectionId='8'                       FontWeight="Bold" FontSize="24" />
+                        <TextBlock Grid.Row="1">
+                            <Run x:ConnectionId='9'                            /> Subscribers
+                        </TextBlock>
+                        <SymbolIcon Symbol="Accept" Grid.Column="1" Grid.RowSpan="2"/>
+                    </Grid>
+                </DataTemplate>
+            </AutoSuggestBox.ItemTemplate>
+        </AutoSuggestBox>
+    </Grid>
+    <Frame x:ConnectionId='4' Grid.Row="1" x:Name="rootFrame" x:FieldModifier="internal"                                />
+</Grid>
+

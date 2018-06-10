@@ -5,7 +5,6 @@
 
 #include "pch.h"
 #include "SubRedditViewPage.xaml.h"
-#include "globalvars.h"
 #include "CommentViewPage.xaml.h"
 #include "ApplicationDataHelper.h"
 #include "MyResources.xaml.h"
@@ -24,7 +23,11 @@ using namespace Windows::UI::Xaml::Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-
+std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> Reddit::SubRedditViewPage::ContentGridItemRecycle;
+std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> Reddit::SubRedditViewPage::SelfGridItemRecycle;
+std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> Reddit::SubRedditViewPage::AdGridItemRecycle;
+std::vector<Windows::UI::Xaml::Controls::ListViewItem^> Reddit::SubRedditViewPage::ListPostItemRecycle;
+std::vector<Windows::UI::Xaml::Controls::ListViewItem^> Reddit::SubRedditViewPage::ListAdItemRecycle;
 Reddit::SubRedditViewPage::~SubRedditViewPage()
 {
 	//__debugbreak();
@@ -87,7 +90,7 @@ void Reddit::SubRedditViewPage::Sort::set(account::postSort newsort)
 void Reddit::SubRedditViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs ^ e)
 {
 	navIndex = static_cast<unsigned char>(e->Parameter);
-	auto _nav = globalvars::NavState.at(navIndex).second.s;
+	auto _nav = static_cast<subredditNavstate*>(globalvars::NavState.at(navIndex).second);
 	_nav->pageState = this;
 	_subreddit = _nav->info.name;
 	_sort = _nav->sort;
@@ -232,62 +235,45 @@ void Reddit::SubRedditViewPage::rangeSelector_SelectionChanged(Platform::Object^
 void Reddit::SubRedditViewPage::listGrid_ItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e)
 {
 	auto clickedPost = static_cast<account::subpostUWP^>(e->ClickedItem);
-	if (globalvars::NavState.size() > 1)
-	{
-		std::vector<navVariant>::const_reverse_iterator rend;
-		if (globalvars::NavState.size() > 3)
+	if (!rootWindowGrid::getCurrent()->TryNavigateToCachedPage([&clickedPost](const navVariant& x) {
+		try
 		{
-			rend = globalvars::NavState.crbegin() + 3;
-		}
-		else
-		{
-			rend = globalvars::NavState.crend();
-		}
-		auto res= std::find_if(globalvars::NavState.crbegin(), rend, [&clickedPost](const navVariant& x) {
-			try
+			if ((x.first.Name == ((Windows::UI::Xaml::Interop::TypeName)(SubRedditViewPage::typeid)).Name) && (x.second->pageState != nullptr))
 			{
-				if ((x.first == NavTypes::comment) && (x.second.c->pageState != nullptr))
-				{
-					return x.second.c->postID == clickedPost->helper.id;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch (Platform::NullReferenceException^)
-			{
-				__debugbreak();
-				return false;
-			}
-		});
-		if (res != rend)
-		{
-			if (App::CurrentManualFrameContent != nullptr)
-			{
-				rootWindowGrid::getCurrent()->rootFrame->BackStack->Append(App::CurrentManualFrameContent);
+				return static_cast<commentNavstate*>(x.second)->postID == clickedPost->helper.id;
 			}
 			else
 			{
-				rootWindowGrid::getCurrent()->rootFrame->BackStack->Append(ref new Windows::UI::Xaml::Navigation::PageStackEntry(rootWindowGrid::getCurrent()->rootFrame->CurrentSourcePageType, static_cast<unsigned char>(static_cast<NavIndexed^>(rootWindowGrid::getCurrent()->rootFrame->Content)->NavigationIndex), nullptr));
+				return false;
 			}
-			rootWindowGrid::getCurrent()->rootFrame->Content = res->second.c->pageState;
-			App::CurrentManualFrameContent = ref new Windows::UI::Xaml::Navigation::PageStackEntry(CommentViewPage::typeid, static_cast<unsigned char>(std::distance(globalvars::NavState.cbegin(), res.base())), nullptr);
-			return;
 		}
+		catch (Platform::NullReferenceException^)
+		{
+			__debugbreak();
+			return false;
+		}
+	}))
+	{
+		auto navstuff = new commentNavstate();
+		navstuff->postID = clickedPost->helper.id;
+		navstuff->post = clickedPost;
+		rootWindowGrid::getCurrent()->NavigateToNewPage(CommentViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, navstuff));
 	}
-	auto navstuff = new commentNavstate();
 	
-	navstuff->postID = clickedPost->helper.id;
-	navstuff->post = clickedPost;
-	((Windows::UI::Xaml::Controls::Frame^)Parent)->Navigate(CommentViewPage::typeid, globalvars::addNav(navstuff));
 }
 
 
 void Reddit::SubRedditViewPage::listGrid_ChoosingItemContainer(Windows::UI::Xaml::Controls::ListViewBase^ sender, Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^ args)
 {
-	auto item = static_cast<account::subpostUWP^>(args->Item);
-	if(!item->self)
+	const auto &item = static_cast<account::subpostUWP^>(args->Item);
+	static Windows::UI::Xaml::DataTemplate^ adTemplate = static_cast<Windows::UI::Xaml::DataTemplate^>(static_cast<App^>(App::Current)->listTemplateRes->Lookup("GridBannerAd"));
+	if (item == nullptr)
+	{
+		args->ItemContainer = ref new Windows::UI::Xaml::Controls::GridViewItem();
+		args->ItemContainer->Tag = (unsigned char)displayType::ad;
+		args->ItemContainer->ContentTemplate = adTemplate;
+	}
+	else if(!item->self)
 	{
 		if (args->ItemContainer != nullptr)
 		{
@@ -295,28 +281,28 @@ void Reddit::SubRedditViewPage::listGrid_ChoosingItemContainer(Windows::UI::Xaml
 			if (displaytype != displayType::content)
 			{
 				if (displaytype == displayType::self)
-					SelfItemRecycle.push_back(args->ItemContainer);
+					SelfGridItemRecycle.push_back(args->ItemContainer);
 				else if (displaytype == displayType::ad)
-					AdItemRecycle.push_back(args->ItemContainer);
+					AdGridItemRecycle.push_back(args->ItemContainer);
 				goto retrievecontentTem;
 			}
 			else
 			{
-				auto it = std::find(ContentItemRecycle.begin(), ContentItemRecycle.end(), args->ItemContainer);
-				if (it != ContentItemRecycle.end())
+				auto it = std::find(ContentGridItemRecycle.begin(), ContentGridItemRecycle.end(), args->ItemContainer);
+				if (it != ContentGridItemRecycle.end())
 				{
-					std::swap(*it, ContentItemRecycle.back());
-					ContentItemRecycle.pop_back();
+					std::swap(*it, ContentGridItemRecycle.back());
+					ContentGridItemRecycle.pop_back();
 				}
 			}
 		}
 		else
 		{
 		retrievecontentTem:
-			if (ContentItemRecycle.size() > 0)
+			if (ContentGridItemRecycle.size() > 0)
 			{
-				args->ItemContainer = ContentItemRecycle.back();
-				ContentItemRecycle.pop_back();
+				args->ItemContainer = ContentGridItemRecycle.back();
+				ContentGridItemRecycle.pop_back();
 			}
 			else
 			{
@@ -337,28 +323,28 @@ void Reddit::SubRedditViewPage::listGrid_ChoosingItemContainer(Windows::UI::Xaml
 			if (displaytype != displayType::self)
 			{
 				if (displaytype == displayType::content)
-					ContentItemRecycle.push_back(args->ItemContainer);
+					ContentGridItemRecycle.push_back(args->ItemContainer);
 				else if (displaytype == displayType::ad)
-					AdItemRecycle.push_back(args->ItemContainer);
+					AdGridItemRecycle.push_back(args->ItemContainer);
 				goto retrieveselfTem;
 			}
 			else
 			{
-				auto it = std::find(SelfItemRecycle.begin(), SelfItemRecycle.end(), args->ItemContainer);
-				if (it != SelfItemRecycle.end())
+				auto it = std::find(SelfGridItemRecycle.begin(), SelfGridItemRecycle.end(), args->ItemContainer);
+				if (it != SelfGridItemRecycle.end())
 				{
-					std::swap(*it, SelfItemRecycle.back());
-					SelfItemRecycle.pop_back();
+					std::swap(*it, SelfGridItemRecycle.back());
+					SelfGridItemRecycle.pop_back();
 				}
 			}
 		}
 		else
 		{
 		retrieveselfTem:
-			if (SelfItemRecycle.size() > 0)
+			if (SelfGridItemRecycle.size() > 0)
 			{
-				args->ItemContainer = SelfItemRecycle.back();
-				SelfItemRecycle.pop_back();
+				args->ItemContainer = SelfGridItemRecycle.back();
+				SelfGridItemRecycle.pop_back();
 			}
 			else
 			{
@@ -380,4 +366,82 @@ void Reddit::SubRedditViewPage::AppBarButton_Click(Platform::Object^ sender, Win
 {
 	_subInfo.key_color = Windows::UI::Colors::Red;
 	Bindings->Update();
+}
+
+
+void Reddit::SubRedditViewPage::listView_ChoosingItemContainer(Windows::UI::Xaml::Controls::ListViewBase^ sender, Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^ args)
+{
+	static Windows::UI::Xaml::DataTemplate^ postTemplate = static_cast<Windows::UI::Xaml::DataTemplate^>(static_cast<App^>(App::Current)->listTemplateRes->Lookup("listSelfPost"));
+	static Windows::UI::Xaml::DataTemplate^ adTemplate = static_cast<Windows::UI::Xaml::DataTemplate^>(static_cast<App^>(App::Current)->listTemplateRes->Lookup("inlineNativeAd"));
+	if (args->Item != nullptr)
+	{
+		if (args->ItemContainer == nullptr)
+		{
+			goto newpostContainer;
+		}
+		if (static_cast<bool>(args->ItemContainer->Tag) == true)
+		{
+			auto it = std::find(ListPostItemRecycle.begin(), ListPostItemRecycle.end(), args->ItemContainer);
+			if (it != ListPostItemRecycle.end())
+			{
+				std::iter_swap(it, ListPostItemRecycle.end() - 1);
+				ListPostItemRecycle.pop_back();
+			}
+		}
+		else
+		{
+			if (ListPostItemRecycle.size() > 0)
+			{
+				args->ItemContainer = ListPostItemRecycle.back();
+				ListPostItemRecycle.pop_back();
+			}
+			else
+			{
+				newpostContainer:
+				args->ItemContainer = ref new Windows::UI::Xaml::Controls::ListViewItem();
+				args->ItemContainer->Tag = true;
+				args->ItemContainer->HorizontalAlignment = Windows::UI::Xaml::HorizontalAlignment::Stretch;
+				args->ItemContainer->HorizontalContentAlignment = Windows::UI::Xaml::HorizontalAlignment::Stretch;
+				args->ItemContainer->ContentTemplate = postTemplate;
+			}
+		}
+	}
+	else
+	{
+		if (args->ItemContainer == nullptr)
+		{
+			goto newadcontainer;
+		}
+		if (static_cast<bool>(args->ItemContainer->Tag) == false)
+		{
+			auto it = std::find(ListAdItemRecycle.begin(), ListAdItemRecycle.end(), args->ItemContainer);
+			if (it != ListAdItemRecycle.end())
+			{
+				std::iter_swap(it, ListAdItemRecycle.end() - 1);
+				ListAdItemRecycle.pop_back();
+			}
+		}
+		else
+		{
+			if (ListAdItemRecycle.size() > 0)
+			{
+				args->ItemContainer = ListAdItemRecycle.back();
+				ListAdItemRecycle.pop_back();
+			}
+			else
+			{
+				newadcontainer:
+				args->ItemContainer = ref new Windows::UI::Xaml::Controls::ListViewItem();
+				args->ItemContainer->Tag = false;
+				args->ItemContainer->ContentTemplate = adTemplate;
+			}
+		}
+	}
+	args->IsContainerPrepared = true;
+}
+
+
+void Reddit::SubRedditViewPage::postButton_click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	_posts->Append(nullptr);
 }

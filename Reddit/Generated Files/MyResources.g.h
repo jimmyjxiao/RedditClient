@@ -11,6 +11,15 @@
 namespace Windows {
     namespace UI {
         namespace Xaml {
+            namespace Controls {
+                ref class ControlTemplate;
+            }
+        }
+    }
+}
+namespace Windows {
+    namespace UI {
+        namespace Xaml {
             ref class DataTemplate;
         }
     }
@@ -35,11 +44,13 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
-        class MyResources_obj2_Bindings;
-        class MyResources_obj19_Bindings;
-        class MyResources_obj28_Bindings;
+        class MyResources_obj7_Bindings;
+        class MyResources_obj24_Bindings;
+        class MyResources_obj33_Bindings;
+        class MyResources_obj44_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
+        private: ::Windows::UI::Xaml::Controls::ControlTemplate^ inlineExpanderButtoning;
         internal: ::Windows::UI::Xaml::DataTemplate^ listSelfPost;
     };
 }

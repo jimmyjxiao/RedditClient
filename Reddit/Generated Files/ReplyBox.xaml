@@ -1,0 +1,26 @@
+﻿<UserControl
+    x:Class="Reddit.ReplyBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:b="using:mdblock"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <RelativePanel>
+        <Pivot x:ConnectionId='2'                                           x:Name="piv">
+            <PivotItem Header="Enhanced Editor">
+                <b:MDFullEnhancedEditor x:ConnectionId='6' x:Name="fancyBox"/>
+            </PivotItem>
+            <PivotItem Header="Edit raw markdown">
+                <TextBox x:ConnectionId='5' AcceptsReturn="True" x:Name="textBox"/>
+            </PivotItem>
+        </Pivot>
+        <Button x:ConnectionId='3' Content="Submit"                            RelativePanel.Below="piv"/>
+        <ProgressRing x:ConnectionId='4' RelativePanel.AlignHorizontalCenterWith="piv" RelativePanel.AlignVerticalCenterWith="piv" IsActive="False" x:Name="busy"/>
+    </RelativePanel>
+    
+</UserControl>
+

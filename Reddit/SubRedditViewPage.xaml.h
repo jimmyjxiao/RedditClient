@@ -4,7 +4,6 @@
 //
 
 #pragma once
-#include "NavStates.h"
 #include "SubRedditViewPage.g.h"
 #include "converters.h"
 #include "AccountInterface.h"
@@ -23,6 +22,12 @@ namespace Reddit
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class SubRedditViewPage sealed : Windows::UI::Xaml::Data::INotifyPropertyChanged,  NavIndexed
 	{
+	internal:
+		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> ContentGridItemRecycle;
+		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> SelfGridItemRecycle;
+		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> AdGridItemRecycle;
+		static std::vector<Windows::UI::Xaml::Controls::ListViewItem^> ListPostItemRecycle;
+		static std::vector<Windows::UI::Xaml::Controls::ListViewItem^> ListAdItemRecycle;
 	public:
 		property bool SidebarUseCSS
 		{
@@ -50,9 +55,9 @@ namespace Reddit
 				//if (pageLoaded && (newa != ((bool)listingType)))
 				//{
 					listingType = (ViewMode)newa;
-					ContentItemRecycle.clear();
-					SelfItemRecycle.clear();
-					AdItemRecycle.clear();
+					ContentGridItemRecycle.clear();
+					SelfGridItemRecycle.clear();
+					AdGridItemRecycle.clear();
 					PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("viewMode"));
 				//}
 			}
@@ -102,9 +107,7 @@ namespace Reddit
 			grid = false, list = true
 		};
 		ViewMode listingType = ViewMode::list;
-		std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> ContentItemRecycle;
-		std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> SelfItemRecycle;
-		std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> AdItemRecycle;
+		
 		account::subredditInfo _subInfo = account::subredditInfo();
 		Platform::String^ _subreddit;
 		account::timerange _rng = account::timerange::Default;
@@ -120,7 +123,9 @@ namespace Reddit
 
 		
 
-	};
+		void listView_ChoosingItemContainer(Windows::UI::Xaml::Controls::ListViewBase^ sender, Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^ args);
+		void postButton_click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+};
 	public ref class sortToTimeRangeVis sealed : Windows::UI::Xaml::Data::IValueConverter
 	{
 	public:

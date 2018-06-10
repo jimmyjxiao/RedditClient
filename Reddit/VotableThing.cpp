@@ -4,6 +4,11 @@
 #include "commentUWPitem.h"
 namespace account
 {
+	concurrency::task<void> VotableThing::giveGold()
+	{
+		throw ref new Platform::NotImplementedException();
+		//return globalvars::currentacc->giveGold()
+	}
 	concurrency::task<CommentUWPitem^> VotableThing::reply(Platform::String ^ markdown)
 	{
 		return globalvars::currentacc->comment(fullname, markdown).then([](Windows::Web::Http::HttpResponseMessage^ m) {
@@ -76,9 +81,8 @@ namespace account
 	{
 		try
 		{
-			fullname = json->GetNamedString("name");
-			id = json->GetNamedString("id");
-			
+			JsonGetString(fullname, "name", json);
+			JsonGetString(id, "id", json);
 			if (json->HasKey("score_hidden"))
 			{
 				if (json->GetNamedBoolean("score_hidden"))
@@ -86,36 +90,42 @@ namespace account
 				else
 					goto nullscore;
 			}
-			else if (json->GetNamedBoolean("hide_score"))
-			{
-				score = globalvars::hiddenScore;
-			}
 			else
 			{
+				if (json->GetNamedBoolean("hide_score", false))
+					score = globalvars::hiddenScore;
+				else
+				{
 				nullscore:
-				score = json->GetNamedNumber("score");
+					score = json->GetNamedNumber("score");
+				}
 			}
 			Windows::Data::Json::IJsonValue^ nullwrapper = json->GetNamedValue("likes");
 			if (nullwrapper->ValueType != Windows::Data::Json::JsonValueType::Null)
 			{
-
 				myvote = nullwrapper->GetBoolean();
 			}
 			else if (nullwrapper->ValueType == Windows::Data::Json::JsonValueType::Null)
 			{
-
 				myvote = nullptr;
 			}
-			author = json->GetNamedString("author");
-			gilded = json->GetNamedNumber("gilded");
+			JsonGetString(author, "author", json);
+			JsonGetNumberWithDefault(gilded, "gilded", json, 0);
 			auto authorData = author->Data();
 			for (auto &a : globalvars::accounts)
 			{
 				if (a.first == authorData)
 					isMine = true;
 			}
-			saved = json->GetNamedBoolean("saved");
-			permalink = json->GetNamedString("permalink");
+			JsonGetBooleanWithDefault(saved, "saved", json, false);
+			//JsonGetString(permalink, "permalink", json);
+			try {
+				permalink = json->GetNamedString("permalink");
+			}
+			catch (Platform::Exception^ e)
+			{
+				__debugbreak();
+			}
 		}
 		catch (...)
 		{

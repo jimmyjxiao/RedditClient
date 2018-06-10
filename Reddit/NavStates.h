@@ -2,10 +2,20 @@
 #include "AccountInterface.h"
 #include "subpostUWP.h"
 #include "App.xaml.h"
-enum class NavTypes : unsigned char
+namespace Reddit
 {
-	subreddit, comment
-};
+	public interface struct NavIndexed
+	{
+		property int NavigationIndex
+		{
+			int get();
+		}
+		property Windows::UI::Xaml::Interop::TypeName PageType
+		{
+			Windows::UI::Xaml::Interop::TypeName get();
+		}
+	};
+}
 struct baseNavState
 {
 	Reddit::NavIndexed^ pageState = nullptr;
@@ -25,6 +35,12 @@ struct subredditNavstate : baseNavState
 	}
 	subredditNavstate(account::subredditInfo i) : info(std::move(i)){}
 };
+struct UserNavState : baseNavState
+{
+	account::postSort sort = account::postSort::Defaultsort;
+	account::timerange rng = account::timerange::Default;
+	account::AccountInfo account;
+};
 struct commentNavstate : baseNavState
 {
 	account::subpostUWP^ post;
@@ -33,11 +49,4 @@ struct commentNavstate : baseNavState
 	Platform::String^ after;
 	account::commentSort sort;
 };
-union Navptrs
-{
-	subredditNavstate* s;
-	commentNavstate* c;
-	Navptrs(subredditNavstate* x) :s(x) {}
-	Navptrs(commentNavstate* x) :c(x) {}
-};
-typedef std::pair<NavTypes,Navptrs> navVariant;
+typedef std::pair<Windows::UI::Xaml::Interop::TypeName,baseNavState*> navVariant;

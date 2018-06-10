@@ -11,6 +11,8 @@
 #include "converters.h"
 #include "contentResizer.h"
 #include "reportFlyout.h"
+#include "commentUWPitem.h"
+#include "serviceHelpers.h"
 namespace Reddit
 {
 	public ref class subPostControlIconTemplateSelector sealed : Windows::UI::Xaml::Data::IValueConverter
@@ -57,20 +59,23 @@ namespace Reddit
 			}
 		}
 	};
+
+	public ref class MixedContentSelector sealed : Windows::UI::Xaml::Controls::DataTemplateSelector
+	{
+	public:
+		property Windows::UI::Xaml::DataTemplate^ SubPostDataTemplate;
+		property Windows::UI::Xaml::DataTemplate^ CommentDataTemplate;
+	protected: virtual Windows::UI::Xaml::DataTemplate^ SelectTemplateCore(Platform::Object^ item) override;
+	};
 	public ref class EXplaceHolder sealed : Windows::UI::Xaml::Controls::ContentControl
 	{
 	private:
-		bool _load = false;
-		Platform::WeakReference s;
+		std::variant<std::unique_ptr<account::serviceHelpers::previewHelperbase>, concurrency::task<account::serviceHelpers::previewHelperbase*>> * contentH;
 	public:
 		property bool contentLoaded {
 			bool get()
 			{
-				return _load;
-			}
-			void set(bool a)
-			{
-				_load = a;
+				return Content != nullptr;
 			}
 		}
 		EXplaceHolder();
@@ -78,11 +83,10 @@ namespace Reddit
 		{
 			void set(account::subpostUWP^ sa)
 			{
-				s = sa;
+				contentH = &sa->contentHelper;
 			}
 		}
 	internal:
-		
 		void OnExpanding(Platform::Object^, Platform::Object^);
 		void  OnLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e);
 	};
@@ -92,6 +96,10 @@ namespace Reddit
 	public:
 		MyResources();
 	private:
+		void NativeAdReady(Platform::Object^ s, Platform::Object^ ad);
+		std::queue<Microsoft::Advertising::WinRT::UI::NativeAd^> extraAds;
+		std::queue<Platform::WeakReference> WaitingForNativeAds;
+		Microsoft::Advertising::WinRT::UI::NativeAdsManager^ nativeadsman;
 		void contentExpander_Loading(Windows::UI::Xaml::FrameworkElement^ sender, Platform::Object^ args);
 		void contentExpander_Loading(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void TextBlock_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
@@ -100,5 +108,8 @@ namespace Reddit
 		void replyButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void username_click(Windows::UI::Xaml::Documents::Hyperlink^ sender, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^ args);
 		void subreddit_click(Windows::UI::Xaml::Documents::Hyperlink^ sender, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^ args);
+		void adcontainer_loading(Windows::UI::Xaml::FrameworkElement^ sender, Platform::Object^ args);
+		void AdControl_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void GridTemplate_loading(Windows::UI::Xaml::FrameworkElement^ sender, Platform::Object^ args);
 	};
 }

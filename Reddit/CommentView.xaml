@@ -17,7 +17,7 @@
         
         <converters:downvotechecked x:Key="downvoteconverter"/>
         <converters:upvotechecked x:Key="upvoteconverter"/>
-        <tree:IntegerToIndentationConverter x:Key="IntToIndConverter"/>
+        
         <converters:InverseBool x:Key="inverseBoolConverter"/>
         <converters:ScoreText x:Key="scoreVis"/>
         <DataTemplate x:DataType="tree:TreeNode" x:Name="commentTemplate" >

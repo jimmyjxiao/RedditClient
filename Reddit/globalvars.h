@@ -1,11 +1,11 @@
 #pragma once
 #include "AccountInterface.h"
 #include "sqlite_modern_cpp\hdr\sqlite_modern_cpp.h"
-#include "NavStates.h"
 #include "subpostUWP.h"
 #include <map>
 namespace globalvars
 {
+	extern Windows::Foundation::Diagnostics::LoggingChannel^ LogChannel;
 	struct ci_less
 	{
 		// case-independent (ci) compare_less binary function
@@ -40,8 +40,7 @@ namespace globalvars
 	extern int htmlinstance;
 	extern std::map<std::wstring, account::AccountInterface*, ci_less> accounts;
 	extern std::vector<navVariant> NavState;
-	unsigned char addNav(commentNavstate* c);
-	unsigned char addNav(subredditNavstate* c);
+	unsigned char addNav(Windows::UI::Xaml::Interop::TypeName pageType, baseNavState * c);
 	extern unsigned char navChar;
 	extern account::AccountInterface * currentacc;
 	extern sqlite::database * AppDB;

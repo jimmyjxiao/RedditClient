@@ -4,7 +4,6 @@
 //
 
 #include "pch.h"
-#include "globalvars.h"
 #include "serviceHelpers.h"
 #include "ApplicationDataHelper.h"
 #include "SubRedditViewPage.xaml.h"
@@ -152,7 +151,7 @@ void Reddit::App::App_BackRequested(Platform::Object ^ sender, Windows::UI::Core
 		auto backstack = ref new Platform::Collections::Vector<Windows::UI::Xaml::Navigation::PageStackEntry^>(Windows::Foundation::Collections::begin(navCore->rootFrame->BackStack), Windows::Foundation::Collections::end(navCore->rootFrame->BackStack));
 		auto forwardstack = ref new Platform::Collections::Vector<Windows::UI::Xaml::Navigation::PageStackEntry^>(Windows::Foundation::Collections::begin(navCore->rootFrame->ForwardStack), Windows::Foundation::Collections::end(navCore->rootFrame->ForwardStack));
 		const auto & pagestack = navCore->rootFrame->BackStack->GetAt(navCore->rootFrame->BackStack->Size - 1);
-		const auto & i = static_cast<baseNavState*>(globalvars::NavState[static_cast<unsigned char>(pagestack->Parameter)].second.c);
+		const auto & i = globalvars::NavState[static_cast<unsigned char>(pagestack->Parameter)].second;
 		
 		auto const & currentPage = static_cast<NavIndexed^>(navCore->rootFrame->Content);
 		int currentIndex = currentPage->NavigationIndex;

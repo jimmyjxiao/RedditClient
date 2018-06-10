@@ -1,0 +1,92 @@
+﻿<Page x:ConnectionId='1'
+    x:Class="Reddit.CommentViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    NavigationCacheMode="Disabled"
+    xmlns:ac="using:account"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <CommandBar x:ConnectionId='2' x:Name="commandBar"                                                                                                                                                                              OverflowButtonVisibility="Auto">
+            <AppBarToggleButton x:ConnectionId='6' Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False"/>
+            <AppBarButton x:ConnectionId='7' Icon="List" Label="Other Discussions"                           />
+            <CommandBar.Content>
+                <StackPanel Orientation="Horizontal">
+                    <ListView x:ConnectionId='8' SelectionMode="Single" SelectedValuePath="Tag" x:Name="sortSelector"                                                  >
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <TextBlock Text="Best">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    best
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Top">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    top
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="New">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    New
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Controversial">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    controversial
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Old">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    old
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="QA">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    qa
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                        <TextBlock Text="Random">
+                            <TextBlock.Tag>
+                                <ac:commentSort>
+                                    random
+                                </ac:commentSort>
+                            </TextBlock.Tag>
+                        </TextBlock>
+                    </ListView>
+                </StackPanel>
+            </CommandBar.Content>
+
+        </CommandBar>
+        <SplitView x:ConnectionId='3'                                                                                                Grid.Row="2">
+            <SplitView.Pane>
+                <WebView x:ConnectionId='4' x:Name="sideBarWebView"/>
+            </SplitView.Pane>
+            <local:CommentView x:ConnectionId='5' x:Name="commentControl" />
+        </SplitView>
+    </Grid>
+
+
+</Page>
+

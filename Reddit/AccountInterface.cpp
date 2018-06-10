@@ -10,6 +10,7 @@
 #include <ppl.h>
 #include "ApplicationDataHelper.h"
 #include "commentUWPitem.h"
+#include "MixedContentSorter.h"
 using namespace Windows::Foundation;
 using namespace Windows::Data::Json;
 using namespace Windows::Web::Http;
@@ -105,6 +106,13 @@ namespace account
 		});
 	}
 
+	concurrency::task<void> AccountInterface::giveGold(Platform::String ^ fullname)
+	{
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/gold/gild/").data()), fullname), nullptr)).then([](Windows::Web::Http::HttpResponseMessage^ h) {
+			auto x = h->ToString();
+		}, concurrency::task_continuation_context::use_arbitrary());
+	}
+
 	concurrency::task<HttpResponseMessage^> AccountInterface::comment(Platform::String ^ ID, Platform::String ^ md)
 	{
 		Platform::Collections::Map<Platform::String^, Platform::String^>^ z = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
@@ -125,6 +133,27 @@ namespace account
 		});
 	}
 
+
+	concurrency::task<std::pair<Platform::Collections::Vector<IRedditTypeIdentifier^>^,const Platform::String^>>  AccountInterface::getMessages(Messages_Where m)
+	{
+		Platform::String^ path = L"message";
+		switch (m)
+		{
+		case Messages_Where::inbox:
+			path += L"/inbox";
+			break;
+		case Messages_Where::sent:
+			path += L"/sent";
+			break;
+		case Messages_Where::unread:
+			path += L"/unread";
+		}
+		return getJsonFromBasePath(path).then([](Windows::Data::Json::JsonObject^ j) {
+			const auto &maindata = j->GetNamedObject("data");
+			const Platform::String^ after = maindata->GetNamedString("after");
+			return std::make_pair(account::MixedContentSorter(maindata->GetNamedArray("children")), std::move(after));
+		});
+	}
 
 	concurrency::task<void> AccountInterface::updateInfo()
 	{
@@ -255,10 +284,13 @@ namespace account
 				}
 				else
 					comments.commentList = std::vector<CommentUWPitem^>(jsoncomments->Size);
-				concurrency::parallel_transform(Windows::Foundation::Collections::begin(jsoncomments), Windows::Foundation::Collections::end(jsoncomments), comments.commentList.begin(), [](Windows::Data::Json::IJsonValue^ z) {
-					return ref new CommentUWPitem(z->GetObject()->GetNamedObject("data"));
-				});
-
+				comments.commentList[0] = ref new CommentUWPitem(jsoncomments->GetObjectAt(0)->GetNamedObject("data"));
+				if (jsoncomments->Size > 1)
+				{
+					concurrency::parallel_transform(Windows::Foundation::Collections::begin(jsoncomments) + 1, Windows::Foundation::Collections::end(jsoncomments), comments.commentList.begin()+1, [&sub = comments.commentList[0]->helper.parent_subreddit](Windows::Data::Json::IJsonValue^ z) {
+						return ref new CommentUWPitem(z->GetObject()->GetNamedObject("data"), nullptr, true, sub);
+					});
+				}
 				return comments;
 			}
 			catch (...)
@@ -267,7 +299,7 @@ namespace account
 			}
 			
 			
-		});
+		},concurrency::task_continuation_context::use_arbitrary());
 		//throw ref new Platform::NotImplementedException();
 	}
 	concurrency::task<commentUWPlisting> AccountInterface::getmorecomments(moreComments ^ more, Platform::String^ link_id, Platform::String^ parent_id)
@@ -463,6 +495,78 @@ namespace account
 			return listing->listing;
 		}), concurrency::task_continuation_context::use_arbitrary;
 		return std::unique_ptr<subredditlisting>(listing);
+	}
+
+	concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> AccountInterface::getDomain(Platform::String ^ domain)
+	{
+		getJsonFromBasePath(L"domain/" + domain + L"?raw_json=1").then([](Windows::Data::Json::JsonObject^ j) {
+
+		});
+		throw ref new Platform::NotImplementedException();
+	}
+
+	concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> AccountInterface::getMixedCollection(Platform::String ^ endpoint)
+	{
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, endpoint)).then([](Windows::Data::Json::JsonObject^ json) {
+			const auto & arr = json->GetNamedObject("data")->GetNamedArray("children");
+			auto vec = ref new Platform::Collections::Vector<IRedditTypeIdentifier^>(arr->Size);
+			concurrency::parallel_transform(Windows::Foundation::Collections::begin(arr), Windows::Foundation::Collections::end(arr), Windows::Foundation::Collections::begin(vec), [](Windows::Data::Json::IJsonValue^ v) {
+				return ambiguousJsonResolver(v->GetObject());
+			});
+			return vec;
+		});
+	}
+
+
+
+	
+	IRedditTypeIdentifier ^ AccountInterface::ambiguousJsonResolver(Windows::Data::Json::JsonObject ^ j)
+	{
+		try {
+			auto kind = j->GetNamedString("kind")->Data();
+			if (*kind == L't')
+			{
+				switch (*(kind + 1))
+				{
+				case L'1':
+				{
+					auto ret = ref new CommentUWPitem(j->GetNamedObject("data"), nullptr, false);
+					ret->cacheMDElements();
+					return ret;
+				}break;
+				case L'2':
+				{
+
+				}break;
+				case L'3':
+				{
+					return ref new subpostUWP(j->GetNamedObject("data"));
+				}break;
+				case L'4':
+				{
+
+				}break;
+				case L'5':
+				{
+
+				}break;
+				case L'6':
+				{
+
+				}break;
+				default:
+					__assume(0);
+				}
+			}
+			else
+			{
+				__debugbreak();
+			}
+		}
+		catch (Platform::Exception^ e)
+		{
+			__debugbreak();
+		}
 	}
 	
 

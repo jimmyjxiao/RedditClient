@@ -30,11 +30,11 @@ void ::Reddit::rootWindowGrid::InitializeComponent()
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::rootWindowGrid::rootWindowGrid_obj6_Bindings 
+class Reddit::rootWindowGrid::rootWindowGrid_obj7_Bindings 
     : public ::XamlBindingInfo::ValueTypeXamlBindings<::account::subredditInfo, ::XamlBindingInfo::XamlBindingTrackingBase>
 {
 public:
-    rootWindowGrid_obj6_Bindings()
+    rootWindowGrid_obj7_Bindings()
     {
     }
 
@@ -42,14 +42,14 @@ public:
     {
         switch(__connectionId)
         {
-            case 6: // rootWindowGrid.xaml line 78
-                this->obj6 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            case 7: // rootWindowGrid.xaml line 92
+                this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 7: // rootWindowGrid.xaml line 87
-                this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 8: // rootWindowGrid.xaml line 101
+                this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 8: // rootWindowGrid.xaml line 89
-                this->obj8 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 9: // rootWindowGrid.xaml line 103
+                this->obj9 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -72,7 +72,7 @@ public:
                 this->SetDataRoot(static_cast<::account::subredditInfo>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj6.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj7.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -86,9 +86,9 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj6;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj7;
-    ::Windows::UI::Xaml::Documents::Run^ obj8;
+    ::Platform::WeakReference obj7;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj8;
+    ::Windows::UI::Xaml::Documents::Run^ obj9;
 
     // Update methods for each path node used in binding steps.
     void Update_(::account::subredditInfo obj, int phase)
@@ -103,16 +103,16 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 87
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj7, obj, nullptr);
+            // rootWindowGrid.xaml line 101
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj8, obj, nullptr);
         }
     }
     void Update_subscribers(::default::uint32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 89
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj8, obj.ToString(), nullptr);
+            // rootWindowGrid.xaml line 103
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj9, obj.ToString(), nullptr);
         }
     }
     static void Set_Windows_UI_Xaml_Controls_TextBlock_Text(::Windows::UI::Xaml::Controls::TextBlock^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
@@ -136,11 +136,11 @@ private:
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::rootWindowGrid::rootWindowGrid_obj10_Bindings 
+class Reddit::rootWindowGrid::rootWindowGrid_obj13_Bindings 
     : public ::XamlBindingInfo::ValueTypeXamlBindings<::account::AccountInfo, ::XamlBindingInfo::XamlBindingTrackingBase>
 {
 public:
-    rootWindowGrid_obj10_Bindings()
+    rootWindowGrid_obj13_Bindings()
     {
     }
 
@@ -148,17 +148,17 @@ public:
     {
         switch(__connectionId)
         {
-            case 10: // rootWindowGrid.xaml line 29
-                this->obj10 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            case 13: // rootWindowGrid.xaml line 29
+                this->obj13 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 11: // rootWindowGrid.xaml line 39
-                this->obj11 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 14: // rootWindowGrid.xaml line 39
+                this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 12: // rootWindowGrid.xaml line 42
-                this->obj12 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 15: // rootWindowGrid.xaml line 42
+                this->obj15 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 13: // rootWindowGrid.xaml line 42
-                this->obj13 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 16: // rootWindowGrid.xaml line 42
+                this->obj16 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -181,7 +181,7 @@ public:
                 this->SetDataRoot(static_cast<::account::AccountInfo>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj10.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj13.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -195,10 +195,10 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj10;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj11;
-    ::Windows::UI::Xaml::Documents::Run^ obj12;
-    ::Windows::UI::Xaml::Documents::Run^ obj13;
+    ::Platform::WeakReference obj13;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj14;
+    ::Windows::UI::Xaml::Documents::Run^ obj15;
+    ::Windows::UI::Xaml::Documents::Run^ obj16;
 
     // Update methods for each path node used in binding steps.
     void Update_(::account::AccountInfo obj, int phase)
@@ -215,7 +215,7 @@ private:
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
             // rootWindowGrid.xaml line 39
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj11, obj, nullptr);
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj14, obj, nullptr);
         }
     }
     void Update_comment_karma(::default::int32 obj, int phase)
@@ -223,7 +223,7 @@ private:
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
             // rootWindowGrid.xaml line 42
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj12, obj.ToString(), nullptr);
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj15, obj.ToString(), nullptr);
         }
     }
     void Update_link_karma(::default::int32 obj, int phase)
@@ -231,7 +231,7 @@ private:
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
             // rootWindowGrid.xaml line 42
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj13, obj.ToString(), nullptr);
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj16, obj.ToString(), nullptr);
         }
     }
     static void Set_Windows_UI_Xaml_Controls_TextBlock_Text(::Windows::UI::Xaml::Controls::TextBlock^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
@@ -255,11 +255,11 @@ private:
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::rootWindowGrid::rootWindowGrid_obj14_Bindings 
+class Reddit::rootWindowGrid::rootWindowGrid_obj17_Bindings 
     : public ::XamlBindingInfo::ValueTypeXamlBindings<::account::AccountInfo, ::XamlBindingInfo::XamlBindingTrackingBase>
 {
 public:
-    rootWindowGrid_obj14_Bindings()
+    rootWindowGrid_obj17_Bindings()
     {
     }
 
@@ -267,17 +267,17 @@ public:
     {
         switch(__connectionId)
         {
-            case 14: // rootWindowGrid.xaml line 50
-                this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 17: // rootWindowGrid.xaml line 50
+                this->obj17 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 15: // rootWindowGrid.xaml line 51
-                this->obj15 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 18: // rootWindowGrid.xaml line 51
+                this->obj18 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 16: // rootWindowGrid.xaml line 51
-                this->obj16 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 20: // rootWindowGrid.xaml line 51
+                this->obj20 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 17: // rootWindowGrid.xaml line 51
-                this->obj17 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 21: // rootWindowGrid.xaml line 51
+                this->obj21 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -300,7 +300,7 @@ public:
                 this->SetDataRoot(static_cast<::account::AccountInfo>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj14.Resolve<::Windows::UI::Xaml::Controls::TextBlock>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj17.Resolve<::Windows::UI::Xaml::Controls::TextBlock>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -314,10 +314,10 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj14;
-    ::Windows::UI::Xaml::Documents::Run^ obj15;
-    ::Windows::UI::Xaml::Documents::Run^ obj16;
-    ::Windows::UI::Xaml::Documents::Run^ obj17;
+    ::Platform::WeakReference obj17;
+    ::Windows::UI::Xaml::Documents::Run^ obj18;
+    ::Windows::UI::Xaml::Documents::Run^ obj20;
+    ::Windows::UI::Xaml::Documents::Run^ obj21;
 
     // Update methods for each path node used in binding steps.
     void Update_(::account::AccountInfo obj, int phase)
@@ -334,7 +334,7 @@ private:
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
             // rootWindowGrid.xaml line 51
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj15, obj, nullptr);
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj18, obj, nullptr);
         }
     }
     void Update_link_karma(::default::int32 obj, int phase)
@@ -342,7 +342,7 @@ private:
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
             // rootWindowGrid.xaml line 51
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj16, obj.ToString(), nullptr);
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj20, obj.ToString(), nullptr);
         }
     }
     void Update_comment_karma(::default::int32 obj, int phase)
@@ -350,7 +350,7 @@ private:
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
             // rootWindowGrid.xaml line 51
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj17, obj.ToString(), nullptr);
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj21, obj.ToString(), nullptr);
         }
     }
     static void Set_Windows_UI_Xaml_Documents_Run_Text(::Windows::UI::Xaml::Documents::Run^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
@@ -363,33 +363,154 @@ private:
     }
 };
 
+/// <summary>
+/// Auto generated class for compiled bindings.
+/// </summary>
+class Reddit::rootWindowGrid::rootWindowGrid_obj1_Bindings 
+    : public ::XamlBindingInfo::ReferenceTypeXamlBindings<::Reddit::rootWindowGrid, ::XamlBindingInfo::XamlBindingTrackingBase>
+    , public ::XamlBindingInfo::IXamlBindingTracking
+{
+public:
+    rootWindowGrid_obj1_Bindings()
+    {
+        InitializeTracking(this);
+    }
+
+private:
+    ~rootWindowGrid_obj1_Bindings()
+    {
+        ReleaseAllListeners();
+    }
+
+public:
+
+    void Connect(int __connectionId, ::Platform::Object^ __target)
+    {
+        switch(__connectionId)
+        {
+            case 11: // rootWindowGrid.xaml line 66
+                this->obj11 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+                break;
+        }
+    }
+
+    void DisconnectUnloadedObject(int connectionId)
+    {
+        throw ref new ::Platform::InvalidArgumentException("No unloadable elements to disconnect.");
+    }
+
+private:
+    // Fields for each control that has bindings.
+    ::Reddit::NoToggleBehaviorButton^ obj11;
+    
+    // Fields for binding tracking.
+    ::Platform::WeakReference cachePC_;
+    ::Windows::Foundation::EventRegistrationToken tokenPC_;
+
+    // Update methods for each path node used in binding steps.
+    void Update_(::Reddit::rootWindowGrid^ obj, int phase)
+    {
+        this->_bindingsTracking->UpdatePropertyChangedListener(obj, this->cachePC_, &tokenPC_);
+        if (obj != nullptr)
+        {
+            if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
+            {
+                this->Update_Has_mail(obj->Has_mail, phase);
+            }
+        }
+    }
+    void Update_Has_mail(::Platform::Boolean obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
+        {
+            // rootWindowGrid.xaml line 66
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj11, obj, nullptr);
+        }
+    }
+
+    virtual void ReleaseAllListeners() override
+    {
+        this->_bindingsTracking->UpdatePropertyChangedListener(nullptr, this->cachePC_, &tokenPC_);
+    }
+
+    virtual void PropertyChanged(Platform::Object^ sender, ::Windows::UI::Xaml::Data::PropertyChangedEventArgs^ e) override
+    {
+        if (this->GetDataRoot() != nullptr && this->GetDataRoot()->Equals(sender))
+        {
+            ::Platform::String^ propName = e->PropertyName;
+            ::Reddit::rootWindowGrid^ obj = safe_cast<::Reddit::rootWindowGrid^>(sender);
+            if (propName == nullptr || propName->IsEmpty())
+            {
+                if (obj != nullptr)
+                {
+                    this->Update_Has_mail(obj->Has_mail, DATA_CHANGED);
+                }
+            }
+            else if (propName == "Has_mail")
+            {
+                if (obj != nullptr)
+                {
+                    this->Update_Has_mail(obj->Has_mail, DATA_CHANGED);
+                }
+            }
+        }
+    }
+
+    void CollectionChanged(::Platform::Object^ sender, ::Windows::UI::Xaml::Interop::NotifyCollectionChangedEventArgs^ e)
+    {
+    }
+
+    void VectorChanged(::Platform::Object^ sender, ::Windows::Foundation::Collections::IVectorChangedEventArgs^ e)
+    {
+    }
+
+    void MapChanged(::Platform::Object^ sender, ::Windows::Foundation::Collections::IMapChangedEventArgs<::Platform::String^>^ e)
+    {
+    }
+
+    void DependencyPropertyChanged(::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
+    {
+        if (sender != nullptr)
+        {
+        }
+    }
+    static void Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(::Windows::UI::Xaml::Controls::Primitives::ToggleButton^ obj, ::Platform::IBox<::Platform::Boolean>^ value, ::Platform::String^ targetNullValue)
+    {
+        if (value == nullptr && targetNullValue != nullptr)
+        {
+            value = (::Platform::IBox<::Platform::Boolean>^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Platform::IBox<::Platform::Boolean>::typeid, targetNullValue);
+        }
+        obj->IsChecked = value;
+    }
+};
+
 void ::Reddit::rootWindowGrid::Connect(int __connectionId, ::Platform::Object^ __target)
 {
     switch (__connectionId)
     {
-    case 1:
+    case 2:
         {
             this->titleRowDef = safe_cast<::Windows::UI::Xaml::Controls::RowDefinition^>(__target);
         }
         break;
-    case 2:
+    case 3:
         {
             this->titleGrid = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
         }
         break;
-    case 3:
+    case 4:
         {
             this->rootFrame = safe_cast<::Windows::UI::Xaml::Controls::Frame^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::Frame^>(this->rootFrame))->Navigated += ref new ::Windows::UI::Xaml::Navigation::NavigatedEventHandler(this, (void (::Reddit::rootWindowGrid::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::Navigation::NavigationEventArgs^))&rootWindowGrid::rootFrame_Navigated);
         }
         break;
-    case 4:
+    case 5:
         {
             this->titleRec = safe_cast<::Windows::UI::Xaml::Shapes::Rectangle^>(__target);
         }
         break;
-    case 5:
+    case 6:
         {
             this->searchBox = safe_cast<::Windows::UI::Xaml::Controls::AutoSuggestBox^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::AutoSuggestBox^>(this->searchBox))->TextChanged += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::Controls::AutoSuggestBox^, ::Windows::UI::Xaml::Controls::AutoSuggestBoxTextChangedEventArgs^>(this, (void (::Reddit::rootWindowGrid::*)
@@ -398,13 +519,34 @@ void ::Reddit::rootWindowGrid::Connect(int __connectionId, ::Platform::Object^ _
                 (::Windows::UI::Xaml::Controls::AutoSuggestBox^, ::Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs^))&rootWindowGrid::AutoSuggestBox_QuerySubmitted);
         }
         break;
-    case 9:
+    case 10:
         {
             this->accountBox = safe_cast<::Windows::UI::Xaml::Controls::ComboBox^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::ComboBox^>(this->accountBox))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::rootWindowGrid::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&rootWindowGrid::Grid_Loaded);
             (safe_cast<::Windows::UI::Xaml::Controls::ComboBox^>(this->accountBox))->SelectionChanged += ref new ::Windows::UI::Xaml::Controls::SelectionChangedEventHandler(this, (void (::Reddit::rootWindowGrid::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::Controls::SelectionChangedEventArgs^))&rootWindowGrid::ComboBox_SelectionChanged);
+        }
+        break;
+    case 11:
+        {
+            ::Reddit::NoToggleBehaviorButton^ element11 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+            (safe_cast<::Reddit::NoToggleBehaviorButton^>(element11))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::rootWindowGrid::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&rootWindowGrid::Flyout_Open);
+        }
+        break;
+    case 12:
+        {
+            ::Windows::UI::Xaml::Controls::Flyout^ element12 = safe_cast<::Windows::UI::Xaml::Controls::Flyout^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::Flyout^>(element12))->Opening += ref new ::Windows::Foundation::EventHandler<::Platform::Object^>(this, (void (::Reddit::rootWindowGrid::*)
+                (::Platform::Object^, ::Platform::Object^))&rootWindowGrid::Flyout_Opening);
+        }
+        break;
+    case 19:
+        {
+            ::Windows::UI::Xaml::Documents::Hyperlink^ element19 = safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(element19))->Click += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^>(this, (void (::Reddit::rootWindowGrid::*)
+                (::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^))&rootWindowGrid::Hyperlink_Click);
         }
         break;
     }
@@ -416,37 +558,47 @@ void ::Reddit::rootWindowGrid::Connect(int __connectionId, ::Platform::Object^ _
     ::XamlBindingInfo::XamlBindings^ bindings = nullptr;
     switch (__connectionId)
     {
-        case 6: // rootWindowGrid.xaml line 78
+        case 1: // rootWindowGrid.xaml line 1
             {
-                ::Windows::UI::Xaml::Controls::Grid^ element6 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-                rootWindowGrid_obj6_Bindings* objBindings = new rootWindowGrid_obj6_Bindings();
-                objBindings->SetDataRoot(element6->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element1 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                rootWindowGrid_obj1_Bindings* objBindings = new rootWindowGrid_obj1_Bindings();
+                objBindings->SetDataRoot(this);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element6);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element6, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element6, bindings);
+                this->Bindings = bindings;
+                element1->Loading += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::FrameworkElement^, ::Platform::Object^>(bindings, &::XamlBindingInfo::XamlBindings::Loading);
             }
             break;
-        case 10: // rootWindowGrid.xaml line 29
+        case 7: // rootWindowGrid.xaml line 92
             {
-                ::Windows::UI::Xaml::Controls::Grid^ element10 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-                rootWindowGrid_obj10_Bindings* objBindings = new rootWindowGrid_obj10_Bindings();
-                objBindings->SetDataRoot(element10->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                rootWindowGrid_obj7_Bindings* objBindings = new rootWindowGrid_obj7_Bindings();
+                objBindings->SetDataRoot(element7->DataContext);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element10);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element10, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element10, bindings);
+                bindings->SubscribeForDataContextChanged(element7);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element7, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element7, bindings);
             }
             break;
-        case 14: // rootWindowGrid.xaml line 50
+        case 13: // rootWindowGrid.xaml line 29
             {
-                ::Windows::UI::Xaml::Controls::TextBlock^ element14 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
-                rootWindowGrid_obj14_Bindings* objBindings = new rootWindowGrid_obj14_Bindings();
-                objBindings->SetDataRoot(element14->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element13 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                rootWindowGrid_obj13_Bindings* objBindings = new rootWindowGrid_obj13_Bindings();
+                objBindings->SetDataRoot(element13->DataContext);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element14);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element14, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element14, bindings);
+                bindings->SubscribeForDataContextChanged(element13);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element13, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element13, bindings);
+            }
+            break;
+        case 17: // rootWindowGrid.xaml line 50
+            {
+                ::Windows::UI::Xaml::Controls::TextBlock^ element17 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+                rootWindowGrid_obj17_Bindings* objBindings = new rootWindowGrid_obj17_Bindings();
+                objBindings->SetDataRoot(element17->DataContext);
+                bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
+                bindings->SubscribeForDataContextChanged(element17);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element17, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element17, bindings);
             }
             break;
     }

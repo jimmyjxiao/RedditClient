@@ -179,6 +179,8 @@ void Reddit::CommentView::commentTree_ChoosingItemContainer(Windows::UI::Xaml::C
 			else
 			{
 				TreeViewControl::TreeViewItem^ newitem = ref new TreeViewControl::TreeViewItem();
+				newitem->HorizontalAlignment = Windows::UI::Xaml::HorizontalAlignment::Stretch;
+				newitem->HorizontalContentAlignment = Windows::UI::Xaml::HorizontalAlignment::Stretch;
 				newitem->BorderBrush = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Black);
 				newitem->BorderThickness = itemBorder;
 				

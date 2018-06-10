@@ -16,6 +16,8 @@
 #include "ReplyBox.xaml.h"
 #include "rootWindowGrid.xaml.h"
 #include "SubRedditViewPage.xaml.h"
+#include "TestPage.xaml.h"
+#include "UserPage.xaml.h"
 #include "XamlBindingInfo.g.hpp"
 #include "CommentView.g.hpp"
 #include "CommentViewPage.g.hpp"
@@ -24,6 +26,8 @@
 #include "ReplyBox.g.hpp"
 #include "rootWindowGrid.g.hpp"
 #include "SubRedditViewPage.g.hpp"
+#include "TestPage.g.hpp"
+#include "UserPage.g.hpp"
 
 template<typename T>
 ::Platform::Object^ ActivateType()
@@ -86,6 +90,36 @@ template<typename TDeclaringType, typename TValue>
 }
 
 template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_HasAd(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->HasAd);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_IsSuspended(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IsSuspended);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_AutoRefreshIntervalInSeconds(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->AutoRefreshIntervalInSeconds);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_IsAutoRefreshEnabled(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IsAutoRefreshEnabled);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_IsEngaged(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IsEngaged);
+}
+
+template<typename TDeclaringType, typename TValue>
 ::Platform::Object^ GetValueTypeMember_IsExpanded(::Platform::Object^ instance)
 {
     return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IsExpanded);
@@ -95,6 +129,12 @@ template<typename TDeclaringType, typename TValue>
 ::Platform::Object^ GetValueTypeMember_contentLoaded(::Platform::Object^ instance)
 {
     return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->contentLoaded);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Has_mail(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Has_mail);
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -218,6 +258,36 @@ template<typename TDeclaringType>
 }
 
 template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_ApplicationId(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->ApplicationId;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_AdUnitId(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->AdUnitId;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_PostalCode(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->PostalCode;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_CountryOrRegion(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->CountryOrRegion;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_Keywords(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->Keywords;
+}
+
+template<typename TDeclaringType>
 ::Platform::Object^ GetReferenceTypeMember_Header(::Platform::Object^ instance)
 {
     return safe_cast<TDeclaringType^>(instance)->Header;
@@ -332,6 +402,18 @@ template<typename TDeclaringType>
 }
 
 template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_CommentDataTemplate(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->CommentDataTemplate;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_SubPostDataTemplate(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->SubPostDataTemplate;
+}
+
+template<typename TDeclaringType>
 ::Platform::Object^ GetReferenceTypeMember_ParentNode(::Platform::Object^ instance)
 {
     return safe_cast<TDeclaringType^>(instance)->ParentNode;
@@ -386,15 +468,21 @@ void SetValueTypeMember_isComment(::Platform::Object^ instance, ::Platform::Obje
 }
 
 template<typename TDeclaringType, typename TValue>
-void SetValueTypeMember_IsExpanded(::Platform::Object^ instance, ::Platform::Object^ value)
+void SetValueTypeMember_AutoRefreshIntervalInSeconds(::Platform::Object^ instance, ::Platform::Object^ value)
 {
-    safe_cast<TDeclaringType^>(instance)->IsExpanded = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+    safe_cast<TDeclaringType^>(instance)->AutoRefreshIntervalInSeconds = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
 }
 
 template<typename TDeclaringType, typename TValue>
-void SetValueTypeMember_contentLoaded(::Platform::Object^ instance, ::Platform::Object^ value)
+void SetValueTypeMember_IsAutoRefreshEnabled(::Platform::Object^ instance, ::Platform::Object^ value)
 {
-    safe_cast<TDeclaringType^>(instance)->contentLoaded = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+    safe_cast<TDeclaringType^>(instance)->IsAutoRefreshEnabled = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsExpanded(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->IsExpanded = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -452,6 +540,36 @@ void SetReferenceTypeMember_thumbnailTemplate(::Platform::Object^ instance, ::Pl
 }
 
 template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_ApplicationId(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->ApplicationId = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_AdUnitId(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->AdUnitId = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_PostalCode(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->PostalCode = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_CountryOrRegion(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->CountryOrRegion = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_Keywords(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Keywords = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
 void SetReferenceTypeMember_Header(::Platform::Object^ instance, ::Platform::Object^ value)
 {
     safe_cast<TDeclaringType^>(instance)->Header = safe_cast<TValue^>(value);
@@ -497,6 +615,18 @@ template<typename TDeclaringType, typename TValue>
 void SetReferenceTypeMember_Liked(::Platform::Object^ instance, ::Platform::Object^ value)
 {
     safe_cast<TDeclaringType^>(instance)->Liked = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_CommentDataTemplate(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->CommentDataTemplate = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_SubPostDataTemplate(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->SubPostDataTemplate = safe_cast<TValue^>(value);
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -572,410 +702,440 @@ const TypeInfo TypeInfos[] =
     //   5
     L"System.Enum", L"",
     nullptr, nullptr, nullptr, nullptr,
-    7, // System.ValueType
+    9, // System.ValueType
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
     //   6
     L"Reddit.ReplyBox", L"",
     nullptr, nullptr, nullptr, nullptr,
-    59, // Windows.UI.Xaml.Controls.UserControl
+    63, // Windows.UI.Xaml.Controls.UserControl
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   7
-    L"System.ValueType", L"",
-    nullptr, nullptr, nullptr, nullptr,
-    1, // Object
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
-    TypeInfo_Flags_None,
+    L"Reddit.TestPage", L"",
+    &ActivateType<::Reddit::TestPage>, nullptr, nullptr, nullptr,
+    48, // Windows.UI.Xaml.Controls.Page
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   8
-    L"account.postSort", L"",
-    nullptr, nullptr, nullptr, &FromStringConverter<::account::postSort>,
-    5, // System.Enum
+    L"Reddit.UserPage", L"",
+    &ActivateType<::Reddit::UserPage>, nullptr, nullptr, nullptr,
+    48, // Windows.UI.Xaml.Controls.Page
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   9
+    L"System.ValueType", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    1, // Object
+    2, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //  10
+    L"account.postSort", L"",
+    nullptr, nullptr, nullptr, &FromStringConverter<::account::postSort>,
+    5, // System.Enum
+    2, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //  11
     L"account.timerange", L"",
     nullptr, nullptr, nullptr, &FromStringConverter<::account::timerange>,
     5, // System.Enum
-    0, 7, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    2, 7, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  10
+    //  12
     L"Reddit.CommentView", L"",
     &ActivateType<::Reddit::CommentView>, nullptr, nullptr, nullptr,
-    59, // Windows.UI.Xaml.Controls.UserControl
-    0, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    63, // Windows.UI.Xaml.Controls.UserControl
+    2, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  11
+    //  13
     L"account.subpostUWP", L"",
     nullptr, nullptr, nullptr, nullptr,
     1, // Object
-    0, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    2, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  12
+    //  14
     L"Reddit.MyResources", L"",
     &ActivateType<::Reddit::MyResources>, nullptr, &DictionaryAdd<::Reddit::MyResources, ::Platform::Object^, ::Platform::Object^>, nullptr,
-    58, // Windows.UI.Xaml.ResourceDictionary
-    20, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    61, // Windows.UI.Xaml.ResourceDictionary
+    22, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  13
+    //  15
     L"account.RedditType", L"",
     nullptr, nullptr, nullptr, &FromStringConverter<::account::RedditType>,
     5, // System.Enum
-    20, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    22, 14, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  14
+    //  16
     L"Reddit.reportFlyout", L"",
     &ActivateType<::Reddit::reportFlyout>, nullptr, nullptr, nullptr,
-    50, // Windows.UI.Xaml.Controls.Flyout
-    20, 18, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    53, // Windows.UI.Xaml.Controls.Flyout
+    22, 18, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  15
+    //  17
     L"account.commentSort", L"",
     nullptr, nullptr, nullptr, &FromStringConverter<::account::commentSort>,
     5, // System.Enum
-    23, 18, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    25, 18, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  16
+    //  18
     L"Reddit.previewIconC", L"",
     &ActivateType<::Reddit::previewIconC>, nullptr, nullptr, nullptr,
     1, // Object
-    23, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  17
+    //  19
     L"converters.ScoreText", L"",
     &ActivateType<::converters::ScoreText>, nullptr, nullptr, nullptr,
     1, // Object
-    23, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  18
+    //  20
     L"Reddit.EXplaceHolder", L"",
     &ActivateType<::Reddit::EXplaceHolder>, nullptr, nullptr, nullptr,
-    63, // Windows.UI.Xaml.Controls.ContentControl
-    23, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    67, // Windows.UI.Xaml.Controls.ContentControl
+    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  19
+    //  21
     L"mdblock.refMDElements", L"",
     nullptr, nullptr, nullptr, nullptr,
     1, // Object
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    27, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
-    //  20
+    //  22
     L"account.subredditInfo", L"",
     nullptr, nullptr, nullptr, nullptr,
-    7, // System.ValueType
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    9, // System.ValueType
+    27, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
-    //  21
+    //  23
     L"converters.HasPreview", L"",
     &ActivateType<::converters::HasPreview>, nullptr, nullptr, nullptr,
     1, // Object
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  22
-    L"mdblock.mdEnhancedBox", L"",
-    nullptr, nullptr, nullptr, nullptr,
-    60, // Windows.UI.Xaml.Controls.RichEditBox
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
-    TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
-    //  23
-    L"Reddit.rootWindowGrid", L"",
-    &ActivateType<::Reddit::rootWindowGrid>, nullptr, nullptr, nullptr,
-    47, // Windows.UI.Xaml.Controls.Grid
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    27, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //  24
+    L"mdblock.mdEnhancedBox", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    64, // Windows.UI.Xaml.Controls.RichEditBox
+    27, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
+    //  25
+    L"Reddit.rootWindowGrid", L"",
+    &ActivateType<::Reddit::rootWindowGrid>, nullptr, nullptr, nullptr,
+    50, // Windows.UI.Xaml.Controls.Grid
+    27, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //  26
     L"Reddit.contentResizer", L"",
     &ActivateType<::Reddit::contentResizer>, nullptr, nullptr, nullptr,
-    63, // Windows.UI.Xaml.Controls.ContentControl
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    67, // Windows.UI.Xaml.Controls.ContentControl
+    28, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  25
+    //  27
     L"converters.InverseBool", L"",
     &ActivateType<::converters::InverseBool>, nullptr, nullptr, nullptr,
     1, // Object
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    28, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  26
+    //  28
     L"Reddit.CommentViewPage", L"",
     &ActivateType<::Reddit::CommentViewPage>, nullptr, nullptr, nullptr,
-    45, // Windows.UI.Xaml.Controls.Page
-    25, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    48, // Windows.UI.Xaml.Controls.Page
+    28, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  27
+    //  29
     L"Windows.Foundation.Uri", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    29, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    32, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  28
+    //  30
     L"converters.BrushToColor", L"",
     &ActivateType<::converters::BrushToColor>, nullptr, nullptr, nullptr,
     1, // Object
-    29, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    32, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  29
+    //  31
     L"converters.unformatHtml", L"",
     &ActivateType<::converters::unformatHtml>, nullptr, nullptr, nullptr,
     1, // Object
-    29, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    32, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  30
+    //  32
     L"account.postContentType", L"",
     nullptr, nullptr, nullptr, &FromStringConverter<::account::postContentType>,
     5, // System.Enum
-    29, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    32, 26, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  31
+    //  33
     L"converters.upvotechecked", L"",
     &ActivateType<::converters::upvotechecked>, nullptr, nullptr, nullptr,
     1, // Object
-    29, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    32, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  32
+    //  34
     L"mdblock.mdRichProperties", L"",
     &ActivateType<::mdblock::mdRichProperties>, nullptr, nullptr, nullptr,
-    52, // Windows.UI.Xaml.DependencyObject
-    29, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    55, // Windows.UI.Xaml.DependencyObject
+    32, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //  33
+    //  35
     L"TreeViewControl.TreeView", L"",
     &ActivateType<::TreeViewControl::TreeView>, nullptr, nullptr, nullptr,
-    57, // Windows.UI.Xaml.Controls.ListView
-    31, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, // Windows.UI.Xaml.Controls.ListView
+    34, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //  34
+    //  36
     L"TreeViewControl.TreeNode", L"",
     &ActivateType<::TreeViewControl::TreeNode>, nullptr, nullptr, nullptr,
     1, // Object
-    32, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    35, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
-    //  35
+    //  37
     L"ExpanderControl.Expander", L"",
     &ActivateType<::ExpanderControl::Expander>, nullptr, nullptr, nullptr,
-    63, // Windows.UI.Xaml.Controls.ContentControl
-    38, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    67, // Windows.UI.Xaml.Controls.ContentControl
+    41, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //  36
+    //  38
     L"Reddit.SubRedditViewPage", L"",
     &ActivateType<::Reddit::SubRedditViewPage>, nullptr, nullptr, nullptr,
-    45, // Windows.UI.Xaml.Controls.Page
-    41, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    48, // Windows.UI.Xaml.Controls.Page
+    44, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  37
+    //  39
     L"converters.ThemeConverter", L"",
     &ActivateType<::converters::ThemeConverter>, nullptr, nullptr, nullptr,
     1, // Object
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    53, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  38
+    //  40
     L"Windows.UI.Xaml.UIElement", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    53, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  39
+    //  41
     L"Reddit.sortToTimeRangeVis", L"",
     &ActivateType<::Reddit::sortToTimeRangeVis>, nullptr, nullptr, nullptr,
     1, // Object
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    53, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  40
+    //  42
     L"converters.downvotechecked", L"",
     &ActivateType<::converters::downvotechecked>, nullptr, nullptr, nullptr,
     1, // Object
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    53, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  41
+    //  43
     L"Windows.UI.Xaml.Media.Brush", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    53, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  42
+    //  44
+    L"Reddit.MixedContentSelector", L"",
+    &ActivateType<::Reddit::MixedContentSelector>, nullptr, nullptr, nullptr,
+    74, // Windows.UI.Xaml.Controls.DataTemplateSelector
+    53, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //  45
     L"TreeViewControl.TreeViewItem", L"",
     &ActivateType<::TreeViewControl::TreeViewItem>, nullptr, nullptr, nullptr,
-    62, // Windows.UI.Xaml.Controls.ListViewItem
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    66, // Windows.UI.Xaml.Controls.ListViewItem
+    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
-    //  43
+    //  46
     L"Windows.UI.Xaml.DataTemplate", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  44
+    //  47
     L"mdblock.MDFullEnhancedEditor", L"",
     &ActivateType<::mdblock::MDFullEnhancedEditor>, nullptr, nullptr, nullptr,
-    59, // Windows.UI.Xaml.Controls.UserControl
-    50, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    63, // Windows.UI.Xaml.Controls.UserControl
+    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //  45
+    //  48
     L"Windows.UI.Xaml.Controls.Page", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    51, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    56, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  46
+    //  49
     L"Reddit.NoToggleBehaviorButton", L"",
     &ActivateType<::Reddit::NoToggleBehaviorButton>, nullptr, nullptr, nullptr,
-    70, // Windows.UI.Xaml.Controls.Primitives.ToggleButton
-    51, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    75, // Windows.UI.Xaml.Controls.Primitives.ToggleButton
+    56, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  47
+    //  50
     L"Windows.UI.Xaml.Controls.Grid", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    51, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    56, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  48
+    //  51
     L"Windows.UI.Xaml.Controls.Panel", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    51, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    56, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  49
+    //  52
     L"Windows.UI.Xaml.Input.ICommand", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    51, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    56, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  50
+    //  53
     L"Windows.UI.Xaml.Controls.Flyout", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    51, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    56, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  51
+    //  54
     L"Reddit.comboboxTemplateSelector", L"",
     &ActivateType<::Reddit::comboboxTemplateSelector>, nullptr, nullptr, nullptr,
-    69, // Windows.UI.Xaml.Controls.DataTemplateSelector
-    51, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    74, // Windows.UI.Xaml.Controls.DataTemplateSelector
+    56, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  52
+    //  55
     L"Windows.UI.Xaml.DependencyObject", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    54, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    59, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  53
+    //  56
     L"Reddit.AppBarToggleColoredButton", L"",
     &ActivateType<::Reddit::AppBarToggleColoredButton>, nullptr, nullptr, nullptr,
-    67, // Windows.UI.Xaml.Controls.AppBarToggleButton
-    54, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    72, // Windows.UI.Xaml.Controls.AppBarToggleButton
+    59, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  54
+    //  57
     L"Windows.UI.Xaml.Interop.TypeName", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  55
+    //  58
     L"Windows.UI.Xaml.FrameworkElement", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  56
+    //  59
     L"converters.NullableValueConverter", L"",
     &ActivateType<::converters::NullableValueConverter>, nullptr, nullptr, nullptr,
     1, // Object
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  57
+    //  60
     L"Windows.UI.Xaml.Controls.ListView", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  58
+    //  61
     L"Windows.UI.Xaml.ResourceDictionary", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  59
+    //  62
+    L"Windows.UI.Xaml.Controls.StackPanel", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  63
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  60
+    //  64
     L"Windows.UI.Xaml.Controls.RichEditBox", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  61
+    //  65
     L"Windows.UI.Xaml.Controls.ItemsControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  62
+    //  66
     L"Windows.UI.Xaml.Controls.ListViewItem", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  63
+    //  67
     L"Windows.UI.Xaml.Controls.ContentControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  64
+    //  68
     L"Windows.UI.Xaml.Controls.ControlTemplate", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  65
+    //  69
+    L"Microsoft.Advertising.WinRT.UI.AdControl", L"",
+    &ActivateType<::Microsoft::Advertising::WinRT::UI::AdControl>, nullptr, nullptr, nullptr,
+    62, // Windows.UI.Xaml.Controls.StackPanel
+    60, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //  70
     L"Windows.Foundation.IReference`1<Boolean>", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    70, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
-    //  66
+    //  71
     L"Reddit.subPostControlIconTemplateSelector", L"",
     &ActivateType<::Reddit::subPostControlIconTemplateSelector>, nullptr, nullptr, nullptr,
     1, // Object
-    55, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    70, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //  67
+    //  72
     L"Windows.UI.Xaml.Controls.AppBarToggleButton", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    57, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    72, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  68
+    //  73
     L"TreeViewControl.IntegerToIndentationConverter", L"",
     &ActivateType<::TreeViewControl::IntegerToIndentationConverter>, nullptr, nullptr, nullptr,
     1, // Object
-    57, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    72, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //  69
+    //  74
     L"Windows.UI.Xaml.Controls.DataTemplateSelector", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    57, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    72, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  70
+    //  75
     L"Windows.UI.Xaml.Controls.Primitives.ToggleButton", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    57, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    72, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  71
+    //  76
     L"Windows.Foundation.Collections.IVector`1<account.subpostUWP>", L"",
     nullptr, &CollectionAdd<::Windows::Foundation::Collections::IVector<::account::subpostUWP^>, ::account::subpostUWP^>, nullptr, nullptr,
     -1,
-    57, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    72, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    57, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    72, 37, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
@@ -996,52 +1156,52 @@ const UINT TypeInfoLookup[] = {
       6,   //  13
       6,   //  14
       6,   //  15
-      7,   //  16
-      9,   //  17
-     10,   //  18
-     14,   //  19
-     17,   //  20
-     19,   //  21
-     25,   //  22
-     28,   //  23
-     31,   //  24
-     37,   //  25
-     40,   //  26
-     41,   //  27
-     42,   //  28
-     45,   //  29
-     48,   //  30
-     50,   //  31
-     52,   //  32
-     56,   //  33
-     58,   //  34
-     59,   //  35
-     59,   //  36
-     61,   //  37
-     63,   //  38
-     63,   //  39
-     64,   //  40
-     66,   //  41
-     67,   //  42
-     67,   //  43
-     68,   //  44
-     68,   //  45
-     70,   //  46
-     70,   //  47
-     70,   //  48
-     71,   //  49
-     71,   //  50
-     71,   //  51
-     71,   //  52
-     71,   //  53
-     71,   //  54
-     71,   //  55
-     71,   //  56
-     71,   //  57
-     71,   //  58
-     71,   //  59
-     71,   //  60
-     72,   //  61
+      9,   //  16
+     11,   //  17
+     12,   //  18
+     16,   //  19
+     19,   //  20
+     21,   //  21
+     27,   //  22
+     30,   //  23
+     33,   //  24
+     39,   //  25
+     42,   //  26
+     43,   //  27
+     45,   //  28
+     48,   //  29
+     51,   //  30
+     53,   //  31
+     55,   //  32
+     59,   //  33
+     61,   //  34
+     62,   //  35
+     63,   //  36
+     65,   //  37
+     67,   //  38
+     67,   //  39
+     68,   //  40
+     71,   //  41
+     72,   //  42
+     72,   //  43
+     73,   //  44
+     73,   //  45
+     75,   //  46
+     75,   //  47
+     75,   //  48
+     76,   //  49
+     76,   //  50
+     76,   //  51
+     76,   //  52
+     76,   //  53
+     76,   //  54
+     76,   //  55
+     76,   //  56
+     76,   //  57
+     76,   //  58
+     76,   //  59
+     76,   //  60
+     77,   //  61
 };
 
 struct EnumValueInfo
@@ -1105,403 +1265,508 @@ struct MemberInfo
 
 const MemberInfo MemberInfos[] = 
 {
-    //   0 - account.subpostUWP.NSFW
+    //   0 - Reddit.UserPage.PageType
+    L"PageType",
+    &GetValueTypeMember_PageType<::Reddit::UserPage, ::Windows::UI::Xaml::Interop::TypeName>,
+    nullptr,
+    57, // Windows.UI.Xaml.Interop.TypeName
+    -1,
+    true,  false, false,
+    //   1 - Reddit.UserPage.NavigationIndex
+    L"NavigationIndex",
+    &GetValueTypeMember_NavigationIndex<::Reddit::UserPage, ::default::int32>,
+    nullptr,
+    0, // Int32
+    -1,
+    true,  false, false,
+    //   2 - account.subpostUWP.NSFW
     L"NSFW",
     &GetValueTypeMember_NSFW<::account::subpostUWP, ::Platform::Boolean>,
     nullptr,
     4, // Boolean
     -1,
     true,  false, false,
-    //   1 - account.subpostUWP.num_comments
+    //   3 - account.subpostUWP.num_comments
     L"num_comments",
     &GetValueTypeMember_num_comments<::account::subpostUWP, ::default::int32>,
     nullptr,
     0, // Int32
     -1,
     true,  false, false,
-    //   2 - account.subpostUWP.subreddit
+    //   4 - account.subpostUWP.subreddit
     L"subreddit",
     &GetReferenceTypeMember_subreddit<::account::subpostUWP>,
     nullptr,
     2, // String
     -1,
     true,  false, false,
-    //   3 - account.subpostUWP.self
+    //   5 - account.subpostUWP.self
     L"self",
     &GetValueTypeMember_self<::account::subpostUWP, ::Platform::Boolean>,
     nullptr,
     4, // Boolean
     -1,
     true,  false, false,
-    //   4 - account.subpostUWP.link
+    //   6 - account.subpostUWP.link
     L"link",
     &GetReferenceTypeMember_link<::account::subpostUWP>,
     nullptr,
-    27, // Windows.Foundation.Uri
+    29, // Windows.Foundation.Uri
     -1,
     true,  false, false,
-    //   5 - account.subpostUWP.Title
+    //   7 - account.subpostUWP.Title
     L"Title",
     &GetReferenceTypeMember_Title<::account::subpostUWP>,
     nullptr,
     2, // String
     -1,
     true,  false, false,
-    //   6 - account.subpostUWP.author
+    //   8 - account.subpostUWP.author
     L"author",
     &GetReferenceTypeMember_author<::account::subpostUWP>,
     nullptr,
     2, // String
     -1,
     true,  false, false,
-    //   7 - account.subpostUWP.selftext
+    //   9 - account.subpostUWP.selftext
     L"selftext",
     &GetReferenceTypeMember_selftext<::account::subpostUWP>,
     nullptr,
     2, // String
     -1,
     true,  false, false,
-    //   8 - account.subpostUWP.contentType
+    //  10 - account.subpostUWP.contentType
     L"contentType",
     &GetValueTypeMember_contentType<::account::subpostUWP, ::account::postContentType>,
     &SetEnumMember_contentType<::account::subpostUWP, ::account::postContentType>,
-    30, // account.postContentType
+    32, // account.postContentType
     -1,
     false, false, false,
-    //   9 - account.subpostUWP.thumbnail
+    //  11 - account.subpostUWP.thumbnail
     L"thumbnail",
     &GetReferenceTypeMember_thumbnail<::account::subpostUWP>,
     nullptr,
-    55, // Windows.UI.Xaml.FrameworkElement
+    58, // Windows.UI.Xaml.FrameworkElement
     -1,
     true,  false, false,
-    //  10 - account.subpostUWP.thumbnailURI
+    //  12 - account.subpostUWP.thumbnailURI
     L"thumbnailURI",
     &GetReferenceTypeMember_thumbnailURI<::account::subpostUWP>,
     nullptr,
-    27, // Windows.Foundation.Uri
+    29, // Windows.Foundation.Uri
     -1,
     true,  false, false,
-    //  11 - account.subpostUWP.previewURI
+    //  13 - account.subpostUWP.previewURI
     L"previewURI",
     &GetReferenceTypeMember_previewURI<::account::subpostUWP>,
     nullptr,
-    27, // Windows.Foundation.Uri
+    29, // Windows.Foundation.Uri
     -1,
     true,  false, false,
-    //  12 - account.subpostUWP.changedownvote
+    //  14 - account.subpostUWP.changedownvote
     L"changedownvote",
     &GetReferenceTypeMember_changedownvote<::account::subpostUWP>,
     nullptr,
-    49, // Windows.UI.Xaml.Input.ICommand
+    52, // Windows.UI.Xaml.Input.ICommand
     -1,
     true,  false, false,
-    //  13 - account.subpostUWP.changeupvote
+    //  15 - account.subpostUWP.changeupvote
     L"changeupvote",
     &GetReferenceTypeMember_changeupvote<::account::subpostUWP>,
     nullptr,
-    49, // Windows.UI.Xaml.Input.ICommand
+    52, // Windows.UI.Xaml.Input.ICommand
     -1,
     true,  false, false,
-    //  14 - account.subpostUWP.previewCommand
+    //  16 - account.subpostUWP.previewCommand
     L"previewCommand",
     &GetReferenceTypeMember_previewCommand<::account::subpostUWP>,
     &SetReferenceTypeMember_previewCommand<::account::subpostUWP, ::Windows::UI::Xaml::Input::ICommand>,
-    49, // Windows.UI.Xaml.Input.ICommand
+    52, // Windows.UI.Xaml.Input.ICommand
     -1,
     false, false, false,
-    //  15 - account.subpostUWP.Liked
+    //  17 - account.subpostUWP.Liked
     L"Liked",
     &GetReferenceTypeMember_Liked<::account::subpostUWP>,
     &SetReferenceTypeMember_Liked<::account::subpostUWP, ::Platform::IBox<::Platform::Boolean>>,
-    65, // Windows.Foundation.IReference`1<Boolean>
+    70, // Windows.Foundation.IReference`1<Boolean>
     -1,
     false, false, false,
-    //  16 - account.subpostUWP.score
+    //  18 - account.subpostUWP.score
     L"score",
     &GetValueTypeMember_score<::account::subpostUWP, ::default::int32>,
     nullptr,
     0, // Int32
     -1,
     true,  false, false,
-    //  17 - account.subpostUWP.saved
+    //  19 - account.subpostUWP.saved
     L"saved",
     &GetValueTypeMember_saved<::account::subpostUWP, ::Platform::Boolean>,
     &SetValueTypeMember_saved<::account::subpostUWP, ::Platform::Boolean>,
     4, // Boolean
     -1,
     false, false, false,
-    //  18 - account.subpostUWP.Golds
+    //  20 - account.subpostUWP.Golds
     L"Golds",
     &GetValueTypeMember_Golds<::account::subpostUWP, ::default::uint32>,
     nullptr,
     3, // UInt32
     -1,
     true,  false, false,
-    //  19 - account.subpostUWP.rType
+    //  21 - account.subpostUWP.rType
     L"rType",
     &GetValueTypeMember_rType<::account::subpostUWP, ::account::RedditType>,
     nullptr,
-    13, // account.RedditType
+    15, // account.RedditType
     -1,
     true,  false, false,
-    //  20 - Reddit.reportFlyout.reasonsVec
+    //  22 - Reddit.reportFlyout.reasonsVec
     L"reasonsVec",
     nullptr,
     &SetReferenceTypeMember_reasonsVec<::Reddit::reportFlyout, ::Platform::Object>,
     1, // Object
     -1,
     false, false, false,
-    //  21 - Reddit.reportFlyout.isComment
+    //  23 - Reddit.reportFlyout.isComment
     L"isComment",
     nullptr,
     &SetValueTypeMember_isComment<::Reddit::reportFlyout, ::Platform::Boolean>,
     4, // Boolean
     -1,
     false, false, false,
-    //  22 - Reddit.reportFlyout.subreddit
+    //  24 - Reddit.reportFlyout.subreddit
     L"subreddit",
     &GetReferenceTypeMember_subreddit<::Reddit::reportFlyout>,
     &SetReferenceTypeMember_subreddit<::Reddit::reportFlyout, ::Platform::String>,
     2, // String
     -1,
     false, false, false,
-    //  23 - Reddit.EXplaceHolder.post
+    //  25 - Reddit.EXplaceHolder.post
     L"post",
     nullptr,
     &SetReferenceTypeMember_post<::Reddit::EXplaceHolder, ::account::subpostUWP>,
-    11, // account.subpostUWP
+    13, // account.subpostUWP
     -1,
     false, false, false,
-    //  24 - Reddit.EXplaceHolder.contentLoaded
+    //  26 - Reddit.EXplaceHolder.contentLoaded
     L"contentLoaded",
     &GetValueTypeMember_contentLoaded<::Reddit::EXplaceHolder, ::Platform::Boolean>,
-    &SetValueTypeMember_contentLoaded<::Reddit::EXplaceHolder, ::Platform::Boolean>,
+    nullptr,
     4, // Boolean
     -1,
-    false, false, false,
-    //  25 - Reddit.CommentViewPage.PageType
+    true,  false, false,
+    //  27 - Reddit.rootWindowGrid.Has_mail
+    L"Has_mail",
+    &GetValueTypeMember_Has_mail<::Reddit::rootWindowGrid, ::Platform::Boolean>,
+    nullptr,
+    4, // Boolean
+    -1,
+    true,  false, false,
+    //  28 - Reddit.CommentViewPage.PageType
     L"PageType",
     &GetValueTypeMember_PageType<::Reddit::CommentViewPage, ::Windows::UI::Xaml::Interop::TypeName>,
     nullptr,
-    54, // Windows.UI.Xaml.Interop.TypeName
+    57, // Windows.UI.Xaml.Interop.TypeName
     -1,
     true,  false, false,
-    //  26 - Reddit.CommentViewPage.sort
+    //  29 - Reddit.CommentViewPage.sort
     L"sort",
     &GetValueTypeMember_sort<::Reddit::CommentViewPage, ::account::commentSort>,
     &SetEnumMember_sort<::Reddit::CommentViewPage, ::account::commentSort>,
-    15, // account.commentSort
+    17, // account.commentSort
     -1,
     false, false, false,
-    //  27 - Reddit.CommentViewPage.NavigationIndex
+    //  30 - Reddit.CommentViewPage.NavigationIndex
     L"NavigationIndex",
     &GetValueTypeMember_NavigationIndex<::Reddit::CommentViewPage, ::default::int32>,
     nullptr,
     0, // Int32
     -1,
     true,  false, false,
-    //  28 - Reddit.CommentViewPage.subInfo
+    //  31 - Reddit.CommentViewPage.subInfo
     L"subInfo",
     &GetValueTypeMember_subInfo<::Reddit::CommentViewPage, ::account::subredditInfo>,
     nullptr,
-    20, // account.subredditInfo
+    22, // account.subredditInfo
     -1,
     true,  false, false,
-    //  29 - mdblock.mdRichProperties.MDElements
+    //  32 - mdblock.mdRichProperties.MDElements
     L"MDElements",
     &GetAttachableMember_MDElements<::mdblock::mdRichProperties, ::Windows::UI::Xaml::UIElement>,
     &SetAttachableMember_MDElements<::mdblock::mdRichProperties, ::Windows::UI::Xaml::UIElement, ::mdblock::refMDElements^>,
-    19, // mdblock.refMDElements
-    38, // Windows.UI.Xaml.UIElement
+    21, // mdblock.refMDElements
+    40, // Windows.UI.Xaml.UIElement
     false, true,  true, 
-    //  30 - mdblock.mdRichProperties.MD
+    //  33 - mdblock.mdRichProperties.MD
     L"MD",
     &GetAttachableMember_MD<::mdblock::mdRichProperties, ::Windows::UI::Xaml::UIElement>,
     &SetAttachableMember_MD<::mdblock::mdRichProperties, ::Windows::UI::Xaml::UIElement, ::Platform::String^>,
     2, // String
-    38, // Windows.UI.Xaml.UIElement
+    40, // Windows.UI.Xaml.UIElement
     false, true,  true, 
-    //  31 - TreeViewControl.TreeView.RootNode
+    //  34 - TreeViewControl.TreeView.RootNode
     L"RootNode",
     &GetReferenceTypeMember_RootNode<::TreeViewControl::TreeView>,
     &SetReferenceTypeMember_RootNode<::TreeViewControl::TreeView, ::TreeViewControl::TreeNode>,
-    34, // TreeViewControl.TreeNode
+    36, // TreeViewControl.TreeNode
     -1,
     false, false, false,
-    //  32 - TreeViewControl.TreeNode.Depth
+    //  35 - TreeViewControl.TreeNode.Depth
     L"Depth",
     &GetValueTypeMember_Depth<::TreeViewControl::TreeNode, ::default::int32>,
     nullptr,
     0, // Int32
     -1,
     true,  false, false,
-    //  33 - TreeViewControl.TreeNode.HasItems
+    //  36 - TreeViewControl.TreeNode.HasItems
     L"HasItems",
     &GetValueTypeMember_HasItems<::TreeViewControl::TreeNode, ::Platform::Boolean>,
     nullptr,
     4, // Boolean
     -1,
     true,  false, false,
-    //  34 - TreeViewControl.TreeNode.IsExpanded
+    //  37 - TreeViewControl.TreeNode.IsExpanded
     L"IsExpanded",
     &GetValueTypeMember_IsExpanded<::TreeViewControl::TreeNode, ::Platform::Boolean>,
     &SetValueTypeMember_IsExpanded<::TreeViewControl::TreeNode, ::Platform::Boolean>,
     4, // Boolean
     -1,
     false, false, false,
-    //  35 - TreeViewControl.TreeNode.ParentNode
+    //  38 - TreeViewControl.TreeNode.ParentNode
     L"ParentNode",
     &GetReferenceTypeMember_ParentNode<::TreeViewControl::TreeNode>,
     &SetReferenceTypeMember_ParentNode<::TreeViewControl::TreeNode, ::TreeViewControl::TreeNode>,
-    34, // TreeViewControl.TreeNode
+    36, // TreeViewControl.TreeNode
     -1,
     false, false, false,
-    //  36 - TreeViewControl.TreeNode.Data
+    //  39 - TreeViewControl.TreeNode.Data
     L"Data",
     &GetReferenceTypeMember_Data<::TreeViewControl::TreeNode>,
     &SetReferenceTypeMember_Data<::TreeViewControl::TreeNode, ::Platform::Object>,
     1, // Object
     -1,
     false, false, false,
-    //  37 - TreeViewControl.TreeNode.Size
+    //  40 - TreeViewControl.TreeNode.Size
     L"Size",
     &GetValueTypeMember_Size<::TreeViewControl::TreeNode, ::default::uint32>,
     nullptr,
     3, // UInt32
     -1,
     true,  false, false,
-    //  38 - ExpanderControl.Expander.IsExpanded
+    //  41 - ExpanderControl.Expander.IsExpanded
     L"IsExpanded",
     &GetValueTypeMember_IsExpanded<::ExpanderControl::Expander, ::Platform::Boolean>,
     &SetValueTypeMember_IsExpanded<::ExpanderControl::Expander, ::Platform::Boolean>,
     4, // Boolean
     -1,
     false, true,  false,
-    //  39 - ExpanderControl.Expander.Header
+    //  42 - ExpanderControl.Expander.Header
     L"Header",
     &GetReferenceTypeMember_Header<::ExpanderControl::Expander>,
     &SetReferenceTypeMember_Header<::ExpanderControl::Expander, ::Platform::Object>,
     1, // Object
     -1,
     false, true,  false,
-    //  40 - ExpanderControl.Expander.HeaderTemplate
+    //  43 - ExpanderControl.Expander.HeaderTemplate
     L"HeaderTemplate",
     &GetReferenceTypeMember_HeaderTemplate<::ExpanderControl::Expander>,
     &SetReferenceTypeMember_HeaderTemplate<::ExpanderControl::Expander, ::Windows::UI::Xaml::DataTemplate>,
-    43, // Windows.UI.Xaml.DataTemplate
+    46, // Windows.UI.Xaml.DataTemplate
     -1,
     false, true,  false,
-    //  41 - Reddit.SubRedditViewPage.PageType
+    //  44 - Reddit.SubRedditViewPage.PageType
     L"PageType",
     &GetValueTypeMember_PageType<::Reddit::SubRedditViewPage, ::Windows::UI::Xaml::Interop::TypeName>,
     nullptr,
-    54, // Windows.UI.Xaml.Interop.TypeName
+    57, // Windows.UI.Xaml.Interop.TypeName
     -1,
     true,  false, false,
-    //  42 - Reddit.SubRedditViewPage.NavigationIndex
+    //  45 - Reddit.SubRedditViewPage.NavigationIndex
     L"NavigationIndex",
     &GetValueTypeMember_NavigationIndex<::Reddit::SubRedditViewPage, ::default::int32>,
     nullptr,
     0, // Int32
     -1,
     true,  false, false,
-    //  43 - Reddit.SubRedditViewPage.Range
+    //  46 - Reddit.SubRedditViewPage.Range
     L"Range",
     &GetValueTypeMember_Range<::Reddit::SubRedditViewPage, ::account::timerange>,
     &SetEnumMember_Range<::Reddit::SubRedditViewPage, ::account::timerange>,
-    9, // account.timerange
+    11, // account.timerange
     -1,
     false, false, false,
-    //  44 - Reddit.SubRedditViewPage.Sort
+    //  47 - Reddit.SubRedditViewPage.Sort
     L"Sort",
     &GetValueTypeMember_Sort<::Reddit::SubRedditViewPage, ::account::postSort>,
     &SetEnumMember_Sort<::Reddit::SubRedditViewPage, ::account::postSort>,
-    8, // account.postSort
+    10, // account.postSort
     -1,
     false, false, false,
-    //  45 - Reddit.SubRedditViewPage.Subreddit
+    //  48 - Reddit.SubRedditViewPage.Subreddit
     L"Subreddit",
     &GetReferenceTypeMember_Subreddit<::Reddit::SubRedditViewPage>,
     nullptr,
     2, // String
     -1,
     true,  false, false,
-    //  46 - Reddit.SubRedditViewPage.viewMode
+    //  49 - Reddit.SubRedditViewPage.viewMode
     L"viewMode",
     &GetValueTypeMember_viewMode<::Reddit::SubRedditViewPage, ::Platform::Boolean>,
     &SetValueTypeMember_viewMode<::Reddit::SubRedditViewPage, ::Platform::Boolean>,
     4, // Boolean
     -1,
     false, false, false,
-    //  47 - Reddit.SubRedditViewPage.subInfo
+    //  50 - Reddit.SubRedditViewPage.subInfo
     L"subInfo",
     &GetValueTypeMember_subInfo<::Reddit::SubRedditViewPage, ::account::subredditInfo>,
     nullptr,
-    20, // account.subredditInfo
+    22, // account.subredditInfo
     -1,
     true,  false, false,
-    //  48 - Reddit.SubRedditViewPage.posts
+    //  51 - Reddit.SubRedditViewPage.posts
     L"posts",
     &GetReferenceTypeMember_posts<::Reddit::SubRedditViewPage>,
     nullptr,
-    71, // Windows.Foundation.Collections.IVector`1<account.subpostUWP>
+    76, // Windows.Foundation.Collections.IVector`1<account.subpostUWP>
     -1,
     true,  false, false,
-    //  49 - Reddit.SubRedditViewPage.SidebarUseCSS
+    //  52 - Reddit.SubRedditViewPage.SidebarUseCSS
     L"SidebarUseCSS",
     &GetValueTypeMember_SidebarUseCSS<::Reddit::SubRedditViewPage, ::Platform::Boolean>,
     &SetValueTypeMember_SidebarUseCSS<::Reddit::SubRedditViewPage, ::Platform::Boolean>,
     4, // Boolean
     -1,
     false, false, false,
-    //  50 - mdblock.MDFullEnhancedEditor.Box
+    //  53 - Reddit.MixedContentSelector.CommentDataTemplate
+    L"CommentDataTemplate",
+    &GetReferenceTypeMember_CommentDataTemplate<::Reddit::MixedContentSelector>,
+    &SetReferenceTypeMember_CommentDataTemplate<::Reddit::MixedContentSelector, ::Windows::UI::Xaml::DataTemplate>,
+    46, // Windows.UI.Xaml.DataTemplate
+    -1,
+    false, false, false,
+    //  54 - Reddit.MixedContentSelector.SubPostDataTemplate
+    L"SubPostDataTemplate",
+    &GetReferenceTypeMember_SubPostDataTemplate<::Reddit::MixedContentSelector>,
+    &SetReferenceTypeMember_SubPostDataTemplate<::Reddit::MixedContentSelector, ::Windows::UI::Xaml::DataTemplate>,
+    46, // Windows.UI.Xaml.DataTemplate
+    -1,
+    false, false, false,
+    //  55 - mdblock.MDFullEnhancedEditor.Box
     L"Box",
     &GetReferenceTypeMember_Box<::mdblock::MDFullEnhancedEditor>,
     nullptr,
-    22, // mdblock.mdEnhancedBox
+    24, // mdblock.mdEnhancedBox
     -1,
     true,  false, false,
-    //  51 - Reddit.comboboxTemplateSelector.listTemplate
+    //  56 - Reddit.comboboxTemplateSelector.listTemplate
     L"listTemplate",
     &GetReferenceTypeMember_listTemplate<::Reddit::comboboxTemplateSelector>,
     &SetReferenceTypeMember_listTemplate<::Reddit::comboboxTemplateSelector, ::Windows::UI::Xaml::DataTemplate>,
-    43, // Windows.UI.Xaml.DataTemplate
+    46, // Windows.UI.Xaml.DataTemplate
     -1,
     false, false, false,
-    //  52 - Reddit.comboboxTemplateSelector.closedTemplate
+    //  57 - Reddit.comboboxTemplateSelector.closedTemplate
     L"closedTemplate",
     &GetReferenceTypeMember_closedTemplate<::Reddit::comboboxTemplateSelector>,
     &SetReferenceTypeMember_closedTemplate<::Reddit::comboboxTemplateSelector, ::Windows::UI::Xaml::DataTemplate>,
-    43, // Windows.UI.Xaml.DataTemplate
+    46, // Windows.UI.Xaml.DataTemplate
     -1,
     false, false, false,
-    //  53 - Reddit.comboboxTemplateSelector.nullTemplate
+    //  58 - Reddit.comboboxTemplateSelector.nullTemplate
     L"nullTemplate",
     &GetReferenceTypeMember_nullTemplate<::Reddit::comboboxTemplateSelector>,
     &SetReferenceTypeMember_nullTemplate<::Reddit::comboboxTemplateSelector, ::Windows::UI::Xaml::DataTemplate>,
-    43, // Windows.UI.Xaml.DataTemplate
+    46, // Windows.UI.Xaml.DataTemplate
     -1,
     false, false, false,
-    //  54 - Reddit.AppBarToggleColoredButton.CheckedBrush
+    //  59 - Reddit.AppBarToggleColoredButton.CheckedBrush
     L"CheckedBrush",
     &GetReferenceTypeMember_CheckedBrush<::Reddit::AppBarToggleColoredButton>,
     &SetReferenceTypeMember_CheckedBrush<::Reddit::AppBarToggleColoredButton, ::Windows::UI::Xaml::Media::Brush>,
-    41, // Windows.UI.Xaml.Media.Brush
+    43, // Windows.UI.Xaml.Media.Brush
     -1,
     false, true,  false,
-    //  55 - Reddit.subPostControlIconTemplateSelector.selfTemplate
+    //  60 - Microsoft.Advertising.WinRT.UI.AdControl.ApplicationId
+    L"ApplicationId",
+    &GetReferenceTypeMember_ApplicationId<::Microsoft::Advertising::WinRT::UI::AdControl>,
+    &SetReferenceTypeMember_ApplicationId<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //  61 - Microsoft.Advertising.WinRT.UI.AdControl.AdUnitId
+    L"AdUnitId",
+    &GetReferenceTypeMember_AdUnitId<::Microsoft::Advertising::WinRT::UI::AdControl>,
+    &SetReferenceTypeMember_AdUnitId<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //  62 - Microsoft.Advertising.WinRT.UI.AdControl.HasAd
+    L"HasAd",
+    &GetValueTypeMember_HasAd<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::Boolean>,
+    nullptr,
+    4, // Boolean
+    -1,
+    true,  false, false,
+    //  63 - Microsoft.Advertising.WinRT.UI.AdControl.IsSuspended
+    L"IsSuspended",
+    &GetValueTypeMember_IsSuspended<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::Boolean>,
+    nullptr,
+    4, // Boolean
+    -1,
+    true,  false, false,
+    //  64 - Microsoft.Advertising.WinRT.UI.AdControl.PostalCode
+    L"PostalCode",
+    &GetReferenceTypeMember_PostalCode<::Microsoft::Advertising::WinRT::UI::AdControl>,
+    &SetReferenceTypeMember_PostalCode<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //  65 - Microsoft.Advertising.WinRT.UI.AdControl.CountryOrRegion
+    L"CountryOrRegion",
+    &GetReferenceTypeMember_CountryOrRegion<::Microsoft::Advertising::WinRT::UI::AdControl>,
+    &SetReferenceTypeMember_CountryOrRegion<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //  66 - Microsoft.Advertising.WinRT.UI.AdControl.Keywords
+    L"Keywords",
+    &GetReferenceTypeMember_Keywords<::Microsoft::Advertising::WinRT::UI::AdControl>,
+    &SetReferenceTypeMember_Keywords<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //  67 - Microsoft.Advertising.WinRT.UI.AdControl.AutoRefreshIntervalInSeconds
+    L"AutoRefreshIntervalInSeconds",
+    &GetValueTypeMember_AutoRefreshIntervalInSeconds<::Microsoft::Advertising::WinRT::UI::AdControl, ::default::int32>,
+    &SetValueTypeMember_AutoRefreshIntervalInSeconds<::Microsoft::Advertising::WinRT::UI::AdControl, ::default::int32>,
+    0, // Int32
+    -1,
+    false, false, false,
+    //  68 - Microsoft.Advertising.WinRT.UI.AdControl.IsAutoRefreshEnabled
+    L"IsAutoRefreshEnabled",
+    &GetValueTypeMember_IsAutoRefreshEnabled<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::Boolean>,
+    &SetValueTypeMember_IsAutoRefreshEnabled<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::Boolean>,
+    4, // Boolean
+    -1,
+    false, false, false,
+    //  69 - Microsoft.Advertising.WinRT.UI.AdControl.IsEngaged
+    L"IsEngaged",
+    &GetValueTypeMember_IsEngaged<::Microsoft::Advertising::WinRT::UI::AdControl, ::Platform::Boolean>,
+    nullptr,
+    4, // Boolean
+    -1,
+    true,  false, false,
+    //  70 - Reddit.subPostControlIconTemplateSelector.selfTemplate
     L"selfTemplate",
     &GetReferenceTypeMember_selfTemplate<::Reddit::subPostControlIconTemplateSelector>,
     &SetReferenceTypeMember_selfTemplate<::Reddit::subPostControlIconTemplateSelector, ::Windows::UI::Xaml::Controls::ControlTemplate>,
-    64, // Windows.UI.Xaml.Controls.ControlTemplate
+    68, // Windows.UI.Xaml.Controls.ControlTemplate
     -1,
     false, false, false,
-    //  56 - Reddit.subPostControlIconTemplateSelector.thumbnailTemplate
+    //  71 - Reddit.subPostControlIconTemplateSelector.thumbnailTemplate
     L"thumbnailTemplate",
     &GetReferenceTypeMember_thumbnailTemplate<::Reddit::subPostControlIconTemplateSelector>,
     &SetReferenceTypeMember_thumbnailTemplate<::Reddit::subPostControlIconTemplateSelector, ::Windows::UI::Xaml::Controls::ControlTemplate>,
-    64, // Windows.UI.Xaml.Controls.ControlTemplate
+    68, // Windows.UI.Xaml.Controls.ControlTemplate
     -1,
     false, false, false,
 };
@@ -1565,6 +1830,8 @@ const MemberInfo* GetMemberInfo(::Platform::String^ longMemberName)
     {
         auto otherProviders = ref new ::Platform::Collections::Vector<::Windows::UI::Xaml::Markup::IXamlMetadataProvider^>();
         ::Windows::UI::Xaml::Markup::IXamlMetadataProvider^ provider;
+        provider = ref new ::Microsoft::Advertising::MicrosoftAdvertising_XamlTypeInfo::XamlMetaDataProvider();
+        otherProviders->Append(provider); 
         provider = ref new ::ExpanderControl::ExpanderControl_XamlTypeInfo::XamlMetaDataProvider();
         otherProviders->Append(provider); 
         provider = ref new ::mdblock::mdblock_XamlTypeInfo::XamlMetaDataProvider();

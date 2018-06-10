@@ -137,7 +137,7 @@ private:
     }
     void Update_sideBarButton(::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj, int phase)
     {
-        this->_bindingsTracking->UpdateDependencyPropertyChangedListener(obj, ::Windows::UI::Xaml::Controls::AppBarToggleButton::IsCheckedProperty, &this->cacheDPC_sideBarButton_IsChecked, &this->tokenDPC_sideBarButton_IsChecked);
+        this->_bindingsTracking->UpdateDependencyPropertyChangedListener(obj, ::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty, &this->cacheDPC_sideBarButton_IsChecked, &this->tokenDPC_sideBarButton_IsChecked);
         if (obj != nullptr)
         {
             if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
@@ -157,7 +157,7 @@ private:
 
     virtual void ReleaseAllListeners() override
     {
-        this->_bindingsTracking->UpdateDependencyPropertyChangedListener(nullptr, ::Windows::UI::Xaml::Controls::AppBarToggleButton::IsCheckedProperty, &this->cacheDPC_sideBarButton_IsChecked, &this->tokenDPC_sideBarButton_IsChecked);
+        this->_bindingsTracking->UpdateDependencyPropertyChangedListener(nullptr, ::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty, &this->cacheDPC_sideBarButton_IsChecked, &this->tokenDPC_sideBarButton_IsChecked);
     }
 
     virtual void PropertyChanged(Platform::Object^ sender, ::Windows::UI::Xaml::Data::PropertyChangedEventArgs^ e) override
@@ -180,7 +180,7 @@ private:
     {
         if (sender != nullptr)
         {
-            if (sender->Equals(this->cacheDPC_sideBarButton_IsChecked) && ::Windows::UI::Xaml::Controls::AppBarToggleButton::IsCheckedProperty->Equals(prop))
+            if (sender->Equals(this->cacheDPC_sideBarButton_IsChecked) && ::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty->Equals(prop))
             {
                 ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(sender);
                 if (obj != nullptr)

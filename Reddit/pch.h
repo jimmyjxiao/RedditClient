@@ -9,3 +9,7 @@
 #include <ppltasks.h>
 
 #include "App.xaml.h"
+#include "NavStates.h"
+#include "globalvars.h"
+#include "accountEnums.h"
+#include "ApplicationDataHelper.h"
