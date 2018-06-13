@@ -1,5 +1,5 @@
 #include "pch.h"
-
+#include <cctype>
 namespace globalvars
 {
 	settings appSettingCache;
@@ -10,7 +10,6 @@ namespace globalvars
 	std::vector<navVariant> NavState;
 	unsigned char navChar = -1;
 	Windows::Web::Http::HttpClient^ imgurHttp;
-	sqlite::database * AppDB;
 	int htmlinstance = 0;
 	std::vector<std::pair<Platform::String^, Platform::Collections::Vector<account::reportReason>^>> reportReasonCache;
 	void clearOldPageCaches()
@@ -35,5 +34,16 @@ namespace globalvars
 			return a.second->updateInfo();
 		});
 		return concurrency::when_all(updateTasks.begin(), updateTasks.end());
+	}
+	bool ci_less::nocase_compare::operator()(const wchar_t & c1, const wchar_t & c2) const
+	{
+			return std::tolower(c1) < std::tolower(c2);
+	}
+	bool ci_less::operator()(const std::wstring & s1, const std::wstring & s2) const
+	{
+		return std::lexicographical_compare
+		(s1.begin(), s1.end(),   // source range
+			s2.begin(), s2.end(),   // dest range
+			nocase_compare());  // comparison
 	}
 }

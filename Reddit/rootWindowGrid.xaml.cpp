@@ -56,7 +56,7 @@ rootWindowGrid::rootWindowGrid()
 			{
 				accclass = new account::AccountInterface(x->Password, ApplicationDataHelper::userHelpers::MyUserInfoCache(x->UserName));
 			}
-			catch (sqlite::sqlite_exception e)
+			catch (std::exception)
 			{
 				accclass = new account::AccountInterface(x->Password);
 			}

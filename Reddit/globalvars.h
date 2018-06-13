@@ -1,6 +1,5 @@
 #pragma once
 #include "AccountInterface.h"
-#include "sqlite_modern_cpp\hdr\sqlite_modern_cpp.h"
 #include "subpostUWP.h"
 #include <map>
 namespace globalvars
@@ -11,16 +10,9 @@ namespace globalvars
 		// case-independent (ci) compare_less binary function
 		struct nocase_compare
 		{
-			bool operator() (const wchar_t& c1, const  wchar_t& c2) const {
-				return std::tolower(c1) < std::tolower(c2);
-			}
+			bool operator() (const wchar_t& c1, const  wchar_t& c2) const;
 		};
-		bool operator() (const std::wstring & s1, const std::wstring & s2) const {
-			return std::lexicographical_compare
-			(s1.begin(), s1.end(),   // source range
-				s2.begin(), s2.end(),   // dest range
-				nocase_compare());  // comparison
-		}
+		bool operator() (const std::wstring & s1, const std::wstring & s2) const;
 	};
 	struct settings
 	{
@@ -43,6 +35,5 @@ namespace globalvars
 	unsigned char addNav(Windows::UI::Xaml::Interop::TypeName pageType, baseNavState * c);
 	extern unsigned char navChar;
 	extern account::AccountInterface * currentacc;
-	extern sqlite::database * AppDB;
 	concurrency::task<void> UpdateAccountsTask();
 }

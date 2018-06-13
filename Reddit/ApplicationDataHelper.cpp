@@ -2,6 +2,10 @@
 #include "ApplicationDataHelper.h"
 #include "sqlite_modern_cpp\hdr\sqlite_modern_cpp.h"
 #include <optional>
+namespace globalvars
+{
+	sqlite::database * AppDB;
+}
 namespace ApplicationDataHelper
 {
 	namespace rulesOneUnitCache
