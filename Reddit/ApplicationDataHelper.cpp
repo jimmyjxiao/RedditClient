@@ -61,7 +61,7 @@ namespace ApplicationDataHelper
 			return globalvars::AppDB->last_insert_rowid();
 		}
 	}
-	Platform::Collections::Vector<account::reportReason>^ subredditHelpers::trysubredditRulesCache(std::u16string subredditName, Platform::Collections::Vector<account::reportReason>^ v)
+	Platform::Collections::Vector<account::reportReason>^ subredditHelpers::trysubredditRulesCache(std::u16string subredditName, Platform::Collections::Vector<account::reportReason>^ v, concurrency::cancellation_token cToken)
 	{
 		if (subredditName == rulesOneUnitCache::subredditCachedName)
 		{
@@ -86,7 +86,7 @@ namespace ApplicationDataHelper
 		else
 		{
 			cacheMiss<std::vector<account::reportReason>> missException;
-			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data())).then([v, index](std::vector<account::reportReason> e) {
+			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data()), cToken).then([v, index](std::vector<account::reportReason> e) {
 				storeSubredditRules(e, index);
 				v->ReplaceAll(ref new Platform::Array<account::reportReason>(e.data(), e.size()));
 				return e;
@@ -94,7 +94,7 @@ namespace ApplicationDataHelper
 			throw missException;
 		}
 	}
-	Platform::Collections::Vector<account::reportReason>^ subredditHelpers::trysubredditRulesCache(unsigned int index, Platform::Collections::Vector<account::reportReason>^ v )
+	Platform::Collections::Vector<account::reportReason>^ subredditHelpers::trysubredditRulesCache(unsigned int index, Platform::Collections::Vector<account::reportReason>^ v , concurrency::cancellation_token cToken)
 	{
 		if (rulesOneUnitCache::index == index)
 		{
@@ -127,7 +127,7 @@ namespace ApplicationDataHelper
 		{
 			rulesOneUnitCache::subredditCachedName = subredditName;
 			cacheMiss<std::vector<account::reportReason>> missException;
-			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data())).then([v, index](std::vector<account::reportReason> e) {
+			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data()), std::move(cToken)).then([v, index](std::vector<account::reportReason> e) {
 				storeSubredditRules(e, index);
 				v->ReplaceAll(ref new Platform::Array<account::reportReason>(e.data(), e.size()));
 				return e;
@@ -135,7 +135,7 @@ namespace ApplicationDataHelper
 			throw missException;
 		}
 	}
-	account::subredditInfo subredditHelpers::trysubredditInfoCache(std::u16string subredditName)
+	account::subredditInfo subredditHelpers::trysubredditInfoCache(std::u16string subredditName, concurrency::cancellation_token cToken)
 	{
 		static account::subredditInfo oneUnitCache; //it happens pretty often that we are in a subreddit, and the user clicks on a comment thread inside that subreddit. Rather than using sqlite and retrieving subredditinfo again, we'll just reuse it
 		if (std::wcscmp(oneUnitCache.name->Data(), (const wchar_t*)subredditName.data()) == 0)
@@ -183,7 +183,7 @@ namespace ApplicationDataHelper
 		{
 			cacheMiss<account::subredditInfo> except(e);
 			except.retrieveTask =
-			concurrency::create_task(globalvars::currentacc->getJsonFromBasePath(Platform::StringReference((const wchar_t*)(u"r/" + subredditName + u"/about.json?raw_json=1").data())).then([index](Windows::Data::Json::JsonObject^ response) {
+			concurrency::create_task(globalvars::currentacc->getJsonFromBasePath(Platform::StringReference((const wchar_t*)(u"r/" + subredditName + u"/about.json?raw_json=1").data()), cToken).then([index](Windows::Data::Json::JsonObject^ response) {
 				auto info = account::subpost::getSubredditInfoFromJson(response->GetNamedObject("data"));
 				info.subredditIndex = index;
 				storeSubredditInfo(info);

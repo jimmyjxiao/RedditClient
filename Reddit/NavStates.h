@@ -14,7 +14,9 @@ namespace Reddit
 		void OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e) override final;
 		virtual void OnNavigatedToPageCode() {}
 	protected private:
-
+		concurrency::cancellation_token RefreshSourceAndGetNewToken();
+		concurrency::cancellation_token_source TaskCancellationSource;
+		concurrency::cancellation_token_source refreshCancelationSource = concurrency::cancellation_token_source::create_linked_source(TaskCancellationSource.get_token());
 		baseNavState * baseRef;
 	internal:
 		virtual property Windows::UI::Xaml::Interop::TypeName PageType
@@ -31,8 +33,12 @@ namespace Reddit
 				return navIndex;
 			}
 		}
+	public:
+		virtual ~NavPage()
+		{
+			TaskCancellationSource.cancel();
+		}
 	};
-
 }
 struct baseNavState
 {

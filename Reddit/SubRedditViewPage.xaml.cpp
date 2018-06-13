@@ -35,13 +35,19 @@ Reddit::SubRedditViewPage::~SubRedditViewPage()
 {
 	//__debugbreak();
 }
-
+Windows::Foundation::Collections::IVector<account::subpostUWP^>^ SubRedditViewPage::posts::get()
+{
+	return lPtr->listing;
+}
 SubRedditViewPage::SubRedditViewPage()
 {
 	Resources->Insert(ref new Platform::String(L"reportReasonsResource"),ref new Platform::String(L"dheh"));
 	InitializeComponent();
 }
-
+account::timerange SubRedditViewPage::Range::get()
+{
+	return _NAV->rng;
+}
 bool SubRedditViewPage::SidebarUseCSS::get()
 {
 	return useCss;
@@ -64,13 +70,12 @@ void SubRedditViewPage::SidebarUseCSS::set(bool a)
 }
 void Reddit::SubRedditViewPage::Range::set(account::timerange newrange)
 {
-	if (newrange != _rng && nav != nullptr)
+	if (newrange != _NAV->rng && pageLoaded)
 	{
 
-		lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, newrange);
-		_posts = lPtr->listing;
+		lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, newrange, RefreshSourceAndGetNewToken());
 		PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("posts"));
-		_rng = newrange;
+		_NAV->rng = newrange;
 		PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("Range"));
 	}
 }
@@ -80,20 +85,18 @@ account::postSort Reddit::SubRedditViewPage::Sort::get()
 }
 void Reddit::SubRedditViewPage::Sort::set(account::postSort newsort)
 {
-	if (newsort != _sort && nav != nullptr)
+	if (newsort != _sort && pageLoaded)
 	{
 		timeSelector->SelectedIndex = 3;
 		if (newsort == account::postSort::controversial || newsort == account::postSort::top)
 		{
-			_rng = account::timerange::month;
-			lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, newsort, _rng);
-			_posts = lPtr->listing;
+			_NAV->rng = account::timerange::month;
+			lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, newsort, _NAV->rng, RefreshSourceAndGetNewToken());
 			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("posts"));
 		}
 		else
 		{
-			lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, newsort, account::timerange::Default);
-			_posts = lPtr->listing;
+			lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, newsort, account::timerange::Default, RefreshSourceAndGetNewToken());
 			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("posts"));
 		}
 		_sort = newsort;
@@ -105,32 +108,31 @@ void Reddit::SubRedditViewPage::Sort::set(account::postSort newsort)
 void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 {
 	_subreddit = _NAV->info.name;
-	_rng = _NAV->rng;
 	if (_subreddit == nullptr)
 	{
 		sideBarButton->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
 		_subInfo.pname = L"Frontpage";
-		lPtr = globalvars::currentacc->getsubredditAsyncVec();
-		_posts = lPtr->listing;
+		lPtr = globalvars::currentacc->getsubredditAsyncVec(refreshCancelationSource.get_token());
 		commandBar->Background = static_cast<Windows::UI::Xaml::Media::SolidColorBrush^>(Application::Current->Resources->Lookup("SystemControlBackgroundChromeMediumBrush"));
 		subTextblock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+		pageLoaded = true;
 	}
 	else
 	{
-		lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, _rng);
-		_posts = lPtr->listing;
+		lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, _NAV->rng, refreshCancelationSource.get_token());
 		int rngIndex;
-		if (((int)_rng) == 6)
+		if (((int)_NAV->rng) == 6)
 			rngIndex = 3;
 		else
-			rngIndex = (int)_rng;
+			rngIndex = (int)_NAV->rng;
 		timeSelector->SelectedIndex = rngIndex;
 		sortSelector->SelectedIndex = (int)_sort;
+		pageLoaded = true;
 		if (_NAV->info.subredditIndex == INT_MAX)
 		{
 			try
 			{
-				_subInfo = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache((const char16_t*)_subreddit->Data());
+				_subInfo = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache((const char16_t*)_subreddit->Data(), TaskCancellationSource.get_token());
 				Platform::Collections::Vector<account::reportReason>^ rules;
 				std::wstring temp = _subInfo.sidebar_html->Data();
 				temp.insert(27, L"usertext usertext-body md-container may-blank-within ");
@@ -147,9 +149,9 @@ void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 					listingType = ViewMode::grid;
 				}
 				if (_subInfo.subredditIndex != -1)
-					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(_subInfo.subredditIndex);
+					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(_subInfo.subredditIndex, ref new Platform::Collections::Vector<account::reportReason>(), TaskCancellationSource.get_token());
 				else
-					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data()));
+					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data()), ref new Platform::Collections::Vector<account::reportReason>(), TaskCancellationSource.get_token());
 				globalvars::reportReasonCache.emplace_back(_subInfo.name, rules);
 
 			}
@@ -169,7 +171,7 @@ void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 					}
 					this->PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("subInfo"));
 					try {
-						globalvars::reportReasonCache.emplace_back(_subInfo.name, ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data())));
+						globalvars::reportReasonCache.emplace_back(_subInfo.name, ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data()), ref new Platform::Collections::Vector<account::reportReason>(), TaskCancellationSource.get_token()));
 					}
 					catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> ee)
 					{
@@ -194,16 +196,6 @@ void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 }
 
 
-
-void Reddit::SubRedditViewPage::OnNavigatingFrom(Windows::UI::Xaml::Navigation::NavigatingCancelEventArgs ^ e)
-{
-	if (nav != nullptr)
-	{
-		nav->sort = _sort;
-		nav->rng = _rng;
-		nav->info = _subInfo;
-	}
-}
 
 void Reddit::SubRedditViewPage::updateSidebar()
 {
@@ -443,5 +435,5 @@ void Reddit::SubRedditViewPage::listView_ChoosingItemContainer(Windows::UI::Xaml
 
 void Reddit::SubRedditViewPage::postButton_click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	_posts->Append(nullptr);
+	//_posts->Append(nullptr);
 }

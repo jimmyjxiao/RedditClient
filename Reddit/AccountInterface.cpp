@@ -20,7 +20,7 @@ namespace account
 {
 	const std::wstring AccountInterface::apibase = L"https://oauth.reddit.com/";
 	Platform::String^ AccountInterface::baseURI = ref new Platform::String(L"https://oauth.reddit.com/");
-	Concurrency::task<AccountInterface*> AccountInterface::LoginNewAcc()
+	Concurrency::task<AccountInterface*> AccountInterface::LoginNewAcc(concurrency::cancellation_token cToken)
 	{
 		GUID state;
 		CoCreateGuid(&state); //create unique state string to make sure that it is our authentication when it comes back
@@ -77,18 +77,18 @@ namespace account
 
 
 
-	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getObjectInfo(Platform::String ^ fullname)
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getObjectInfo(Platform::String ^ fullname, concurrency::cancellation_token cToken)
 	{
 		Platform::String^ apiendpoint =  L"api/info" + L"?id="  + fullname + L"&raw_json=1";
-		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, apiendpoint));
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, apiendpoint), std::move(cToken));
 	}
 
-	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getObjectInfo(std::queue<Platform::String^> fullnames)
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getObjectInfo(std::queue<Platform::String^> fullnames, concurrency::cancellation_token cToken)
 	{
 		throw ref new Platform::NotImplementedException();
 	}
 
-	concurrency::task<void> AccountInterface::vote(Platform::IBox<bool>^ dir, Platform::String ^ id)
+	concurrency::task<void> AccountInterface::vote(Platform::IBox<bool>^ dir, Platform::String ^ id, concurrency::cancellation_token cToken)
 	{
 		auto content = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
 		Platform::String^ z;
@@ -100,20 +100,20 @@ namespace account
 			z = L"1";
 		content->Insert(Platform::StringReference(L"dir"), z);
 		content->Insert(Platform::StringReference(L"id"), id);
-		return concurrency::create_task(httpClient->PostAsync(ref new Uri(Platform::StringReference((apibase + L"api/vote").data())), ref new Windows::Web::Http::HttpFormUrlEncodedContent(content))).then([](Windows::Web::Http::HttpResponseMessage^ respond)
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(Platform::StringReference((apibase + L"api/vote").data())), ref new Windows::Web::Http::HttpFormUrlEncodedContent(content)), std::move(cToken)).then([](Windows::Web::Http::HttpResponseMessage^ respond)
 		{
 			respond->EnsureSuccessStatusCode();
 		});
 	}
 
-	concurrency::task<void> AccountInterface::giveGold(Platform::String ^ fullname)
+	concurrency::task<void> AccountInterface::giveGold(Platform::String ^ fullname, concurrency::cancellation_token cToken)
 	{
-		return concurrency::create_task(httpClient->PostAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/gold/gild/").data()), fullname), nullptr)).then([](Windows::Web::Http::HttpResponseMessage^ h) {
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/gold/gild/").data()), fullname), nullptr), std::move(cToken)).then([](Windows::Web::Http::HttpResponseMessage^ h) {
 			auto x = h->ToString();
 		}, concurrency::task_continuation_context::use_arbitrary());
 	}
 
-	concurrency::task<HttpResponseMessage^> AccountInterface::comment(Platform::String ^ ID, Platform::String ^ md)
+	concurrency::task<HttpResponseMessage^> AccountInterface::comment(Platform::String ^ ID, Platform::String ^ md, concurrency::cancellation_token cToken)
 	{
 		Platform::Collections::Map<Platform::String^, Platform::String^>^ z = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
 		z->Insert("raw_json", "1");
@@ -121,20 +121,20 @@ namespace account
 		z->Insert("text", md);
 		z->Insert("thing_id", ID);
 
-		return concurrency::create_task(httpClient->PostAsync(ref new Uri(baseURI, "api/comment"), ref new HttpFormUrlEncodedContent(z)));
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(baseURI, "api/comment"), ref new HttpFormUrlEncodedContent(z)), std::move(cToken));
 	}
 
 
-	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getJsonAsync(Windows::Foundation::Uri ^ requestUri)
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getJsonAsync(Windows::Foundation::Uri ^ requestUri, concurrency::cancellation_token cToken)
 	{
 		auto debugstring = requestUri->ToString();
-		return concurrency::create_task(httpClient->GetStringAsync(requestUri)).then([](Platform::String^ content) {
+		return concurrency::create_task(httpClient->GetStringAsync(requestUri), std::move(cToken)).then([](Platform::String^ content) {
 			return JsonObject::Parse(content);
 		});
 	}
 
 
-	concurrency::task<std::pair<Platform::Collections::Vector<IRedditTypeIdentifier^>^,const Platform::String^>>  AccountInterface::getMessages(Messages_Where m)
+	concurrency::task<std::pair<Platform::Collections::Vector<IRedditTypeIdentifier^>^,const Platform::String^>>  AccountInterface::getMessages(Messages_Where m, concurrency::cancellation_token cToken)
 	{
 		Platform::String^ path = L"message";
 		switch (m)
@@ -148,17 +148,17 @@ namespace account
 		case Messages_Where::unread:
 			path += L"/unread";
 		}
-		return getJsonFromBasePath(path).then([](Windows::Data::Json::JsonObject^ j) {
+		return getJsonFromBasePath(path, std::move(cToken)).then([](Windows::Data::Json::JsonObject^ j) {
 			const auto &maindata = j->GetNamedObject("data");
 			const Platform::String^ after = maindata->GetNamedString("after");
 			return std::make_pair(account::MixedContentSorter(maindata->GetNamedArray("children")), std::move(after));
 		});
 	}
 
-	concurrency::task<void> AccountInterface::updateInfo()
+	concurrency::task<void> AccountInterface::updateInfo(concurrency::cancellation_token cToken)
 	{
 		
-		return getJsonAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/me").data()))).then([this](Windows::Data::Json::JsonObject^ jsoninfo) {
+		return getJsonAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/me").data())), std::move(cToken)).then([this](Windows::Data::Json::JsonObject^ jsoninfo) {
 			me =  jsontoinfo(jsoninfo);
 			ApplicationDataHelper::userHelpers::cacheMyUser(me);
 		});
@@ -176,23 +176,23 @@ namespace account
 		return returning;
 	}
 
-	Concurrency::task<void> AccountInterface::changeSave(Platform::String ^ fullname, bool dir)
+	Concurrency::task<void> AccountInterface::changeSave(Platform::String ^ fullname, bool dir, concurrency::cancellation_token cToken)
 	{
 		std::wstring path = L"api/";
 		if (!dir)
 			path += L"un";
 		path += L"save";
-		return concurrency::create_task(httpClient->PostAsync(ref new Uri(baseURI, Platform::StringReference(path.data())), ref new Windows::Web::Http::HttpFormUrlEncodedContent(ref new Platform::Collections::Map<Platform::String^, Platform::String^>({ std::pair<Platform::String^, Platform::String^>("id", fullname) })))).then([](HttpResponseMessage^ xv) {xv->EnsureSuccessStatusCode(); });
+		return concurrency::create_task(httpClient->PostAsync(ref new Uri(baseURI, Platform::StringReference(path.data())), ref new Windows::Web::Http::HttpFormUrlEncodedContent(ref new Platform::Collections::Map<Platform::String^, Platform::String^>({ std::pair<Platform::String^, Platform::String^>("id", fullname) }))), std::move(cToken)).then([](HttpResponseMessage^ xv) {xv->EnsureSuccessStatusCode(); });
 	}
 
-	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getJsonFromBasePath(Platform::String ^ path)
+	concurrency::task<Windows::Data::Json::JsonObject^> AccountInterface::getJsonFromBasePath(Platform::String ^ path ,concurrency::cancellation_token cToken)
 	{
-		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, path));
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, path), std::move(cToken));
 	}
 
-	concurrency::task<std::vector<reportReason>> AccountInterface::getRules(Platform::String ^ subreddit)
+	concurrency::task<std::vector<reportReason>> AccountInterface::getRules(Platform::String ^ subreddit, concurrency::cancellation_token cToken)
 	{
-		return getJsonAsync(ref new Uri(baseURI, "r/" + subreddit + "/about/rules.json?raw_json=1")).then([](Windows::Data::Json::JsonObject^ json) {
+		return getJsonAsync(ref new Uri(baseURI, "r/" + subreddit + "/about/rules.json?raw_json=1"), std::move(cToken)).then([](Windows::Data::Json::JsonObject^ json) {
 
 			auto jsonrulesarr = json->GetNamedArray("rules");
 			std::vector<reportReason> output(jsonrulesarr->Size);
@@ -230,11 +230,11 @@ namespace account
 		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh, currentauth));
 		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
 	}
-	concurrency::task<commentUWPlisting> AccountInterface::getCommentAsyncVec(Platform::String^ ID)
+	concurrency::task<commentUWPlisting> AccountInterface::getCommentAsyncVec(Platform::String^ ID, concurrency::cancellation_token cToken)
 	{
-		return getCommentAsyncVec(ID, commentSort::default);
+		return getCommentAsyncVec(ID, commentSort::default, std::move(cToken));
 	}
-	concurrency::task<commentUWPlisting> AccountInterface::getCommentAsyncVec(Platform::String ^ ID, commentSort sort)
+	concurrency::task<commentUWPlisting> AccountInterface::getCommentAsyncVec(Platform::String ^ ID, commentSort sort, concurrency::cancellation_token cToken)
 	{
 
 		std::wstring reqstr = L"/comments/";
@@ -263,7 +263,7 @@ namespace account
 		case commentSort::default:
 			break;
 		}
-		return concurrency::create_task(httpClient->GetStringAsync(ref new Uri(baseURI, Platform::StringReference(reqstr.data())))).then([](Platform::String^ jsonstr) {
+		return concurrency::create_task(httpClient->GetStringAsync(ref new Uri(baseURI, Platform::StringReference(reqstr.data()))), std::move(cToken)).then([](Platform::String^ jsonstr) {
 			try
 			{
 				commentUWPlisting comments;
@@ -302,10 +302,10 @@ namespace account
 		},concurrency::task_continuation_context::use_arbitrary());
 		//throw ref new Platform::NotImplementedException();
 	}
-	concurrency::task<commentUWPlisting> AccountInterface::getmorecomments(moreComments ^ more, Platform::String^ link_id, Platform::String^ parent_id)
+	concurrency::task<commentUWPlisting> AccountInterface::getmorecomments(moreComments ^ more, Platform::String^ link_id, Platform::String^ parent_id, concurrency::cancellation_token cToken)
 	{
 		std::wstring urlstr = L"api/morechildren?api_type=json&children=" + more->morelist + L"&link_id=" + link_id->Data();
-		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, Platform::StringReference(urlstr.data()))).then([link_id, parent_id](Windows::Data::Json::JsonObject^ j) {
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, Platform::StringReference(urlstr.data())), std::move(cToken)).then([link_id, parent_id](Windows::Data::Json::JsonObject^ j) {
 			auto arr = j->GetNamedObject("json")->GetNamedObject("data")->GetNamedArray("things");
 			commentUWPlisting reps;
 			std::vector<CommentUWPitem^> refmap;
@@ -379,17 +379,17 @@ namespace account
 			return reps;
 		});
 	}
-	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec()
+	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec( concurrency::cancellation_token cToken)
 	{
-		return getsubredditAsyncVec("");
+		return getsubredditAsyncVec("", std::move(cToken));
 	}
-	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit)
+	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit, concurrency::cancellation_token cToken)
 	{
 
-		return getsubredditAsyncVec(subreddit, postSort::Defaultsort, timerange::Default);
+		return getsubredditAsyncVec(subreddit, postSort::Defaultsort, timerange::Default, std::move(cToken));
 		
 	}
-	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit, postSort sort, timerange range)
+	std::unique_ptr<subredditlisting> AccountInterface::getsubredditAsyncVec(Platform::String ^ subreddit, postSort sort, timerange range, concurrency::cancellation_token cToken)
 	{
 		if (subreddit != "")
 		{
@@ -448,7 +448,7 @@ namespace account
 		subredditlisting*listing = new subredditlisting();
 		listing->listing = ref new Platform::Collections::Vector<subpostUWP^>();
 		
-		listing->getTask = getJsonAsync(ref new Uri(baseURI, Platform::StringReference(urlstr.data()))).then([listing](Windows::Data::Json::JsonObject^ json) {
+		listing->getTask = getJsonAsync(ref new Uri(baseURI, Platform::StringReference(urlstr.data())), std::move(cToken)).then([listing](Windows::Data::Json::JsonObject^ json) {
 			auto data = json->GetNamedObject("data");
 			try
 			{
@@ -497,17 +497,17 @@ namespace account
 		return std::unique_ptr<subredditlisting>(listing);
 	}
 
-	concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> AccountInterface::getDomain(Platform::String ^ domain)
+	concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> AccountInterface::getDomain(Platform::String ^ domain, concurrency::cancellation_token cToken)
 	{
-		getJsonFromBasePath(L"domain/" + domain + L"?raw_json=1").then([](Windows::Data::Json::JsonObject^ j) {
+		getJsonFromBasePath(L"domain/" + domain + L"?raw_json=1", std::move(cToken)).then([](Windows::Data::Json::JsonObject^ j) {
 
 		});
 		throw ref new Platform::NotImplementedException();
 	}
 
-	concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> AccountInterface::getMixedCollection(Platform::String ^ endpoint)
+	concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> AccountInterface::getMixedCollection(Platform::String ^ endpoint, concurrency::cancellation_token cToken)
 	{
-		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, endpoint)).then([](Windows::Data::Json::JsonObject^ json) {
+		return getJsonAsync(ref new Windows::Foundation::Uri(baseURI, endpoint), std::move(cToken)).then([](Windows::Data::Json::JsonObject^ json) {
 			const auto & arr = json->GetNamedObject("data")->GetNamedArray("children");
 			auto vec = ref new Platform::Collections::Vector<IRedditTypeIdentifier^>(arr->Size);
 			concurrency::parallel_transform(Windows::Foundation::Collections::begin(arr), Windows::Foundation::Collections::end(arr), Windows::Foundation::Collections::begin(vec), [](Windows::Data::Json::IJsonValue^ v) {

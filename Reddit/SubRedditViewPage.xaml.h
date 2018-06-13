@@ -48,9 +48,7 @@ namespace Reddit
 		SubRedditViewPage();
 		property Windows::Foundation::Collections::IVector<account::subpostUWP^>^ posts
 		{
-			Windows::Foundation::Collections::IVector<account::subpostUWP^>^ get() {
-				return _posts;
-			}
+			Windows::Foundation::Collections::IVector<account::subpostUWP^>^ get();
 		}
 		property account::subredditInfo subInfo { account::subredditInfo get(); }
 		property bool viewMode
@@ -82,18 +80,16 @@ namespace Reddit
 		}
 		property account::timerange Range
 		{
-			account::timerange get() { return _rng; }
+			account::timerange get();
 			void set(account::timerange newrange);
 		}
 		
 	protected:
 		virtual void OnNavigatedToPageCode() override final;
-		void OnNavigatingFrom(Windows::UI::Xaml::Navigation::NavigatingCancelEventArgs^ e) override;
 	private:
 		void updateSidebar();
 		bool useCss = true;
 		std::unique_ptr<account::subredditlisting> lPtr;
-		Platform::Collections::Vector<account::subpostUWP^>^ _posts;
 		bool pageLoaded = false;
 		enum class ViewMode : bool
 		{
@@ -102,8 +98,6 @@ namespace Reddit
 		ViewMode listingType = ViewMode::list;
 		
 		Platform::String^ _subreddit;
-		account::timerange _rng = account::timerange::Default;
-		subredditNavstate* nav = nullptr;
 		void sortSelector_SelectionChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e);
 		void rangeSelector_SelectionChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e);
 		void listGrid_ItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e);

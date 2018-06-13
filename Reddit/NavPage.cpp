@@ -8,3 +8,10 @@ void Reddit::NavPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEve
 	baseRef->pageState = this;
 	OnNavigatedToPageCode();
 }
+
+concurrency::cancellation_token Reddit::NavPage::RefreshSourceAndGetNewToken()
+{
+	refreshCancelationSource.cancel();
+	refreshCancelationSource = concurrency::cancellation_token_source::create_linked_source(TaskCancellationSource.get_token());
+	return refreshCancelationSource.get_token();
+}

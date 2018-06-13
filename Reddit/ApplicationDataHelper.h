@@ -32,10 +32,10 @@ namespace ApplicationDataHelper
 	}
 	namespace subredditHelpers
 	{
-		Platform::Collections::Vector<account::reportReason>^ trysubredditRulesCache(std::u16string subredditName, Platform::Collections::Vector<account::reportReason>^ v = ref new Platform::Collections::Vector<account::reportReason>());
-		Platform::Collections::Vector<account::reportReason>^ trysubredditRulesCache(unsigned int index, Platform::Collections::Vector<account::reportReason>^ v = ref new Platform::Collections::Vector<account::reportReason>());
+		Platform::Collections::Vector<account::reportReason>^ trysubredditRulesCache(std::u16string subredditName, Platform::Collections::Vector<account::reportReason>^ v = ref new Platform::Collections::Vector<account::reportReason>(), concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
+		Platform::Collections::Vector<account::reportReason>^ trysubredditRulesCache(unsigned int index, Platform::Collections::Vector<account::reportReason>^ v = ref new Platform::Collections::Vector<account::reportReason>(), concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		
-		account::subredditInfo trysubredditInfoCache(std::u16string subredditName);
+		account::subredditInfo trysubredditInfoCache(std::u16string subredditName, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		Platform::Collections::Vector<account::subredditInfo, account::subInfoCompare>^ SearchSubNames(const char16_t* str, bool bothways);
 	    void storeSubredditInfo(account::subredditInfo &info);
 		void storeSubredditRules(std::vector<account::reportReason> &r, std::u16string subname);
