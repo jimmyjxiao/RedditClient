@@ -100,34 +100,34 @@ private:
     ::Windows::UI::Xaml::Controls::SplitView^ obj3;
     
     // Fields for binding tracking.
+    ::Platform::WeakReference cachePC_;
     ::Windows::UI::Xaml::DependencyObject^ cacheDPC_sideBarButton_IsChecked = nullptr;
+    ::Windows::Foundation::EventRegistrationToken tokenPC_;
     __int64 tokenDPC_sideBarButton_IsChecked = 0;
 
     // Update methods for each path node used in binding steps.
     void Update_(::Reddit::CommentViewPage^ obj, int phase)
     {
+        this->_bindingsTracking->UpdatePropertyChangedListener(obj, this->cachePC_, &tokenPC_);
         if (obj != nullptr)
         {
-            if ((phase & (NOT_PHASED | (1 << 0))) != 0)
-            {
-                this->Update_subInfo(obj->subInfo, phase);
-            }
             if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
             {
+                this->Update_subInfo(obj->subInfo, phase);
                 this->Update_sideBarButton(obj->sideBarButton, phase);
             }
         }
     }
     void Update_subInfo(::account::subredditInfo obj, int phase)
     {
-            if ((phase & (NOT_PHASED | (1 << 0))) != 0)
+            if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
             {
                 this->Update_subInfo_key_color(obj.key_color, phase);
             }
     }
     void Update_subInfo_key_color(::Windows::UI::Color obj, int phase)
     {
-        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
+        if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
             // CommentViewPage.xaml line 17
             Set_Windows_UI_Xaml_FrameworkElement_RequestedTheme(this->obj2, safe_cast<::Windows::UI::Xaml::ElementTheme>(this->LookupConverter("themeConv")->Convert(obj, ::Windows::UI::Xaml::ElementTheme::typeid, nullptr, nullptr)));
@@ -157,11 +157,32 @@ private:
 
     virtual void ReleaseAllListeners() override
     {
+        this->_bindingsTracking->UpdatePropertyChangedListener(nullptr, this->cachePC_, &tokenPC_);
         this->_bindingsTracking->UpdateDependencyPropertyChangedListener(nullptr, ::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty, &this->cacheDPC_sideBarButton_IsChecked, &this->tokenDPC_sideBarButton_IsChecked);
     }
 
     virtual void PropertyChanged(Platform::Object^ sender, ::Windows::UI::Xaml::Data::PropertyChangedEventArgs^ e) override
     {
+        if (this->GetDataRoot() != nullptr && this->GetDataRoot()->Equals(sender))
+        {
+            ::Platform::String^ propName = e->PropertyName;
+            ::Reddit::CommentViewPage^ obj = safe_cast<::Reddit::CommentViewPage^>(sender);
+            if (propName == nullptr || propName->IsEmpty())
+            {
+                if (obj != nullptr)
+                {
+                    this->Update_subInfo(obj->subInfo, DATA_CHANGED);
+                    this->Update_sideBarButton(obj->sideBarButton, DATA_CHANGED);
+                }
+            }
+            else if (propName == "subInfo")
+            {
+                if (obj != nullptr)
+                {
+                    this->Update_subInfo(obj->subInfo, DATA_CHANGED);
+                }
+            }
+        }
     }
 
     void CollectionChanged(::Platform::Object^ sender, ::Windows::UI::Xaml::Interop::NotifyCollectionChangedEventArgs^ e)
@@ -257,7 +278,7 @@ void ::Reddit::CommentViewPage::Connect(int __connectionId, ::Platform::Object^ 
     {
         case 1: // CommentViewPage.xaml line 1
             {
-                ::Windows::UI::Xaml::Controls::Page^ element1 = safe_cast<::Windows::UI::Xaml::Controls::Page^>(__target);
+                ::Reddit::NavPage^ element1 = safe_cast<::Reddit::NavPage^>(__target);
                 CommentViewPage_obj1_Bindings* objBindings = new CommentViewPage_obj1_Bindings();
                 objBindings->SetDataRoot(this);
                 objBindings->SetConverterLookupRoot(this);

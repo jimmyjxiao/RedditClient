@@ -4,7 +4,7 @@
 //
 
 #pragma once
-
+#include "NavStates.h"
 #include "rootWindowGrid.g.h"
 #include "NoToggleBehaviorButton.h"
 #include "linkHandler.h"
@@ -96,7 +96,7 @@ namespace Reddit
 					}
 					else
 					{
-						rootWindowGrid::getCurrent()->rootFrame->BackStack->Append(ref new Windows::UI::Xaml::Navigation::PageStackEntry(rootWindowGrid::getCurrent()->rootFrame->CurrentSourcePageType, static_cast<unsigned char>(static_cast<NavIndexed^>(rootWindowGrid::getCurrent()->rootFrame->Content)->NavigationIndex), nullptr));
+						rootWindowGrid::getCurrent()->rootFrame->BackStack->Append(ref new Windows::UI::Xaml::Navigation::PageStackEntry(rootWindowGrid::getCurrent()->rootFrame->CurrentSourcePageType, static_cast<unsigned char>(static_cast<NavPage^>(rootWindowGrid::getCurrent()->rootFrame->Content)->NavigationIndex), nullptr));
 					}
 					rootWindowGrid::getCurrent()->rootFrame->Content = res->second->pageState;
 					App::CurrentManualFrameContent = ref new Windows::UI::Xaml::Navigation::PageStackEntry(res->first, static_cast<unsigned char>(std::distance(globalvars::NavState.cbegin(), res.base())), nullptr);

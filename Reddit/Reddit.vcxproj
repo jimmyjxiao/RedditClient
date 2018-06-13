@@ -293,6 +293,7 @@
     <ClCompile Include="MyResources.xaml.cpp">
       <DependentUpon>MyResources.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="NavPage.cpp" />
     <ClCompile Include="NoToggleBehaviorButton.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -10,6 +10,7 @@
 #include "serviceHelpers.h"
 #include <concurrent_vector.h>
 #include <ppl.h>
+#define nav static_cast<commentNavstate*>(baseRef)
 using namespace Reddit;
 
 using namespace Platform;
@@ -32,14 +33,11 @@ CommentViewPage::CommentViewPage()
 	InitializeComponent();
 }
 
-void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs ^ e)
+void Reddit::CommentViewPage::OnNavigatedToPageCode()
 {
-	navIndex = static_cast<unsigned char>(e->Parameter);
-	nav = static_cast<commentNavstate*>(globalvars::NavState.at(navIndex).second);
-	nav->pageState = this;
 	auto list = globalvars::currentacc->getCommentAsyncVec(nav->postID, nav->sort);
 	const char16_t* substr = (const char16_t*)nav->post->subreddit->Data();
-	
+
 	try
 	{
 		ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(substr, commentControl->reportingReasons);
@@ -55,15 +53,16 @@ void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Navig
 	{
 		try {
 			_subInfo = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache(substr);
-			
+
 		}
 		catch (ApplicationDataHelper::cacheMiss<account::subredditInfo> m)
 		{
-			m.retrieveTask.then([this](account::subredditInfo v){
+			m.retrieveTask.then([this](account::subredditInfo v) {
 				_subInfo = v;
+				this->PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("subInfo"));
 			});
 		}
-		
+
 		this->commentControl->setHeaderpost(nav->post);
 
 	}
@@ -73,7 +72,7 @@ void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Navig
 	}
 	list.then([this](account::commentUWPlisting z) {
 
-		
+
 		concurrency::parallel_for_each(z.commentList.begin(), z.commentList.end(), [](account::CommentUWPitem^ item) {
 			try
 			{
@@ -87,7 +86,7 @@ void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Navig
 			{
 				__debugbreak();
 			}});
-	
+
 		this->listing = z;
 
 		if (nav->sort == account::commentSort::default)
@@ -120,6 +119,7 @@ void Reddit::CommentViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Navig
 	});
 }
 
+
 void Reddit::CommentViewPage::OnNavigatingFrom(Windows::UI::Xaml::Navigation::NavigatingCancelEventArgs ^ e)
 {
 	nav->pageState = this;
@@ -143,7 +143,10 @@ void Reddit::CommentViewPage::sort::set(account::commentSort a)
 
 
 
-
+account::commentSort Reddit::CommentViewPage::sort::get()
+{
+	return nav->sort;
+}
 void Reddit::CommentViewPage::AppBarButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	

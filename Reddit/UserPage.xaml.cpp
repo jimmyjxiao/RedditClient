@@ -20,18 +20,15 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
+#define _NAV static_cast<UserNavState*>(baseRef)
 UserPage::UserPage()
 {
 	InitializeComponent();
 }
 
-void Reddit::UserPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs ^ e)
+void Reddit::UserPage::OnNavigatedToPageCode()
 {
-	navIndex = static_cast<unsigned char>(e->Parameter);
-	auto _nav = static_cast<UserNavState*>(globalvars::NavState.at(navIndex).second);
-	_nav->pageState = this;
-	globalvars::currentacc->getMixedCollection("/user/" + _nav->account.username + "/overview").then([this](Platform::Collections::Vector<account::IRedditTypeIdentifier^>^ v) {
+	globalvars::currentacc->getMixedCollection("/user/" + _NAV->account.username + "/overview").then([this](Platform::Collections::Vector<account::IRedditTypeIdentifier^>^ v) {
 		Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this, v]() {
 			Lview->ItemsSource = v;
 		}));

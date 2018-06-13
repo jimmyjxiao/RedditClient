@@ -59,7 +59,7 @@
         </PathIcon>
     </ControlTemplate>
     <DataTemplate                                x:Key="SingleCommentTemplate" >
-        <Grid x:ConnectionId='44'                 HorizontalAlignment="Stretch" >
+        <Grid x:ConnectionId='45'                 HorizontalAlignment="Stretch" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition/>
@@ -67,34 +67,34 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <HyperlinkButton x:ConnectionId='52' x:Name="user"                                                    FontSize="16" VerticalAlignment="Bottom"/>
-                <TextBlock x:ConnectionId='53' FontSize="16" VerticalAlignment="Center"                                                                         >
+                <HyperlinkButton x:ConnectionId='53' x:Name="user"                                                    FontSize="16" VerticalAlignment="Bottom"/>
+                <TextBlock x:ConnectionId='54' FontSize="16" VerticalAlignment="Center"                                                                         >
                 </TextBlock>
                 <TextBlock x:Name="time"/>
             </StackPanel>
             <!--<RichTextBlock Name="comment" Grid.Row="1" common:Properties.Html="{x:Bind  htmltext}"/>-->
-            <RichTextBlock x:ConnectionId='45' Grid.Row="1"                                                      />
+            <RichTextBlock x:ConnectionId='46' Grid.Row="1"                                                      />
             <!--<md:mdRichblock Grid.Row="1" Markdown="{x:Bind  markdowntext}"/>-->
             <CommandBar HorizontalAlignment="Stretch" Grid.Row="2" Template="{StaticResource leftAlignNoContentCommandBar}" OverflowButtonVisibility="Collapsed" IsDynamicOverflowEnabled="True"  >
-                <local:AppBarToggleColoredButton x:ConnectionId='46' CheckedBrush="#FF8b60" IsThreeState="False"  Label="Upvote"                                                                                                                    >
+                <local:AppBarToggleColoredButton x:ConnectionId='47' CheckedBrush="#FF8b60" IsThreeState="False"  Label="Upvote"                                                                                                                    >
                     <AppBarToggleButton.Icon>
                         <FontIcon Glyph="&#xE70E;" FontWeight="ExtraBold"/>
                     </AppBarToggleButton.Icon>
                 </local:AppBarToggleColoredButton>
-                <local:AppBarToggleColoredButton x:ConnectionId='47' CheckedBrush="#9494FF" IsThreeState="False" Label="Downvote"                                                                                                                        >
+                <local:AppBarToggleColoredButton x:ConnectionId='48' CheckedBrush="#9494FF" IsThreeState="False" Label="Downvote"                                                                                                                        >
                     <AppBarToggleButton.Icon>
                         <FontIcon Glyph="&#xE70D;" FontWeight="ExtraBold"/>
                     </AppBarToggleButton.Icon>
                 </local:AppBarToggleColoredButton>
-                <AppBarToggleButton x:ConnectionId='48' Icon="Save" Label="Save"                                          IsThreeState="False"/>
+                <AppBarToggleButton x:ConnectionId='49' Icon="Save" Label="Save"                                          IsThreeState="False"/>
                 <AppBarButton Icon="Important" Label="Report">
                     <AppBarButton.Flyout>
-                        <local:reportFlyout x:ConnectionId='51'                                       isComment="True"/>
+                        <local:reportFlyout x:ConnectionId='52'                                       isComment="True"/>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton x:ConnectionId='49' Icon="Edit" Label="Edit"                             />
+                <AppBarButton x:ConnectionId='50' Icon="Edit" Label="Edit"                             />
                 <AppBarButton Icon="ReShare" Label="Share"/>
-                <AppBarToggleButton x:ConnectionId='50' Label="Reply" Name="replyButton"                           IsThreeState="False">
+                <AppBarToggleButton x:ConnectionId='51' Label="Reply" Name="replyButton"                           IsThreeState="False">
                     <AppBarToggleButton.Icon>
                         <FontIcon Glyph="&#xE97A;" FontWeight="ExtraBold"/>
                     </AppBarToggleButton.Icon>
@@ -109,55 +109,55 @@
     <converters:unformatHtml x:Key="htmlPrev"/>
     <local:previewIconC x:Key="pathdataconvz"/>
     <DataTemplate x:Key="imageGriddatatemplate"                           >
-        <Grid x:ConnectionId='33' Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}"  >
+        <Grid x:ConnectionId='34' Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}"  >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
-            <TextBlock x:ConnectionId='34'                                     FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
-            <TextBlock x:ConnectionId='35'                        FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
+            <TextBlock x:ConnectionId='35'                                     FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
+            <TextBlock x:ConnectionId='36'                        FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
             <TextBlock FontSize="12" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" TextAlignment="Center">
-                    /r/<Run x:ConnectionId='43'                          />
+                    /r/<Run x:ConnectionId='44'                          />
             </TextBlock>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="auto" Height="13" Grid.Row="2" Margin="0,0,5,5" Orientation="Horizontal">
-                <local:NoToggleBehaviorButton x:ConnectionId='40' Height="13" Width="13"  VerticalAlignment="Center"                                                                                                                     />
-                <TextBlock x:ConnectionId='41'                                    FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
-                <local:NoToggleBehaviorButton x:ConnectionId='42'  Height="13" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center"                                                                                                                            />
+                <local:NoToggleBehaviorButton x:ConnectionId='41' Height="13" Width="13"  VerticalAlignment="Center"                                                                                                                     />
+                <TextBlock x:ConnectionId='42'                                    FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
+                <local:NoToggleBehaviorButton x:ConnectionId='43'  Height="13" Width="13" HorizontalAlignment="Right" VerticalAlignment="Center"                                                                                                                            />
             </StackPanel>
             
-            <Button x:ConnectionId='36' Grid.Row="1" Height="auto" Width="460" Padding="0"                                   >
+            <Button x:ConnectionId='37' Grid.Row="1" Height="auto" Width="460" Padding="0"                                   >
                 <Grid>
                     <Image Height="auto" Width="460" Stretch="UniformToFill">
                         <Image.Source>
-                            <BitmapImage x:ConnectionId='39'                                />
+                            <BitmapImage x:ConnectionId='40'                                />
                         </Image.Source>
                     </Image>
-                    <Path x:ConnectionId='38' Fill="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"                                                                                         MaxHeight="70" MaxWidth="70"  Stretch="Fill" UseLayoutRounding="False"   HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="#CCFFFFFF" />
+                    <Path x:ConnectionId='39' Fill="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"                                                                                         MaxHeight="70" MaxWidth="70"  Stretch="Fill" UseLayoutRounding="False"   HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="#CCFFFFFF" />
                 </Grid>
             </Button>
             <Grid Grid.Row="1" Margin="2,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Width="auto" Height="20">
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" x:Name="hello" Foreground="White" Padding="0,0,8,0" Margin="2,0,0,0">
                             <Run Text="Comments:" FontWeight="Light"/>
-        			        <Run x:ConnectionId='37'                             />
+        			        <Run x:ConnectionId='38'                             />
                 </TextBlock>
             </Grid>
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="selfGridTemplate"                           >
-        <Grid x:ConnectionId='24' Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}" >
+        <Grid x:ConnectionId='25' Height="360" Width="460"  CornerRadius="2" Background="{ThemeResource SystemAltMediumLowColor}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
-            <TextBlock x:ConnectionId='25'                                     FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
-            <TextBlock x:ConnectionId='26'                        FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
+            <TextBlock x:ConnectionId='26'                                     FontSize="16" TextWrapping="WrapWholeWords" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" Width="350" Margin="4,0" TextAlignment="Center"/>
+            <TextBlock x:ConnectionId='27'                        FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0,0,5"/>
             <TextBlock FontSize="12" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" TextAlignment="Center">
-                    /r/<Run x:ConnectionId='32'                          />
+                    /r/<Run x:ConnectionId='33'                          />
             </TextBlock>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="auto" Height="20" Grid.Row="2" Margin="0,0,5,0" Orientation="Horizontal">
-                <local:NoToggleBehaviorButton x:ConnectionId='29' Height="20" Width="20" Padding="0"  VerticalAlignment="Bottom"                                                                                                                     >
+                <local:NoToggleBehaviorButton x:ConnectionId='30' Height="20" Width="20" Padding="0"  VerticalAlignment="Bottom"                                                                                                                     >
                     <FontIcon Glyph="&#xE74A;"  FontSize="16" />
                     <local:NoToggleBehaviorButton.Resources>
                         <ResourceDictionary>
@@ -169,8 +169,8 @@
                         </ResourceDictionary>
                     </local:NoToggleBehaviorButton.Resources>
                 </local:NoToggleBehaviorButton>
-                <TextBlock x:ConnectionId='30'                                    FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
-                <local:NoToggleBehaviorButton x:ConnectionId='31' Padding="0" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Bottom"                                                                                                                             >
+                <TextBlock x:ConnectionId='31'                                    FontSize="12" HorizontalAlignment="Center" x:Name="score" VerticalAlignment="Center"/>
+                <local:NoToggleBehaviorButton x:ConnectionId='32' Padding="0" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Bottom"                                                                                                                             >
                     <FontIcon Glyph="&#xE74B;"  FontSize="16" />
                     <local:NoToggleBehaviorButton.Resources>
                         <ResourceDictionary>
@@ -183,11 +183,11 @@
                     </local:NoToggleBehaviorButton.Resources>
                 </local:NoToggleBehaviorButton>
             </StackPanel>
-            <TextBlock x:ConnectionId='27' Grid.Row="1" Height="auto" Width="460" Padding="0"                                            />
+            <TextBlock x:ConnectionId='28' Grid.Row="1" Height="auto" Width="460" Padding="0"                                            />
             <Grid Grid.Row="1" Margin="2,0,0,8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" Width="auto" Height="20">
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" x:Name="hello" Foreground="White" Padding="0,0,8,0" Margin="2,0,0,0">
                             <Run Text="Comments:" FontWeight="Light"/>
-        			        <Run x:ConnectionId='28'                             />
+        			        <Run x:ConnectionId='29'                             />
                 </TextBlock>
             </Grid>
         </Grid>
@@ -212,12 +212,15 @@
                     <ex:Expander.Header>
                         <SymbolIcon Symbol="HideBcc"/>
                     </ex:Expander.Header>
-                    <local:EXplaceHolder x:ConnectionId='23'                 HorizontalAlignment="Left" />
+                    <local:EXplaceHolder x:ConnectionId='24'                 HorizontalAlignment="Left" />
                 </ex:Expander>
             <TextBlock x:ConnectionId='11' Style="{ThemeResource CaptionTextBlockStyle}"  HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Margin="80,0,0,0"                          >
-                        posted by <Hyperlink x:ConnectionId='18'                       ><Run x:ConnectionId='22'                       /></Hyperlink> to <Hyperlink x:ConnectionId='19'                        >/r/<Run x:ConnectionId='21'                          /></Hyperlink>
+                        posted by <Hyperlink x:ConnectionId='18'                       ><Run x:ConnectionId='23'                       /></Hyperlink> to <Hyperlink x:ConnectionId='19'                        >/r/<Run x:ConnectionId='22'                          /></Hyperlink>
                 <LineBreak/>
-                <Run x:ConnectionId='20'                                                                         FontWeight="Bold"/>
+                <Span FontWeight="Bold">
+                    <Run x:ConnectionId='20'                                                                        /> | <Run x:ConnectionId='21'                             /> Comments
+                </Span>
+                
             </TextBlock>
             <CommandBar Template="{StaticResource leftAlignNoContentCommandBar}" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
                 <local:AppBarToggleColoredButton x:ConnectionId='12' CheckedBrush="{StaticResource upvoteBrush}" Label="Upvote" IsThreeState="False"                                                                                                                  >

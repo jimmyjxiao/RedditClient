@@ -118,7 +118,7 @@ std::tuple<account::postContentType, previewHelperbase*, const ServiceHelper* co
 	}
 	else
 	{
-		return { account::postContentType::linktype, nullptr, nullptr };
+		return { account::postContentType::linktype, new previewHelperbase(ref new Windows::Foundation::Uri(z->GetNamedString("url"))), nullptr };
 	}
 }
 std::tuple<account::postContentType, previewHelperbase*, const ServiceHelper* const> account::serviceHelpers::prelimContentHelper(Windows::Foundation::Uri ^ url)

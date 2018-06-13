@@ -20,7 +20,7 @@ namespace Windows {
 namespace Reddit
 {
     [::Windows::Foundation::Metadata::WebHostHidden]
-    partial ref class UserPage : public ::Windows::UI::Xaml::Controls::Page, 
+    partial ref class UserPage : public ::Reddit::NavPage, 
         public ::Windows::UI::Xaml::Markup::IComponentConnector,
         public ::Windows::UI::Xaml::Markup::IComponentConnector2
     {

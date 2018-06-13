@@ -217,7 +217,10 @@
             <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"  HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Margin="80,0,0,0" Loaded="TextBlock_Loaded">
                         posted by <Hyperlink Click="username_click"><Run Text="{x:Bind author}"/></Hyperlink> to <Hyperlink Click="subreddit_click">/r/<Run Text="{x:Bind subreddit}"/></Hyperlink>
                 <LineBreak/>
-                <Run Text="{x:Bind score, Converter={StaticResource scoreVis}, Mode=OneWay}" FontWeight="Bold"/>
+                <Span FontWeight="Bold">
+                    <Run Text="{x:Bind score, Converter={StaticResource scoreVis}, Mode=OneWay}"/> | <Run Text="{x:Bind num_comments}"/> Comments
+                </Span>
+                
             </TextBlock>
             <CommandBar Template="{StaticResource leftAlignNoContentCommandBar}" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
                 <local:AppBarToggleColoredButton CheckedBrush="{StaticResource upvoteBrush}" Label="Upvote" IsThreeState="False" IsChecked="{x:Bind Liked, Converter={StaticResource upvoteconvert}, Mode=OneWay}" Command="{x:Bind changeupvote}">

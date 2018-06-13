@@ -153,7 +153,7 @@ void Reddit::App::App_BackRequested(Platform::Object ^ sender, Windows::UI::Core
 		const auto & pagestack = navCore->rootFrame->BackStack->GetAt(navCore->rootFrame->BackStack->Size - 1);
 		const auto & i = globalvars::NavState[static_cast<unsigned char>(pagestack->Parameter)].second;
 		
-		auto const & currentPage = static_cast<NavIndexed^>(navCore->rootFrame->Content);
+		auto const & currentPage = static_cast<NavPage^>(navCore->rootFrame->Content);
 		int currentIndex = currentPage->NavigationIndex;
 		
 		if (i->pageState == nullptr)

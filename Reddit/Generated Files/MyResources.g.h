@@ -45,9 +45,9 @@ namespace Reddit
         bool _contentLoaded;
     
         class MyResources_obj7_Bindings;
-        class MyResources_obj24_Bindings;
-        class MyResources_obj33_Bindings;
-        class MyResources_obj44_Bindings;
+        class MyResources_obj25_Bindings;
+        class MyResources_obj34_Bindings;
+        class MyResources_obj45_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
         private: ::Windows::UI::Xaml::Controls::ControlTemplate^ inlineExpanderButtoning;

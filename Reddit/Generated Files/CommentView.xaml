@@ -31,7 +31,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <HyperlinkButton x:ConnectionId='14' x:Name="user"                                                                              FontSize="16" VerticalAlignment="Bottom"/>
-                    <TextBlock x:ConnectionId='15' FontSize="16" VerticalAlignment="Center"                                                                                                   >
+                    <TextBlock x:ConnectionId='15' FontSize="16" VerticalAlignment="Center"                                                                                                    Margin="4,0,0,0">
                     </TextBlock>
                     <TextBlock x:Name="time"/>
                 </StackPanel>

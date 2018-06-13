@@ -4,6 +4,7 @@
 //
 
 #pragma once
+#include "NavStates.h"
 #include "SubRedditViewPage.g.h"
 #include "converters.h"
 #include "AccountInterface.h"
@@ -20,9 +21,17 @@ namespace Reddit
 		content, self, ad
 	};
 	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class SubRedditViewPage sealed : Windows::UI::Xaml::Data::INotifyPropertyChanged,  NavIndexed
+	public ref class SubRedditViewPage sealed : Windows::UI::Xaml::Data::INotifyPropertyChanged
 	{
 	internal:
+		// Inherited via NavPage
+		virtual property Windows::UI::Xaml::Interop::TypeName PageType
+		{
+			Windows::UI::Xaml::Interop::TypeName get() override
+			{
+				return SubRedditViewPage::typeid;
+			}
+		}
 		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> ContentGridItemRecycle;
 		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> SelfGridItemRecycle;
 		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> AdGridItemRecycle;
@@ -43,7 +52,7 @@ namespace Reddit
 				return _posts;
 			}
 		}
-		property account::subredditInfo subInfo { account::subredditInfo get() { return _subInfo; }}
+		property account::subredditInfo subInfo { account::subredditInfo get(); }
 		property bool viewMode
 		{
 			bool get()
@@ -64,11 +73,11 @@ namespace Reddit
 		}
 		property Platform::String^ Subreddit
 		{
-			Platform::String^ get() { return _subreddit; }
+			Platform::String^ get();
 		}
 		property account::postSort Sort
 		{
-			account::postSort get() { return _sort; }
+			account::postSort get();
 			void set(account::postSort newsort);
 		}
 		property account::timerange Range
@@ -76,27 +85,11 @@ namespace Reddit
 			account::timerange get() { return _rng; }
 			void set(account::timerange newrange);
 		}
-		// Inherited via NavIndexed
-		virtual property int NavigationIndex
-		{
-			int get()
-			{
-				return navIndex;
-			}
-		}
-		// Inherited via NavIndexed
-		virtual property Windows::UI::Xaml::Interop::TypeName PageType
-		{
-			Windows::UI::Xaml::Interop::TypeName get()
-			{
-				return SubRedditViewPage::typeid;
-			}
-		}
+		
 	protected:
-		void OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e) override;
+		virtual void OnNavigatedToPageCode() override final;
 		void OnNavigatingFrom(Windows::UI::Xaml::Navigation::NavigatingCancelEventArgs^ e) override;
 	private:
-		int navIndex;
 		void updateSidebar();
 		bool useCss = true;
 		std::unique_ptr<account::subredditlisting> lPtr;
@@ -108,11 +101,9 @@ namespace Reddit
 		};
 		ViewMode listingType = ViewMode::list;
 		
-		account::subredditInfo _subInfo = account::subredditInfo();
 		Platform::String^ _subreddit;
 		account::timerange _rng = account::timerange::Default;
 		subredditNavstate* nav = nullptr;
-		account::postSort _sort = account::postSort::hot;
 		void sortSelector_SelectionChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e);
 		void rangeSelector_SelectionChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e);
 		void listGrid_ItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e);

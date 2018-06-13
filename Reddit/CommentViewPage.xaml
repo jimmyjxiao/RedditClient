@@ -1,4 +1,4 @@
-﻿<Page
+﻿<local:NavPage
     x:Class="Reddit.CommentViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,7 +14,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <CommandBar x:Name="commandBar" RequestedTheme="{x:Bind subInfo.key_color, Mode=OneTime, Converter={StaticResource themeConv}}" Background="{x:Bind subInfo.key_color, Converter={StaticResource brushify}}" OverflowButtonVisibility="Auto">
+        <CommandBar x:Name="commandBar" RequestedTheme="{x:Bind subInfo.key_color, Mode=OneWay, Converter={StaticResource themeConv}}" Background="{x:Bind subInfo.key_color, Converter={StaticResource brushify}, Mode=OneWay}" OverflowButtonVisibility="Auto">
             <AppBarToggleButton Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False"/>
             <AppBarButton Icon="List" Label="Other Discussions" Click="AppBarButton_Click"/>
             <CommandBar.Content>
@@ -88,4 +88,4 @@
     </Grid>
 
 
-</Page>
+</local:NavPage>

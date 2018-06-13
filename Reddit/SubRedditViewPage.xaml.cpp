@@ -8,6 +8,9 @@
 #include "CommentViewPage.xaml.h"
 #include "ApplicationDataHelper.h"
 #include "MyResources.xaml.h"
+#define _NAV static_cast<subredditNavstate*>(baseRef)
+#define _sort _NAV->sort
+#define _subInfo _NAV->info
 using namespace Reddit;
 
 using namespace Platform;
@@ -43,6 +46,14 @@ bool SubRedditViewPage::SidebarUseCSS::get()
 {
 	return useCss;
 }
+Platform::String^ Reddit::SubRedditViewPage::Subreddit::get()
+{
+	return _NAV->info.name;
+}
+account::subredditInfo Reddit::SubRedditViewPage::subInfo::get()
+{
+	return _subInfo;
+}
 void SubRedditViewPage::SidebarUseCSS::set(bool a)
 {
 	if (a != useCss)
@@ -56,13 +67,17 @@ void Reddit::SubRedditViewPage::Range::set(account::timerange newrange)
 	if (newrange != _rng && nav != nullptr)
 	{
 
-		_posts = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, newrange)->listing;
+		lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, newrange);
+		_posts = lPtr->listing;
 		PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("posts"));
 		_rng = newrange;
 		PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("Range"));
 	}
 }
-
+account::postSort Reddit::SubRedditViewPage::Sort::get()
+{
+	return _sort;
+}
 void Reddit::SubRedditViewPage::Sort::set(account::postSort newsort)
 {
 	if (newsort != _sort && nav != nullptr)
@@ -87,50 +102,62 @@ void Reddit::SubRedditViewPage::Sort::set(account::postSort newsort)
 }
 
 
-void Reddit::SubRedditViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs ^ e)
+void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 {
-	navIndex = static_cast<unsigned char>(e->Parameter);
-	auto _nav = static_cast<subredditNavstate*>(globalvars::NavState.at(navIndex).second);
-	_nav->pageState = this;
-	_subreddit = _nav->info.name;
-	_sort = _nav->sort;
-	_rng = _nav->rng;
-		if (_subreddit == nullptr)
-		{
-			sideBarButton->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-			_subInfo.pname = L"Frontpage";
-			lPtr = globalvars::currentacc->getsubredditAsyncVec();
-			_posts = lPtr->listing;
-			commandBar->Background = static_cast<Windows::UI::Xaml::Media::SolidColorBrush^>(Application::Current->Resources->Lookup("SystemControlBackgroundChromeMediumBrush"));
-			subTextblock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-		}
+	_subreddit = _NAV->info.name;
+	_rng = _NAV->rng;
+	if (_subreddit == nullptr)
+	{
+		sideBarButton->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+		_subInfo.pname = L"Frontpage";
+		lPtr = globalvars::currentacc->getsubredditAsyncVec();
+		_posts = lPtr->listing;
+		commandBar->Background = static_cast<Windows::UI::Xaml::Media::SolidColorBrush^>(Application::Current->Resources->Lookup("SystemControlBackgroundChromeMediumBrush"));
+		subTextblock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+	}
+	else
+	{
+		lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, _rng);
+		_posts = lPtr->listing;
+		int rngIndex;
+		if (((int)_rng) == 6)
+			rngIndex = 3;
 		else
+			rngIndex = (int)_rng;
+		timeSelector->SelectedIndex = rngIndex;
+		sortSelector->SelectedIndex = (int)_sort;
+		if (_NAV->info.subredditIndex == INT_MAX)
 		{
-			lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, _rng);
-			_posts = lPtr->listing;
-			int rngIndex;
-			if (((int)_rng) == 6)
-				rngIndex = 3;
-			else
-				rngIndex = (int)_rng;
-			timeSelector->SelectedIndex = rngIndex;
-			sortSelector->SelectedIndex = (int)_sort;
-			if (_nav->info.subredditIndex == INT_MAX)
+			try
 			{
-				_subInfo.name = _subreddit;
-				auto stuff = [this, _nav](account::subredditInfo &z)
+				_subInfo = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache((const char16_t*)_subreddit->Data());
+				Platform::Collections::Vector<account::reportReason>^ rules;
+				std::wstring temp = _subInfo.sidebar_html->Data();
+				temp.insert(27, L"usertext usertext-body md-container may-blank-within ");
+				temp = L"<body><div class=\"side\"><div class=\"titlebox spacer\">" + temp;
+				temp.append(L"</div></div></body>");
+				_subInfo.sidebar_html = ref new Platform::String(temp.data());
+				this->updateSidebar();
+				if (_subInfo.submissions == account::subType::self)
 				{
-					_subInfo = z;
+					listingType = ViewMode::list;
+				}
+				else
+				{
+					listingType = ViewMode::grid;
+				}
+				if (_subInfo.subredditIndex != -1)
+					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(_subInfo.subredditIndex);
+				else
+					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data()));
+				globalvars::reportReasonCache.emplace_back(_subInfo.name, rules);
 
-					/*bool colorIsDark = (5 * _subInfo.key_color.G + 2 * _subInfo.key_color.R + _subInfo.key_color.B) <= 8 * 128;
-					if (colorIsDark)
-					{
-						subredditBasedTheme = Windows::UI::Xaml::ElementTheme::Dark;
-					}
-					else
-					{
-						subredditBasedTheme = Windows::UI::Xaml::ElementTheme::Light;
-					}*/
+			}
+			catch (ApplicationDataHelper::cacheMiss<account::subredditInfo> e)
+			{
+
+				e.retrieveTask.then([this](account::subredditInfo z) {
+					_subInfo = std::move(z);
 					this->updateSidebar();
 					if (_subInfo.submissions == account::subType::self)
 					{
@@ -140,60 +167,33 @@ void Reddit::SubRedditViewPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Nav
 					{
 						listingType = ViewMode::grid;
 					}
-					nav = _nav;
-
-				};
-				try
-				{
-					auto x = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache((const char16_t*)_subreddit->Data());
-					Platform::Collections::Vector<account::reportReason>^ rules;
-					std::wstring temp = x.sidebar_html->Data();
-					temp.insert(27, L"usertext usertext-body md-container may-blank-within ");
-					temp = L"<body><div class=\"side\"><div class=\"titlebox spacer\">" + temp;
-					temp.append(L"</div></div></body>");
-					x.sidebar_html = ref new Platform::String(temp.data());
-					stuff(x);
-					if (x.subredditIndex != -1)
-						rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(x.subredditIndex);
-					else
-						rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(x.name->Data()));
-					globalvars::reportReasonCache.emplace_back(x.name, rules);
-
-				}
-				catch (ApplicationDataHelper::cacheMiss<account::subredditInfo> e)
-				{
-
-					e.retrieveTask.then(stuff).then([this]() {
-						this->PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("subInfo"));
-						try {
-							globalvars::reportReasonCache.emplace_back(_subInfo.name, ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data())));
-						}
-						catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> ee)
-						{
-							Platform::Collections::Vector<account::reportReason>^ rules = ref new Platform::Collections::Vector<account::reportReason>();
-							globalvars::reportReasonCache.emplace_back(_subInfo.name, rules);
-							ee.retrieveTask.then([rules](std::vector<account::reportReason> v) {
-								rules->ReplaceAll(ref new Platform::Array<account::reportReason>(v.data(), v.size()));
-							});
-						}
-					});
-				}
-				catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> e)
-				{
-					Platform::Collections::Vector<account::reportReason>^ rules = ref new Platform::Collections::Vector<account::reportReason>();
-					globalvars::reportReasonCache.emplace_back(_subInfo.name, rules);
-					e.retrieveTask.then([rules](std::vector<account::reportReason> v) {
-						rules->ReplaceAll(ref new Platform::Array<account::reportReason>(v.data(), v.size()));
-					});
-				}
+					this->PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("subInfo"));
+					try {
+						globalvars::reportReasonCache.emplace_back(_subInfo.name, ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data())));
+					}
+					catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> ee)
+					{
+						Platform::Collections::Vector<account::reportReason>^ rules = ref new Platform::Collections::Vector<account::reportReason>();
+						globalvars::reportReasonCache.emplace_back(_subInfo.name, rules);
+						ee.retrieveTask.then([rules](std::vector<account::reportReason> v) {
+							rules->ReplaceAll(ref new Platform::Array<account::reportReason>(v.data(), v.size()));
+						});
+					}
+				});
 			}
-			else
+			catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> e)
 			{
-				_subInfo = _nav->info;
+				Platform::Collections::Vector<account::reportReason>^ rules = ref new Platform::Collections::Vector<account::reportReason>();
+				globalvars::reportReasonCache.emplace_back(_subInfo.name, rules);
+				e.retrieveTask.then([rules](std::vector<account::reportReason> v) {
+					rules->ReplaceAll(ref new Platform::Array<account::reportReason>(v.data(), v.size()));
+				});
 			}
 		}
-	//pageLoaded = true;
+	}
 }
+
+
 
 void Reddit::SubRedditViewPage::OnNavigatingFrom(Windows::UI::Xaml::Navigation::NavigatingCancelEventArgs ^ e)
 {

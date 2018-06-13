@@ -672,7 +672,7 @@ void ::Reddit::SubRedditViewPage::DisconnectUnloadedObject(int connectionId)
     {
         case 1: // SubRedditViewPage.xaml line 1
             {
-                ::Windows::UI::Xaml::Controls::Page^ element1 = safe_cast<::Windows::UI::Xaml::Controls::Page^>(__target);
+                ::Reddit::NavPage^ element1 = safe_cast<::Reddit::NavPage^>(__target);
                 SubRedditViewPage_obj1_Bindings* objBindings = new SubRedditViewPage_obj1_Bindings();
                 objBindings->SetDataRoot(this);
                 objBindings->SetConverterLookupRoot(this);

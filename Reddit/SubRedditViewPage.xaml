@@ -1,4 +1,4 @@
-﻿<Page
+﻿<local:NavPage
     x:Class="Reddit.SubRedditViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -166,4 +166,4 @@
             </Grid>
         </SplitView>
     </Grid>
-</Page>
+</local:NavPage>

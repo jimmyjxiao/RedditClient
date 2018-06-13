@@ -27,7 +27,7 @@ namespace Reddit {
 namespace Reddit
 {
     [::Windows::Foundation::Metadata::WebHostHidden]
-    partial ref class CommentViewPage : public ::Windows::UI::Xaml::Controls::Page, 
+    partial ref class CommentViewPage : public ::Reddit::NavPage, 
         public ::Windows::UI::Xaml::Markup::IComponentConnector,
         public ::Windows::UI::Xaml::Markup::IComponentConnector2
     {

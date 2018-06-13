@@ -31,7 +31,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <HyperlinkButton x:Name="user" Content="{x:Bind ((acc:CommentUWPitem)Data).author, FallbackValue=username}" FontSize="16" VerticalAlignment="Bottom"/>
-                    <TextBlock FontSize="16" VerticalAlignment="Center" Text="{x:Bind ((acc:CommentUWPitem)Data).score, Mode=OneWay, Converter={StaticResource scoreVis}}">
+                    <TextBlock FontSize="16" VerticalAlignment="Center" Text="{x:Bind ((acc:CommentUWPitem)Data).score, Mode=OneWay, Converter={StaticResource scoreVis}}" Margin="4,0,0,0">
                     </TextBlock>
                     <TextBlock x:Name="time"/>
                 </StackPanel>

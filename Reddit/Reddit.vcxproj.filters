@@ -56,9 +56,9 @@
     <ClCompile Include="MixedContentSorter.cpp">
       <Filter>account</Filter>
     </ClCompile>
-    <ClCompile Include="MixedRedditTypeControl.xaml.cpp" />
     <ClCompile Include="TestPage.xaml.cpp" />
     <ClCompile Include="UserPage.xaml.cpp" />
+    <ClCompile Include="NavPage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -105,7 +105,6 @@
     <ClInclude Include="MixedContentSorter.h">
       <Filter>account</Filter>
     </ClInclude>
-    <ClInclude Include="MixedRedditTypeControl.xaml.h" />
     <ClInclude Include="TestPage.xaml.h" />
     <ClInclude Include="UserPage.xaml.h" />
   </ItemGroup>
