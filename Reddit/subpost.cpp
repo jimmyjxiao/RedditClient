@@ -11,7 +11,6 @@ namespace account
 		{
 			subredditInfo info;
 			info.name = sub->GetNamedString("display_name");
-			info.subscribed = sub->GetNamedBoolean("user_is_subscriber");
 			std::wstring colorstr = sub->GetNamedString("key_color")->Data();
 			if (colorstr == L"")
 			{

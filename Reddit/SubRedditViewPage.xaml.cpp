@@ -68,6 +68,17 @@ void SubRedditViewPage::SidebarUseCSS::set(bool a)
 		updateSidebar();
 	}
 }
+bool Reddit::SubRedditViewPage::Subscribed::get()
+{
+	return (_subInfo.subscribed & globalvars::currentacc->me.bitflag);
+}
+void Reddit::SubRedditViewPage::Subscribed::set(bool a)
+{
+	if (a != Subscribed)
+	{
+		__debugbreak();
+	}
+}
 void Reddit::SubRedditViewPage::Range::set(account::timerange newrange)
 {
 	if (newrange != _NAV->rng && pageLoaded)
@@ -148,7 +159,7 @@ void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 				{
 					listingType = ViewMode::grid;
 				}
-				if (_subInfo.subredditIndex != -1)
+				if (_subInfo.subredditIndex != INT_MIN)
 					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(_subInfo.subredditIndex, ref new Platform::Collections::Vector<account::reportReason>(), TaskCancellationSource.get_token());
 				else
 					rules = ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data()), ref new Platform::Collections::Vector<account::reportReason>(), TaskCancellationSource.get_token());
@@ -170,6 +181,7 @@ void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 						listingType = ViewMode::grid;
 					}
 					this->PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("subInfo"));
+					this->PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("Subscribed"));
 					try {
 						globalvars::reportReasonCache.emplace_back(_subInfo.name, ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(reinterpret_cast<const char16_t*>(_subInfo.name->Data()), ref new Platform::Collections::Vector<account::reportReason>(), TaskCancellationSource.get_token()));
 					}

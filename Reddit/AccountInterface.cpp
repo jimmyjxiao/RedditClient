@@ -159,7 +159,9 @@ namespace account
 	{
 		
 		return getJsonAsync(ref new Uri(Platform::StringReference((apibase + L"api/v1/me").data())), std::move(cToken)).then([this](Windows::Data::Json::JsonObject^ jsoninfo) {
-			me =  jsontoinfo(jsoninfo);
+			auto newinfo =  jsontoinfo(std::move(jsoninfo));
+			newinfo.bitflag = me.bitflag;
+			me = std::move(newinfo);
 			ApplicationDataHelper::userHelpers::cacheMyUser(me);
 		});
 		
@@ -229,6 +231,27 @@ namespace account
 	{
 		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh, currentauth));
 		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
+	}
+	concurrency::task<subredditInfo> AccountInterface::GetSubredditInfo(Platform::String^ subreddit, concurrency::cancellation_token cToken)
+	{
+		Platform::String^ str = L"r/" + subreddit + L"/about.json?raw_json=1";
+		return concurrency::create_task(getJsonFromBasePath(std::move(str), std::move(cToken)).then([bflag = me.bitflag](Windows::Data::Json::JsonObject^ response) {
+			const auto & data = response->GetNamedObject("data");
+			auto info = account::subpost::getSubredditInfoFromJson(data);
+			if (data->GetNamedBoolean("user_is_subscriber"))
+			{
+				info.subscribed = bflag;
+			}
+			return info;
+		}));
+	}
+	concurrency::task<subredditInfo> AccountInterface::GetSubredditInfo(subredditInfo s, concurrency::cancellation_token cToken)
+	{
+		return GetSubredditInfo(s.name, std::move(cToken)).then([sx = std::move(s)](subredditInfo n) {
+			n.subredditIndex = std::move(sx.subredditIndex);
+			n.subscribed |= sx.subredditIndex;
+			return n;
+		});
 	}
 	concurrency::task<commentUWPlisting> AccountInterface::getCommentAsyncVec(Platform::String^ ID, concurrency::cancellation_token cToken)
 	{

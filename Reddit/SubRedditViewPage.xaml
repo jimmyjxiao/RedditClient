@@ -27,6 +27,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <CommandBar x:Name="commandBar" RequestedTheme="{x:Bind subInfo.key_color, Mode=OneWay, Converter={StaticResource themeConv}}" OverflowButtonVisibility="Auto" Background="{x:Bind subInfo.key_color, Converter={StaticResource brushify}, Mode=OneWay}">
+            <AppBarToggleButton IsChecked="{x:Bind Subscribed, Mode=TwoWay}">
+                Subscribed
+            </AppBarToggleButton>
             <AppBarToggleButton Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False" />
             <AppBarToggleButton IsChecked="{x:Bind viewMode, Mode=TwoWay}" />
             <AppBarButton Icon="PreviewLink" Label="Wiki" />

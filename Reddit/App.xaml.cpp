@@ -37,7 +37,6 @@ App::App()
 	
 	mdblock::mdRichProperties::registerProperties();
 	//__debugbreak();
-	ApplicationDataHelper::initializeAppDB();
 	globalvars::generalHttp = ref new Windows::Web::Http::HttpClient();
 	globalvars::generalHttp->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("I heard you liked user agents"));
 	globalvars::imgurHttp = ref new Windows::Web::Http::HttpClient();

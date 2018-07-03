@@ -33,7 +33,7 @@ namespace account
 		bool NSFW;
 		unsigned int subscribers;
 		subType submissions;
-		bool subscribed;
+		int64 subscribed;
 		unsigned int subredditIndex;
 	};
 	struct subInfoCompare : std::equal_to<subredditInfo>

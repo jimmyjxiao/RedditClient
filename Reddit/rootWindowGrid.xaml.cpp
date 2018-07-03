@@ -37,13 +37,7 @@ rootWindowGrid::rootWindowGrid()
 {
 	singleT = this;
 	InitializeComponent();
-	auto coretitle = Windows::ApplicationModel::Core::CoreApplication::GetCurrentView()->TitleBar;
-	Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TitleBar->ButtonBackgroundColor = Windows::UI::Colors::Transparent;
-	searchIcon = ref new Windows::UI::Xaml::Controls::SymbolIcon(Windows::UI::Xaml::Controls::Symbol::Find);
-	goIcon = ref new Windows::UI::Xaml::Controls::SymbolIcon(Windows::UI::Xaml::Controls::Symbol::Forward);
-	coretitle->ExtendViewIntoTitleBar = true;
-	coretitle->IsVisibleChanged += ref new Windows::Foundation::TypedEventHandler<Windows::ApplicationModel::Core::CoreApplicationViewTitleBar ^, Platform::Object^>(this, &rootWindowGrid::CoreTitleBar_IsVisibleChanged);
-	coretitle->LayoutMetricsChanged += ref new Windows::Foundation::TypedEventHandler<Windows::ApplicationModel::Core::CoreApplicationViewTitleBar ^, Platform::Object^>(this, &rootWindowGrid::CoreTitleBar_LayoutMetricsChanged);
+	ApplicationDataHelper::initializeAppDB();
 	auto credvault = ref new Windows::Security::Credentials::PasswordVault();
 	try
 	{
@@ -76,7 +70,7 @@ rootWindowGrid::rootWindowGrid()
 				ref new Windows::UI::Core::DispatchedHandler([this]()
 			{
 				rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(nullptr)));
-			})); 
+			}));
 		});
 	}
 	globalvars::UpdateAccountsTask().then([this]() {
@@ -89,6 +83,14 @@ rootWindowGrid::rootWindowGrid()
 	{
 		rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(nullptr)));
 	}
+	auto coretitle = Windows::ApplicationModel::Core::CoreApplication::GetCurrentView()->TitleBar;
+	Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TitleBar->ButtonBackgroundColor = Windows::UI::Colors::Transparent;
+	searchIcon = ref new Windows::UI::Xaml::Controls::SymbolIcon(Windows::UI::Xaml::Controls::Symbol::Find);
+	goIcon = ref new Windows::UI::Xaml::Controls::SymbolIcon(Windows::UI::Xaml::Controls::Symbol::Forward);
+	coretitle->ExtendViewIntoTitleBar = true;
+	coretitle->IsVisibleChanged += ref new Windows::Foundation::TypedEventHandler<Windows::ApplicationModel::Core::CoreApplicationViewTitleBar ^, Platform::Object^>(this, &rootWindowGrid::CoreTitleBar_IsVisibleChanged);
+	coretitle->LayoutMetricsChanged += ref new Windows::Foundation::TypedEventHandler<Windows::ApplicationModel::Core::CoreApplicationViewTitleBar ^, Platform::Object^>(this, &rootWindowGrid::CoreTitleBar_LayoutMetricsChanged);
+	
 }
 rootWindowGrid^ Reddit::rootWindowGrid::singleT;
 rootWindowGrid ^ Reddit::rootWindowGrid::getCurrent()
@@ -116,6 +118,7 @@ void Reddit::rootWindowGrid::NavigateToNewPage(const Windows::UI::Xaml::Interop:
 		App::CurrentManualFrameContent = nullptr;
 	}
 }
+
 
 bool Reddit::rootWindowGrid::wstrValidGo(const wchar_t * str, size_t size)
 {
@@ -263,7 +266,7 @@ void Reddit::rootWindowGrid::rootFrame_Navigated(Platform::Object^ sender, Windo
 
 void Reddit::rootWindowGrid::Grid_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	updateAccountsToComboBox();
+	//updateAccountsToComboBox();
 }
 
 Windows::UI::Xaml::DataTemplate ^Reddit::comboboxTemplateSelector::SelectTemplateCore(Platform::Object ^ item, Windows::UI::Xaml::DependencyObject ^ container)

@@ -27,7 +27,7 @@ namespace ApplicationDataHelper
 		};
 		void incrementUserVote(bool direction, std::u16string username);
 		userInteractions getMyInteractionsWithUser(std::u16string username);
-		void cacheMyUser(const account::AccountInfo & user);
+		void cacheMyUser(account::AccountInfo & user);
 		account::AccountInfo MyUserInfoCache(Platform::String^ username);
 	}
 	namespace subredditHelpers

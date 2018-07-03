@@ -46,6 +46,7 @@ namespace Reddit
 		// Inherited via INotifyPropertyChanged
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler ^ PropertyChanged;
 		void NavigateToNewPage(const Windows::UI::Xaml::Interop::TypeName&const type, Platform::Object ^args);
+
 	private:
 
 		linkHandler ^ _linkHandler = linkHandler::getInstance();

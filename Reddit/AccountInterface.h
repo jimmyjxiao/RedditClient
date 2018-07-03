@@ -32,6 +32,7 @@ namespace account
 		int comment_karma;
 		bool has_gold;
 		bool has_mail;
+		int64 bitflag;
 	};
 	class AccountInterface sealed
 	{
@@ -77,6 +78,8 @@ namespace account
 		AccountInterface(Platform::String^ refresh, AccountInfo cachedInfo);
 		AccountInterface(Platform::String^ refresh);
 		AccountInterface(Platform::String^ refresh, Platform::String^ currentauth);
+		concurrency::task<subredditInfo> GetSubredditInfo(Platform::String^ subreddit, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
+		concurrency::task<subredditInfo> GetSubredditInfo(subredditInfo s, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		Concurrency::task<void> vote(Platform::IBox<bool>^ dir, Platform::String^ id, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<void> giveGold(Platform::String^ fullname, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<Windows::Web::Http::HttpResponseMessage^> comment(Platform::String^ ID, Platform::String^ md, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());

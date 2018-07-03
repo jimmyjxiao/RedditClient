@@ -83,7 +83,11 @@ namespace Reddit
 			account::timerange get();
 			void set(account::timerange newrange);
 		}
-		
+		property bool Subscribed
+		{
+			bool get();
+			void set(bool a);
+		}
 	protected:
 		virtual void OnNavigatedToPageCode() override final;
 	private:

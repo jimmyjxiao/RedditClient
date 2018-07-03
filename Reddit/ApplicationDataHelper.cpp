@@ -18,10 +18,15 @@ namespace ApplicationDataHelper
 	{
 		auto path = Windows::Storage::ApplicationData::Current->LocalFolder->Path + L"\\AppDB.db";
 		globalvars::AppDB = new sqlite::database((const char16_t*)path->Data());
-
-		//create subredditinfo table
-		*globalvars::AppDB << u"CREATE TABLE IF NOT EXISTS 'SubredditInfo' ( `index` INTEGER PRIMARY KEY AUTOINCREMENT, `subreddit` TEXT UNIQUE COLLATE NOCASE, `key_color` INTEGER, `sidebar_html` TEXT, `NSFW` INTEGER, `submissionType` INTEGER, `subscribers` INTEGER, `desc` TEXT, `lastModified` INTEGER )";
-		
+		try
+		{
+			//create subredditinfo table
+			*globalvars::AppDB << u"CREATE TABLE IF NOT EXISTS 'SubredditInfo' ( `subreddit` TEXT UNIQUE COLLATE NOCASE PRIMARY KEY, `key_color` INTEGER, `sidebar_html` TEXT, `NSFW` INTEGER, `submissionType` INTEGER, `subscribers` INTEGER, `desc` TEXT, `lastModified` INTEGER , 'subscribedUsers' INTEGER )";
+		}
+		catch (sqlite::sqlite_exception e)
+		{
+			__debugbreak();
+		}
 		//create subredditRules cache table
 		*globalvars::AppDB <<
 		u"CREATE TABLE IF NOT EXISTS 'SubredditRulesCache' ( `subredditIndex` INTEGER, `ruleNumber` INTEGER, `shortDesc` TEXT, `longDesc` TEXT, `applic` INTEGER )";
@@ -31,7 +36,7 @@ namespace ApplicationDataHelper
 		{
 			*globalvars::AppDB
 				<<
-				u"CREATE TABLE IF NOT EXISTS `MyUsers` ( `username` TEXT NOT NULL UNIQUE, `link_karma` INTEGER NOT NULL, `comment_karma` INTEGER NOT NULL, `has_gold` INTEGER NOT NULL )";
+				u"CREATE TABLE IF NOT EXISTS `MyUsers` ( `username` TEXT NOT NULL PRIMARY KEY, `link_karma` INTEGER NOT NULL, `comment_karma` INTEGER NOT NULL, `has_gold` INTEGER NOT NULL )";
 		}
 		catch (sqlite::sqlite_exception e)
 		{
@@ -47,7 +52,7 @@ namespace ApplicationDataHelper
 	}
 	int FindSubIndex(std::u16string &sub)
 	{
-		static auto prepst = *globalvars::AppDB << u"SELECT [index] FROM SubredditInfo WHERE subreddit = ?";
+		static auto prepst = *globalvars::AppDB << u"SELECT rowid FROM SubredditInfo WHERE subreddit = ?";
 		try {
 			int i;
 			prepst << sub >> i;
@@ -105,7 +110,7 @@ namespace ApplicationDataHelper
 			[&v](std::u16string shortDesc, std::u16string longdesc, int applic) {
 			v->Append(account::reportReason{ Platform::StringReference((const wchar_t*)shortDesc.data()), Platform::StringReference((const wchar_t*)longdesc.data()), (account::reportApplicibility)applic });
 		};
-		static auto getname = *globalvars::AppDB << u"SELECT subreddit FROM SubredditInfo WHERE [index] = ?";
+		static auto getname = *globalvars::AppDB << u"SELECT subreddit FROM SubredditInfo WHERE rowid = ?";
 		std::u16string subredditName;
 		try
 		{
@@ -149,16 +154,17 @@ namespace ApplicationDataHelper
 		int subs;
 		char subType;
 		int index = INT_MIN;
+		int64 bitflags;
 		try
 		{
 			static auto prepSt = *globalvars::AppDB <<
-				u"SELECT subreddit, key_color, sidebar_html, NSFW, submissionType, subscribers, [index] "
+				u"SELECT subreddit, key_color, sidebar_html, NSFW, submissionType, subscribers, rowid, subscribedUsers "
 				"FROM SubredditInfo "
 				"WHERE subreddit = ?";
 			prepSt
 				<< subredditName
 				>>
-				std::tie(name, intcolor, sidebar_html, NSFW, subType, subs, index);
+				std::tie(name, intcolor, sidebar_html, NSFW, subType, subs, index, bitflags);
 			if (NSFW == 999)
 			{
 				throw std::exception("Found record, but record is unintialized");
@@ -173,7 +179,7 @@ namespace ApplicationDataHelper
 				(bool)NSFW,
 				subs,
 				(account::subType)subType,
-				false,
+				bitflags,
 				index
 			};
 			oneUnitCache = z;
@@ -181,14 +187,12 @@ namespace ApplicationDataHelper
 		}
 		catch (std::exception e)
 		{
-			cacheMiss<account::subredditInfo> except(e);
-			except.retrieveTask =
-			concurrency::create_task(globalvars::currentacc->getJsonFromBasePath(Platform::StringReference((const wchar_t*)(u"r/" + subredditName + u"/about.json?raw_json=1").data()), cToken).then([index](Windows::Data::Json::JsonObject^ response) {
-				auto info = account::subpost::getSubredditInfoFromJson(response->GetNamedObject("data"));
-				info.subredditIndex = index;
-				storeSubredditInfo(info);
-				return info;
-			}));
+			cacheMiss<account::subredditInfo> except(std::move(e));
+			except.retrieveTask = globalvars::currentacc->GetSubredditInfo(Platform::StringReference((const wchar_t*)subredditName.data()), std::move(cToken)).then([index](account::subredditInfo x) {
+				x.subredditIndex = index;
+				storeSubredditInfo(x);
+				return x;
+			});
 			throw except;
 		}
 	}
@@ -196,13 +200,13 @@ namespace ApplicationDataHelper
 	{
 		auto returning = ref new Platform::Collections::Vector<account::subredditInfo, account::subInfoCompare>();
 		try {
-			std::u16string query = u"SELECT subreddit, key_color, sidebar_html, NSFW, submissionType, subscribers, [index] FROM SubredditInfo WHERE subreddit LIKE '";
+			std::u16string query = u"SELECT subreddit, key_color, sidebar_html, NSFW, submissionType, subscribers, rowid, subscribedUsers  FROM SubredditInfo WHERE subreddit LIKE '";
 			if (bothways)
 				query += u'%';
 			query.append(str);
 			query += u"%'";
 			*globalvars::AppDB << query
-				>> [&returning](std::u16string sub, std::optional<int32> key_color,std::u16string sidebar, int NSFW, char subType, unsigned int subs, unsigned int index) {
+				>> [&returning](std::u16string sub, std::optional<int32> key_color,std::u16string sidebar, int NSFW, char subType, unsigned int subs, unsigned int index, int64 bitflag) {
 				returning->Append(
 				{
 					Platform::StringReference((const wchar_t*)sub.data()),
@@ -213,7 +217,7 @@ namespace ApplicationDataHelper
 					(bool)NSFW,
 					subs,
 					(account::subType)subType,
-					false,
+					bitflag,
 					index
 				});
 			};
@@ -232,8 +236,8 @@ namespace ApplicationDataHelper
 				{
 					static auto prepst = *globalvars::AppDB <<
 						u"INSERT INTO SubredditInfo "
-						"(subreddit, key_color, sidebar_html, NSFW, submissionType, subscribers, desc, lastModified) "
-						"VALUES (?,?,?,?,?,?,?, (SELECT datetime('now')))";
+						"(subreddit, key_color, sidebar_html, NSFW, submissionType, subscribers, desc, lastModified, subscribedUsers) "
+						"VALUES (?,?,?,?,?,?,?, (SELECT datetime('now')), ?)";
 					prepst
 						<< (const char16_t*)(info.name->Data());
 					if (info.key_color.A == Windows::UI::Colors::Transparent.A)
@@ -250,7 +254,8 @@ namespace ApplicationDataHelper
 						<< (int)info.NSFW
 						<< (int)info.submissions
 						<< info.subscribers
-						<< (const char16_t*)info.desc->Data();
+						<< (const char16_t*)info.desc->Data()
+						<< info.subscribed;
 					prepst.execute();
 					info.subredditIndex = globalvars::AppDB->last_insert_rowid();
 				}
@@ -258,8 +263,8 @@ namespace ApplicationDataHelper
 				{
 					static auto prepst = *globalvars::AppDB <<
 						u"UPDATE SubredditInfo "
-						"SET key_color = ?, sidebar_html = ?, NSFW = ?, submissionType = ?, subscribers = ?, desc = ?, lastModified = (SELECT datetime('now')) "
-						"WHERE [index] = ?";
+						"SET key_color = ?, sidebar_html = ?, NSFW = ?, submissionType = ?, subscribers = ?, desc = ?, lastModified = (SELECT datetime('now')), (subscribedUsers | ?) "
+						"WHERE rowid = ?";
 					if (info.key_color.A == Windows::UI::Colors::Transparent.A)
 					{
 						prepst
@@ -275,6 +280,7 @@ namespace ApplicationDataHelper
 						<< (int)info.submissions
 						<< info.subscribers
 						<< (const char16_t*)info.desc->Data()
+						<< info.subscribed
 						<< info.subredditIndex;
 					prepst.execute();
 				}
@@ -338,19 +344,28 @@ namespace ApplicationDataHelper
 	{
 		return userInteractions();
 	}
-	void userHelpers::cacheMyUser(const account::AccountInfo & user)
+	void userHelpers::cacheMyUser(account::AccountInfo & user)
 	{
-		static auto StoreRow = *globalvars::AppDB << u"INSERT OR REPLACE INTO MyUsers (username, link_karma, comment_karma, has_gold) VALUES (?,?,?,?)";
-		StoreRow << (const char16_t*)user.username->Data() << user.link_karma << user.comment_karma << (int)user.has_gold;
-		StoreRow.execute();
+		static auto StoreRow = *globalvars::AppDB << u"INSERT INTO MyUsers (username, link_karma, comment_karma, has_gold) VALUES (?,?,?,?)";
+		try {
+			StoreRow << (const char16_t*)user.username->Data() << user.link_karma << user.comment_karma << (int)user.has_gold;
+			StoreRow.execute();
+			user.bitflag = (1 << globalvars::AppDB->last_insert_rowid());
+		}
+		catch (sqlite::sqlite_exception)
+		{
+			static auto updateRow = *globalvars::AppDB << u"UPDATE MyUsers SET link_karma = ?, comment_karma = ? , has_gold = ? WHERE username = ?";
+			updateRow << user.link_karma << user.comment_karma << user.has_gold << (const char16_t*)user.username->Data();
+			updateRow.execute();
+		}
 	}
 	account::AccountInfo userHelpers::MyUserInfoCache(Platform::String^ username)
 	{
-		static auto GetRow = *globalvars::AppDB << u"SELECT link_karma, comment_karma, has_gold FROM MyUsers WHERE username = ?";
+		static auto GetRow = *globalvars::AppDB << u"SELECT link_karma, comment_karma, has_gold, (1 << rowid) FROM MyUsers WHERE username = ?";
 		account::AccountInfo returning;
 		int g;
 		returning.username = std::move(username);
-		GetRow << (const char16_t*)username->Data() >> std::tie(returning.link_karma, returning.comment_karma, g);
+		GetRow << (const char16_t*)username->Data() >> std::tie(returning.link_karma, returning.comment_karma, g, returning.bitflag);
 		returning.has_gold = std::move(g);
 		return returning;
 	}
