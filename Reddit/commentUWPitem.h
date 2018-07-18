@@ -19,12 +19,9 @@ namespace account
 		void _changeupvote(Platform::Object^);
 	internal:
 		comment helper;
-		union
-		{
-			commentUWPlisting* replies = nullptr;
-			void* linkparent;
-		};
+		commentUWPlisting* replies = nullptr;
 		void cacheMDElements();
+		void recursivelyCacheMDElements();
 		CommentUWPitem(Windows::Data::Json::JsonObject^ jsoncomment, Platform::String^ pid = nullptr,const bool handleReplies = true, Platform::String^ subreddit = nullptr);
 	public:
 		property Platform::String^ ParentSubreddit
@@ -52,13 +49,13 @@ namespace account
 				return helper.controversial;
 			}
 		}
-		virtual property Platform::IBox<bool>^ Liked
+		virtual property int Liked
 		{
-			Platform::IBox<bool>^ get()
+			int get()
 			{
-				return helper.myvote;
+				return helper.getMyVote();
 			}
-			void set(Platform::IBox<bool>^ newvalue);
+			void set(int newvalue);
 		}
 		virtual property Windows::UI::Xaml::Input::ICommand^ changeupvote
 		{
@@ -76,14 +73,14 @@ namespace account
 		}
 		virtual property bool saved
 		{
-			bool get() { return helper.saved; }
+			bool get() { return helper.getIsSaved(); }
 			void set(bool s);
 		}
 		virtual property int score
 		{
 			int get()
 			{
-				return helper.score;
+				return helper.GetScore();
 			}
 		}
 
@@ -91,7 +88,7 @@ namespace account
 		{
 			Platform::String^ get() 
 			{
-				return helper.author;
+				return helper.Getauthor();
 			}
 		}
 		property mdblock::refMDElements^ mdElements
@@ -116,7 +113,14 @@ namespace account
 		{
 			bool get()
 			{
-				return helper.isMine;
+				return helper.getIsMine();
+			}
+		}
+		virtual property account::DistinguishedAccountTypes  DistinguishedAuthorType
+		{
+			account::DistinguishedAccountTypes get()
+			{
+				return helper.getAuthorIsDistinguished();
 			}
 		}
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ PropertyChanged;
@@ -137,14 +141,14 @@ namespace account
 		{
 			Windows::Foundation::Uri^ get()
 			{
-				return ref new Windows::Foundation::Uri(L"https://www.reddit.com", helper.permalink);
+				return ref new Windows::Foundation::Uri(L"https://www.reddit.com", helper.Getpermalink());
 			}
 		}
 		virtual property unsigned int Golds
 		{
 			unsigned int get()
 			{
-				return helper.gilded;
+				return helper.GetGilded();
 			}
 		}
 };

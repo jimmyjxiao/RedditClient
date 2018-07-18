@@ -94,17 +94,36 @@ concurrency::task<std::pair<account::postContentType, previewHelperbase*>> servi
 
 concurrency::task<std::pair<account::postContentType, previewHelperbase*>> account::serviceHelpers::urlHelper(Windows::Foundation::Uri ^ url)
 {
-	return concurrency::create_task([url] {
+		auto str = url->ToString();
 		auto it = domainMap.find(std::wstring_view(url->Domain->Data()));
 		if (it != domainMap.end())
 		{
-			it->second(url);
+			try {
+				return it->second(url).then([](concurrency::task<std::pair<account::postContentType, previewHelperbase*>>t) {
+					try { t.wait(); return t; }
+					catch (Platform::Exception^ e)
+					{
+						__debugbreak();
+					}
+					catch (std::exception e)
+					{
+						__debugbreak();
+					}
+					catch (...)
+					{
+						__debugbreak();
+					}
+				});;
+			}
+			catch (...)
+			{
+				__debugbreak();
+			}
 		}
 		else
 		{
 			return concurrency::task_from_result(std::pair<account::postContentType, previewHelperbase*>(account::postContentType::linktype, new previewHelperbase(url)));
 		}
-	});
 
 }
 
@@ -162,10 +181,8 @@ const struct imgur final : ServiceHelper
 		{
 			auto u = uri->ToString();
 			OutputDebugString(u->Data());
-			return concurrency::create_task(globalvars::imgurHttp->GetAsync(ref new Windows::Foundation::Uri("https://api.imgur.com/3/image/", idRefStr))).then([uri](Windows::Web::Http::HttpResponseMessage^ z) {
-				Platform::String^ x = z->Content->ToString();
-
-
+			auto url = ref new Windows::Foundation::Uri("https://api.imgur.com/3/image/", idRefStr);
+			return concurrency::create_task(globalvars::imgurHttp->GetAsync(url)).then([uri](Windows::Web::Http::HttpResponseMessage^ z) {
 				z->EnsureSuccessStatusCode();
 				auto json = Windows::Data::Json::JsonObject::Parse(z->Content->ToString())->GetNamedObject("data");
 				if (json->GetNamedBoolean("animated"))
@@ -181,6 +198,7 @@ const struct imgur final : ServiceHelper
 		};
 		auto albumEndpoint = [uri, idRefStr]()
 		{
+
 			return concurrency::create_task(globalvars::imgurHttp->GetAsync(ref new Windows::Foundation::Uri("https://api.imgur.com/3/album/",idRefStr))).then([uri](Windows::Web::Http::HttpResponseMessage^ z) {
 
 				try
@@ -694,9 +712,8 @@ const struct vReddit final : ServiceHelper
 	//});
 //}
 
-account::serviceHelpers::gifvDisplay::gifvDisplay(Windows::Foundation::Uri ^ imageDirectLink, Windows::Foundation::Uri ^ Url, bool setSource) : imageDisplay(imageDirectLink, Url)
+account::serviceHelpers::gifvDisplay::gifvDisplay(Windows::Foundation::Uri ^ imageDirectLink, Windows::Foundation::Uri ^ Url) : imageDisplay(imageDirectLink, Url)
 {
-	if(setSource)
 		source = Windows::Media::Core::MediaSource::CreateFromUri(contentLink);
 }
 
@@ -757,11 +774,11 @@ Windows::UI::Xaml::UIElement ^ account::serviceHelpers::embedDisplay::viewerCont
 	return webview;
 }
 
-account::serviceHelpers::videoDisplay::videoDisplay(Windows::Foundation::Uri ^ imageDirectLink, Windows::Foundation::Uri ^ Url) : gifvDisplay(imageDirectLink, Url, true) , adaptive(false)
+account::serviceHelpers::videoDisplay::videoDisplay(Windows::Foundation::Uri ^ imageDirectLink, Windows::Foundation::Uri ^ Url) : gifvDisplay(imageDirectLink, Url) , adaptive(false)
 {
 }
 
-account::serviceHelpers::videoDisplay::videoDisplay(Windows::Foundation::Uri ^ imageDirectLink, Windows::Foundation::Uri ^ Url, Windows::Media::Streaming::Adaptive::AdaptiveMediaSource ^ source) : gifvDisplay(imageDirectLink, Url, false), adaptive(true)
+account::serviceHelpers::videoDisplay::videoDisplay(Windows::Foundation::Uri ^ imageDirectLink, Windows::Foundation::Uri ^ Url, Windows::Media::Streaming::Adaptive::AdaptiveMediaSource ^ source) : gifvDisplay(imageDirectLink, Url), adaptive(true)
 {
 	this->source = Windows::Media::Core::MediaSource::CreateFromAdaptiveMediaSource(source);
 }

@@ -244,7 +244,7 @@ void Reddit::SubRedditViewPage::listGrid_ItemClick(Platform::Object^ sender, Win
 		{
 			if ((x.first.Name == ((Windows::UI::Xaml::Interop::TypeName)(SubRedditViewPage::typeid)).Name) && (x.second->pageState != nullptr))
 			{
-				return static_cast<commentNavstate*>(x.second)->postID == clickedPost->helper.id;
+				return static_cast<commentNavstate*>(x.second)->postID == clickedPost->helper.getId();
 			}
 			else
 			{
@@ -259,7 +259,7 @@ void Reddit::SubRedditViewPage::listGrid_ItemClick(Platform::Object^ sender, Win
 	}))
 	{
 		auto navstuff = new commentNavstate();
-		navstuff->postID = clickedPost->helper.id;
+		navstuff->postID = clickedPost->helper.getId();
 		navstuff->post = clickedPost;
 		rootWindowGrid::getCurrent()->NavigateToNewPage(CommentViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, navstuff));
 	}

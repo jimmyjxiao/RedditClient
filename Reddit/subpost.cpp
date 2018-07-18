@@ -47,7 +47,7 @@ namespace account
 			__debugbreak();
 		}
 	}
-	subpost::subpost(Windows::Data::Json::JsonObject^ json) : VotableThing(json), RedditCreated(json)
+	subpost::subpost(Windows::Data::Json::JsonObject^ json) : VotableThing(json)
 	{
 		try
 		{

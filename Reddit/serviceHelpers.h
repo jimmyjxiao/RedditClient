@@ -58,7 +58,7 @@ namespace account
 			gifvDisplay() {}
 			Windows::Media::Core::MediaSource^ source;
 		public:
-			gifvDisplay(Windows::Foundation::Uri^ imageDirectLink, Windows::Foundation::Uri^ Url, bool setSource = true);
+			gifvDisplay(Windows::Foundation::Uri^ imageDirectLink, Windows::Foundation::Uri^ Url);
 
 			virtual Windows::UI::Xaml::UIElement^ viewerControl() override;
 		};

@@ -6,29 +6,12 @@
 //     the code is regenerated.
 //------------------------------------------------------------------------------
 
-#include "XamlBindingInfo.g.h"
 
-namespace Windows {
-    namespace UI {
-        namespace Xaml {
-            namespace Controls {
-                ref class ControlTemplate;
-            }
-        }
-    }
-}
-namespace Windows {
-    namespace UI {
-        namespace Xaml {
-            ref class DataTemplate;
-        }
-    }
-}
 
 namespace Reddit
 {
     [::Windows::Foundation::Metadata::WebHostHidden]
-    partial ref class MyResources : public ::Windows::UI::Xaml::ResourceDictionary, 
+    partial ref class PreviewContentDialog : public ::Windows::UI::Xaml::Controls::ContentDialog, 
         public ::Windows::UI::Xaml::Markup::IComponentConnector,
         public ::Windows::UI::Xaml::Markup::IComponentConnector2
     {
@@ -44,15 +27,7 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
-        class MyResources_obj8_Bindings;
-        class MyResources_obj26_Bindings;
-        class MyResources_obj35_Bindings;
-        class MyResources_obj46_Bindings;
     
-        ::XamlBindingInfo::XamlBindings^ Bindings;
-        private: ::Windows::UI::Xaml::Controls::ControlTemplate^ inlineExpanderButtoning;
-        internal: ::Windows::UI::Xaml::Controls::ControlTemplate^ ContentDiagTemplate;
-        internal: ::Windows::UI::Xaml::DataTemplate^ listSelfPost;
     };
 }
 

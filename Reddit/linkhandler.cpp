@@ -32,34 +32,73 @@ void setToBlock(Windows::UI::Xaml::Documents::InlineCollection ^ const &  inline
 }
 void Reddit::linkHandler::linkloaded(Windows::Foundation::Uri^ link, Windows::UI::Xaml::Documents::InlineCollection ^ inlineCollection, unsigned int index, Windows::UI::Xaml::Documents::Hyperlink^ sender)
 {
-	//sender->Click += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Xaml::Documents::Hyperlink ^, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^>(&linkClicked);
-	//auto it = urlLookupTasks.find(link->GetHashCode());
+	sender->Click += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Xaml::Documents::Hyperlink ^, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^>(&linkClicked);
+	auto it = urlLookupTasks.find(link->GetHashCode());
+	if (it != urlLookupTasks.end())
+	{
+		auto addButton = [inlineCollection = std::move(inlineCollection), index](std::pair<account::postContentType, account::serviceHelpers::previewHelperbase*> p) {
+			if (p.first != account::postContentType::linktype)
+			{
+				auto text = ref new Windows::UI::Xaml::Documents::InlineUIContainer();
+				auto exp = ref new ExpanderControl::Expander();
+				exp->MinHeight = 24;
+				exp->MinWidth = 24;
+				exp->Template = static_cast<Windows::UI::Xaml::Controls::ControlTemplate^>(static_cast<App^>(App::Current)->listTemplateRes->Lookup("inlineExpanderButtoning"));
+				exp->Content = ref new EXplaceHolder(p.second);
+				/*auto rec = ref new Windows::UI::Xaml::Shapes::Rectangle();
+				rec->Fill = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Red);
+				rec->Width = 300;
+				rec->Height = 300;
+				exp->Content = std::move(rec);*/
+				text->Child = std::move(exp);
+				try {
+					inlineCollection->InsertAt(index, text);
+				}
+				catch (...)
+				{
+					if (inlineCollection->Size == index)
+					{
+						inlineCollection->Append(text);
+					}
+				}
+			}
+		};
+		if (it->second.is_done())
+		{
+			addButton(it->second.get());
+		}
+		else
+		{
+			it->second.then(addButton);
+		}
+	}
 	//if (it != urlLookupTasks.end())
 	//{
-	//		auto text = ref new Windows::UI::Xaml::Documents::InlineUIContainer();
-	//		auto exp = ref new ExpanderControl::Expander();
-	//		exp->Content = ref new EXplaceHolder(&it->second);
-	//		try {
-	//			inlineCollection->InsertAt(index, text);
-	//		}
-	//		catch (...)
-	//		{
-	//			if (inlineCollection->Size == index)
-	//			{
-	//				inlineCollection->Append(text);
-	//			}
-	//		}
-	//		/*it->second.then([inlineCollection, index](std::pair<account::postContentType, account::serviceHelpers::previewHelperbase*>  result) {
-	//			Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
-	//			Windows::UI::Core::CoreDispatcherPriority::Normal,
-	//			ref new Windows::UI::Core::DispatchedHandler([inlineCollection, index, res= std::move(result) ]()
-	//		{
-	//			
-	//		})); });*/
+	//	__debugbreak();
+	//		//auto text = ref new Windows::UI::Xaml::Documents::InlineUIContainer();
+	//		//auto exp = ref new ExpanderControl::Expander();
+	//		//exp->Content = ref new EXplaceHolder(&it->second);
+	//		//try {
+	//		//	inlineCollection->InsertAt(index, text);
+	//		//}
+	//		//catch (...)
+	//		//{
+	//		//	if (inlineCollection->Size == index)
+	//		//	{
+	//		//		inlineCollection->Append(text);
+	//		//	}
+	//		//}
+	//		///*it->second.then([inlineCollection, index](std::pair<account::postContentType, account::serviceHelpers::previewHelperbase*>  result) {
+	//		//	Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
+	//		//	Windows::UI::Core::CoreDispatcherPriority::Normal,
+	//		//	ref new Windows::UI::Core::DispatchedHandler([inlineCollection, index, res= std::move(result) ]()
+	//		//{
+	//		//	
+	//		//})); });*/
 	//}
 	//else
 	//{
-	//	
+	//	__debugbreak();
 	//}
 	/*auto text = ref new Windows::UI::Xaml::Documents::Run();
 	text->Text = L"🔸🔸🔸";*/

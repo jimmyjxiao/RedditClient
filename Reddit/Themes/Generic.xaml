@@ -356,4 +356,19 @@
         </Setter>
     </Style>
 
+
+    <Style TargetType="local:PopupContent" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:PopupContent">
+                    <RelativePanel Name="rootGrid">
+                        <ContentPresenter Name="contentPresenter" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
+                        <Button Name="CloseButton" RelativePanel.AlignRightWith="contentPresenter" RelativePanel.AlignTopWith="contentPresenter">
+                            <SymbolIcon Symbol="Clear"/>
+                        </Button>
+                    </RelativePanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

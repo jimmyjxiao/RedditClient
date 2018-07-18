@@ -88,17 +88,10 @@ namespace account
 		throw ref new Platform::NotImplementedException();
 	}
 
-	concurrency::task<void> AccountInterface::vote(Platform::IBox<bool>^ dir, Platform::String ^ id, concurrency::cancellation_token cToken)
+	concurrency::task<void> AccountInterface::vote(int8_t dir, Platform::String ^ id, concurrency::cancellation_token cToken)
 	{
 		auto content = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
-		Platform::String^ z;
-		if (dir == nullptr)
-			z = L"0";
-		else if (dir->Value == false)
-			z = L"-1";
-		else if (dir->Value == true)
-			z = L"1";
-		content->Insert(Platform::StringReference(L"dir"), z);
+		content->Insert(Platform::StringReference(L"dir"), dir.ToString());
 		content->Insert(Platform::StringReference(L"id"), id);
 		return concurrency::create_task(httpClient->PostAsync(ref new Uri(Platform::StringReference((apibase + L"api/vote").data())), ref new Windows::Web::Http::HttpFormUrlEncodedContent(content)), std::move(cToken)).then([](Windows::Web::Http::HttpResponseMessage^ respond)
 		{
@@ -115,7 +108,7 @@ namespace account
 
 	concurrency::task<HttpResponseMessage^> AccountInterface::comment(Platform::String ^ ID, Platform::String ^ md, concurrency::cancellation_token cToken)
 	{
-		Platform::Collections::Map<Platform::String^, Platform::String^>^ z = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
+		Platform::Collections::Map<Platform::String^, Platform::String^>^ z = ref new Platform::Collections::Map<Platform::String^,Platform::String^>();
 		z->Insert("raw_json", "1");
 		z->Insert("api_type", "json");
 		z->Insert("text", md);
@@ -351,7 +344,7 @@ namespace account
 				{
 					pItem = nullptr;
 				}
-				else if (wcscmp(r->helper.id->Data(), pid->Data() + 3) == 0)
+				else if (wcscmp(r->helper.getId()->Data(), pid->Data() + 3) == 0)
 				{
 					if (r->replies == nullptr)
 					{
@@ -362,7 +355,8 @@ namespace account
 				else
 				{
 					auto it = std::find_if(refmap.rbegin(), refmap.rend(), [pid](CommentUWPitem^ c) {
-						return (wcscmp(c->helper.id->Data(), pid->Data()+3) == 0);
+						//return (wcscmp(c->helper.getId->Data(), pid->Data()+3) == 0);
+						return false;
 					});
 					if (it == refmap.rend())
 						__debugbreak();
@@ -442,7 +436,7 @@ namespace account
 		default:
 			__assume(0);
 		}
-		urlstr += L"?raw_json=1&limit=40";
+		urlstr += L"?raw_json=1&limit=500";
 		switch (range)
 		{
 		case timerange::Default:

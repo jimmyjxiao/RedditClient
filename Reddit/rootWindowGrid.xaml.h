@@ -14,6 +14,17 @@ namespace Reddit
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
+	public ref class CurrentUserSubscribedConverter sealed : Windows::UI::Xaml::Data::IValueConverter
+	{
+	public:
+		virtual Platform::Object^ Convert(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language);
+		virtual Platform::Object^ ConvertBack(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language)
+		{
+			return nullptr;
+		}
+	};
 	public value struct subredditSuggestion
 	{
 		Platform::String^ name;
@@ -41,7 +52,7 @@ namespace Reddit
 	public:
 		property bool Has_mail {bool get(); }
 		rootWindowGrid();
-		static rootWindowGrid^ getCurrent();
+		
 		void updateAccountsToComboBox();
 		// Inherited via INotifyPropertyChanged
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler ^ PropertyChanged;
@@ -67,6 +78,7 @@ namespace Reddit
 		void Flyout_Open(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void Hyperlink_Click(Windows::UI::Xaml::Documents::Hyperlink^ sender, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^ args);
 	internal:
+		static rootWindowGrid^& getCurrent();
 		template <typename func> bool TryNavigateToCachedPage(func&& CompareFunc);
 		
 		

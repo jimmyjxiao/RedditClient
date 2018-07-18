@@ -22,13 +22,13 @@ namespace account
 	{
 		return concurrency::task<void>();
 	}*/
-	concurrency::task<void> VotableThing::vote(Platform::IBox<bool>^ direction)
+	concurrency::task<void> VotableThing::vote(int8_t direction)
 	{
 		if (myvote != direction)
 		{
-			if (myvote == nullptr)
+			if (myvote == 0)
 			{
-				if (direction->Value)
+				if (myvote == 1)
 				{
 					score++;
 				}
@@ -37,9 +37,9 @@ namespace account
 					score--;
 				}
 			}
-			else if (myvote->Value)
+			else if (myvote == 1)
 			{
-				if (direction == nullptr)
+				if (direction == 0)
 				{
 					score--;
 				}
@@ -50,7 +50,7 @@ namespace account
 			}
 			else
 			{
-				if (direction == nullptr)
+				if (direction == 0)
 				{
 					score++;
 				}
@@ -77,7 +77,7 @@ namespace account
 			saved = false;
 		});
 	}
-	VotableThing::VotableThing(Windows::Data::Json::JsonObject^ json)
+	VotableThing::VotableThing(Windows::Data::Json::JsonObject^ json) try : RedditCreated(json)
 	{
 		try
 		{
@@ -103,11 +103,14 @@ namespace account
 			Windows::Data::Json::IJsonValue^ nullwrapper = json->GetNamedValue("likes");
 			if (nullwrapper->ValueType != Windows::Data::Json::JsonValueType::Null)
 			{
-				myvote = nullwrapper->GetBoolean();
+				if (nullwrapper->GetBoolean())
+					myvote = 1;
+				else
+					myvote = -1;
 			}
 			else if (nullwrapper->ValueType == Windows::Data::Json::JsonValueType::Null)
 			{
-				myvote = nullptr;
+				myvote = 0;
 			}
 			JsonGetString(author, "author", json);
 			JsonGetNumberWithDefault(gilded, "gilded", json, 0);
@@ -126,13 +129,46 @@ namespace account
 			{
 				__debugbreak();
 			}
+			for (auto &a : globalvars::accounts)
+			{
+				if (author->Data() == a.first)
+				{
+					is_special = DistinguishedAccountTypes::me;
+				}
+			}
+			if (is_special != DistinguishedAccountTypes::me)
+			{
+				if (const auto& x = json->GetNamedValue("distinguished"); x->ValueType == Windows::Data::Json::JsonValueType::String)
+				{
+					const auto &str = x->GetString();
+					if (str == "admin")
+					{
+						is_special = DistinguishedAccountTypes::admin;
+					}
+					else if (str == "moderator")
+					{
+						is_special = DistinguishedAccountTypes::mod;
+					}
+					else
+					{
+						is_special = DistinguishedAccountTypes::none;
+					}
+				}
+				else
+				{
+					is_special = DistinguishedAccountTypes::none;
+				}
+			}
 		}
 		catch (...)
 		{
 			__debugbreak();
 		}
 	}
-
+	catch (Platform::COMException^ e)
+	{
+		__debugbreak();
+	}
 
 	VotableThing::~VotableThing()
 	{
@@ -140,5 +176,45 @@ namespace account
 	RedditCreated::RedditCreated(Windows::Data::Json::JsonObject ^ json)
 	{
 		createdUTC = json->GetNamedNumber("created_utc");
+	}
+	Platform::String ^& VotableThing::getFullname()
+	{
+		return fullname;
+	}
+	int VotableThing::getMyVote()
+	{
+		return myvote;
+	}
+	int VotableThing::GetScore()
+	{
+		return score;
+	}
+	Platform::String ^& VotableThing::Getpermalink()
+	{
+		return permalink;
+	}
+	Platform::String ^& VotableThing::Getauthor()
+	{
+		return author;
+	}
+	bool VotableThing::getIsMine()
+	{
+		return isMine;
+	}
+	bool VotableThing::getIsSaved()
+	{
+		return saved;
+	}
+	unsigned int VotableThing::GetGilded()
+	{
+		return gilded;
+	}
+	DistinguishedAccountTypes VotableThing::getAuthorIsDistinguished()
+	{
+		return is_special;
+	}
+	Platform::String ^& VotableThing::getId()
+	{
+		return id;
 	}
 }

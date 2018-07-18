@@ -3,7 +3,7 @@ namespace account
 {
 	public enum class RedditType
 	{
-		subpost, comment, subreddit, user
+		subpost, comment, subreddit, user, message
 	};
 	public enum class timerange
 	{

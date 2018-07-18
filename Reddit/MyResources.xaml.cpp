@@ -72,6 +72,12 @@ Reddit::EXplaceHolder::EXplaceHolder()
 	this->Loaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &Reddit::EXplaceHolder::OnLoaded);
 }
 
+const uintptr_t MASK = ~0x03ULL;
+Reddit::EXplaceHolder::EXplaceHolder(account::serviceHelpers::previewHelperbase* ptr)
+{
+	contentPtr = (void *)(((uintptr_t)ptr & MASK) | 2);
+	this->Loaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &Reddit::EXplaceHolder::OnLoaded);
+}
 
 void Reddit::EXplaceHolder::OnExpanding(Platform::Object ^, Platform::Object ^)
 {
@@ -93,38 +99,54 @@ Windows::UI::Xaml::DataTemplate ^ Reddit::MixedContentSelector::SelectTemplateCo
 	}
 }
 
+void Reddit::EXplaceHolder::post::set(account::subpostUWP^ sa)
+{
+	// store the tag
+	contentPtr= (void *)(((uintptr_t)&sa->contentHelper & MASK) | 1);
+}
 void Reddit::EXplaceHolder::OnLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e)
 {
 	//auto ParentExpander = static_cast<ExpanderControl::Expander^>(Parent);
 	//ParentExpander->Expanding += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &Reddit::EXplaceHolder::OnExpanding);
 	if (Content == nullptr)
 	{
-		if (std::holds_alternative<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(*contentH))
+		int tag = (uintptr_t)contentPtr & 0x03;
+		if (tag == 1)
 		{
+			auto contentH = reinterpret_cast<std::variant<std::unique_ptr<account::serviceHelpers::previewHelperbase>, concurrency::task<account::serviceHelpers::previewHelperbase*>>*>((uintptr_t)contentPtr & MASK);
+			if (std::holds_alternative<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(*contentH))
+			{
 			nonccc:
-			auto resizer = ref new contentResizer();
-			resizer->Content = std::get<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(*contentH)->viewerControl();
-			Content = std::move(resizer);
+				auto resizer = ref new contentResizer();
+				resizer->Content = std::get<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(*contentH)->viewerControl();
+				Content = std::move(resizer);
+			}
+			else
+			{
+				try
+				{
+					std::get<concurrency::task<account::serviceHelpers::previewHelperbase*>>(*contentH).then([this](account::serviceHelpers::previewHelperbase* r) {
+						return Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
+							Windows::UI::Core::CoreDispatcherPriority::High,
+							ref new Windows::UI::Core::DispatchedHandler([this, r]()
+						{
+							auto resizer = ref new contentResizer();
+							resizer->Content = r->viewerControl();
+							this->Content = resizer;
+						}));
+					});
+				}
+				catch (std::bad_variant_access&)
+				{
+					goto nonccc;
+				}
+			}
 		}
 		else
 		{
-			try
-			{
-				std::get<concurrency::task<account::serviceHelpers::previewHelperbase*>>(*contentH).then([this](account::serviceHelpers::previewHelperbase* r) {
-					return Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
-						Windows::UI::Core::CoreDispatcherPriority::High,
-						ref new Windows::UI::Core::DispatchedHandler([this, r]()
-					{
-						auto resizer = ref new contentResizer();
-						resizer->Content = r->viewerControl();
-						this->Content = resizer;
-					}));
-				});
-			}
-			catch (std::bad_variant_access&)
-			{
-				goto nonccc;
-			}
+			auto resizer = ref new contentResizer();
+			resizer->Content = reinterpret_cast<account::serviceHelpers::previewHelperbase*>((uintptr_t)contentPtr & MASK)->viewerControl();
+			this->Content = resizer;
 		}
 			/*concurrency::create_task(*contentTask).then([this](std::pair<account::postContentType, account::serviceHelpers::previewHelperbase*> r) {
 				return Windows::ApplicationModel::Core::CoreApplication::MainView->CoreWindow->Dispatcher->RunAsync(
@@ -222,7 +244,7 @@ void Reddit::MyResources::AppBarButton_Loaded(Platform::Object^ sender, Windows:
 		});
 		auto item2 = ref new Windows::UI::Xaml::Controls::MenuFlyoutItem();
 		item2->Text = "Reddit Post";
-		item2->Tag = ref new Windows::Foundation::Uri("https://www.reddit.com", send->helper.permalink);
+		item2->Tag = ref new Windows::Foundation::Uri("https://www.reddit.com", send->helper.Getpermalink());
 		item2->Click += ref new Windows::UI::Xaml::RoutedEventHandler([](Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e) {
 			Windows::System::Launcher::LaunchUriAsync(static_cast<Windows::Foundation::Uri^>(static_cast<Windows::UI::Xaml::Controls::MenuFlyoutItem^>(sender)->Tag));
 		});

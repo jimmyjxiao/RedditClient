@@ -13,27 +13,27 @@
 extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent();
 #endif
 
-#include "MixedRedditTypeControl.xaml.h"
+#include "MessagesViewer.xaml.h"
 
-void ::Reddit::MixedRedditTypeControl::InitializeComponent()
+void ::Reddit::MessagesViewer::InitializeComponent()
 {
     if (_contentLoaded)
     {
         return;
     }
     _contentLoaded = true;
-    ::Windows::Foundation::Uri^ resourceLocator = ref new ::Windows::Foundation::Uri(L"ms-appx:///MixedRedditTypeControl.xaml");
+    ::Windows::Foundation::Uri^ resourceLocator = ref new ::Windows::Foundation::Uri(L"ms-appx:///MessagesViewer.xaml");
     ::Windows::UI::Xaml::Application::LoadComponent(this, resourceLocator, ::Windows::UI::Xaml::Controls::Primitives::ComponentResourceLocation::Application);
 }
 
-void ::Reddit::MixedRedditTypeControl::Connect(int __connectionId, ::Platform::Object^ __target)
+void ::Reddit::MessagesViewer::Connect(int __connectionId, ::Platform::Object^ __target)
 {
     __connectionId;         // unreferenced 
     __target;               // unreferenced
     _contentLoaded = true;
 }
 
-::Windows::UI::Xaml::Markup::IComponentConnector^ ::Reddit::MixedRedditTypeControl::GetBindingConnector(int __connectionId, ::Platform::Object^ __target)
+::Windows::UI::Xaml::Markup::IComponentConnector^ ::Reddit::MessagesViewer::GetBindingConnector(int __connectionId, ::Platform::Object^ __target)
 {
     __connectionId;         // unreferenced
     __target;               // unreferenced

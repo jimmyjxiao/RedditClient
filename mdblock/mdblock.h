@@ -4,35 +4,7 @@
 #include <variant>
 namespace mdblock
 {
-	public ref struct LinkData sealed
-	{
-	private:
-		std::variant<const wchar_t*, MD_REDDIT_SLASH_DETAIL*> dataPtr;
-	internal:
-		LinkData(std::variant<const wchar_t*, MD_REDDIT_SLASH_DETAIL*> v)
-		{
-			dataPtr = std::move(v);
-		}
-	public:
-		property char16 RedditInfo
-		{
-			char16 get() {
-				if (!std::holds_alternative<MD_REDDIT_SLASH_DETAIL*>(dataPtr))
-					return L'f';
-				else
-				{
-					if (std::get<MD_REDDIT_SLASH_DETAIL*>(dataPtr)->type == MD_REDDIT_SUBREDDIT)
-						return L's';
-					else
-						return L'u';
-				}
-			}
-		}
-		Platform::String^ getLink()
-		{
-			return ref new Platform::String(std::get<const wchar_t*>(dataPtr));
-		}
-	};
+	public delegate void RedditLinkClickedEventHandler(Platform::String^ name, bool type);
 	public delegate void linkLoadedeventhandler(Windows::Foundation::Uri^ link, Windows::UI::Xaml::Documents::InlineCollection^ inlineCollection, unsigned int index, Windows::UI::Xaml::Documents::Hyperlink^ sender);
 	const MD_SPAN_A_DETAIL refDelete = { { nullptr, 999, nullptr, nullptr },{ nullptr, 999, nullptr, nullptr } };
 	bool spanDetailCompare(const MD_SPAN_A_DETAIL* a, const MD_SPAN_A_DETAIL* b, bool shallow);

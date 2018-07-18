@@ -14,14 +14,14 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
-        
+        <local:DepthToColor x:Key="itemBrushConv"/>
         <converters:downvotechecked x:Key="downvoteconverter"/>
         <converters:upvotechecked x:Key="upvoteconverter"/>
         
         <converters:InverseBool x:Key="inverseBoolConverter"/>
         <converters:ScoreText x:Key="scoreVis"/>
         <DataTemplate x:DataType="tree:TreeNode" x:Name="commentTemplate" >
-            <Grid Tag="{x:Bind}"  Margin="{x:Bind Depth, Converter={StaticResource IntToIndConverter}}" HorizontalAlignment="Stretch" >
+            <Grid Tag="{x:Bind}"  Margin="{x:Bind Depth, Converter={StaticResource IntToIndConverter}}" HorizontalAlignment="Stretch" Background="{x:Bind Depth, Converter={StaticResource itemBrushConv}}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32"/>
@@ -31,8 +31,8 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <HyperlinkButton x:Name="user" Content="{x:Bind ((acc:CommentUWPitem)Data).author, FallbackValue=username}" FontSize="16" VerticalAlignment="Bottom"/>
-                    <TextBlock FontSize="16" VerticalAlignment="Center" Text="{x:Bind ((acc:CommentUWPitem)Data).score, Mode=OneWay, Converter={StaticResource scoreVis}}" Margin="4,0,0,0">
-                    </TextBlock>
+                    <ContentPresenter VerticalAlignment="Center" VerticalContentAlignment="Center" Content="{x:Bind ((acc:CommentUWPitem)Data).DistinguishedAuthorType, Converter={StaticResource DistinguishedOPBadge}}"/>
+                    <TextBlock FontSize="16" VerticalAlignment="Center" Text="{x:Bind ((acc:CommentUWPitem)Data).score, Mode=OneWay, Converter={StaticResource scoreVis}}" Margin="4,0,0,0"/>
                     <TextBlock x:Name="time"/>
                 </StackPanel>
                 <!--<RichTextBlock Name="comment" Grid.Row="1" common:Properties.Html="{x:Bind ((acc:CommentUWPitem)Data).htmltext}"/>-->
@@ -78,7 +78,36 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <tree:TreeView x:Name="commentTree" x:FieldModifier="internal" SelectionMode="None" Loaded="commentTree_Loaded" ChoosingItemContainer="commentTree_ChoosingItemContainer" HeaderTemplate="{StaticResource listSelfPost}">
+    <tree:TreeView  x:Name="commentTree" x:FieldModifier="internal" SelectionMode="None" Loaded="commentTree_Loaded" ChoosingItemContainer="commentTree_ChoosingItemContainer" HeaderTemplate="{StaticResource listSelfPost}">
+        <tree:TreeView.Template>
+            <ControlTemplate TargetType="tree:TreeView">
+                <Grid BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Rectangle  HorizontalAlignment="Left" Fill="{ThemeResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Stretch"  Margin="24,0,0,0"  Width="22"/>
+                    <ScrollViewer x:Name="ScrollViewer"
+                            TabNavigation="{TemplateBinding TabNavigation}"
+                            HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                            HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                            IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}"
+                            VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                            VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                            IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}"
+                            IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                            IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                            ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}"
+                            IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                            BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}"
+                            AutomationProperties.AccessibilityView="Raw">
+                        <ItemsPresenter Header="{TemplateBinding Header}"
+                                HeaderTemplate="{TemplateBinding HeaderTemplate}"
+                                HeaderTransitions="{TemplateBinding HeaderTransitions}"
+                                Footer="{TemplateBinding Footer}"
+                                FooterTemplate="{TemplateBinding FooterTemplate}"
+                                FooterTransitions="{TemplateBinding FooterTransitions}"
+                                Padding="{TemplateBinding Padding}" />
+                    </ScrollViewer>
+                </Grid>
+            </ControlTemplate>
+        </tree:TreeView.Template>
         <tree:TreeView.ItemContainerStyle>
             <Style TargetType="tree:TreeViewItem">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

@@ -16,6 +16,7 @@
         <converters:NullableValueConverter x:Key="boxConv"/>
         <converters:downvotechecked x:Key="downvoteconvert"/>
         <tree:IntegerToIndentationConverter x:Key="IntToIndConverter"/>
+        <converters:DistinguishedAuthorBadge x:Key="DistinguishedOPBadge"/>
         <converters:upvotechecked x:Key="upvoteconvert"/>
         <x:Double x:Key="ContentDialogMaxHeight">1080</x:Double>
         <x:Double x:Key="ContentDialogMaxWidth">1920</x:Double>

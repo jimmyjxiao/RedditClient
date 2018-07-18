@@ -6,12 +6,13 @@
 //     the code is regenerated.
 //------------------------------------------------------------------------------
 
+#include "XamlBindingInfo.g.h"
 
 
 namespace Reddit
 {
     [::Windows::Foundation::Metadata::WebHostHidden]
-    partial ref class MixedRedditTypeControl : public ::Windows::UI::Xaml::Controls::ListView, 
+    partial ref class ContentDiag : public ::Windows::UI::Xaml::Controls::UserControl, 
         public ::Windows::UI::Xaml::Markup::IComponentConnector,
         public ::Windows::UI::Xaml::Markup::IComponentConnector2
     {
@@ -27,7 +28,9 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
+        class ContentDiag_obj1_Bindings;
     
+        ::XamlBindingInfo::XamlBindings^ Bindings;
     };
 }
 

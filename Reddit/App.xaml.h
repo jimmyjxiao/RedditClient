@@ -11,6 +11,7 @@
 #include "NoToggleBehaviorButton.h"
 #include "contentResizer.h"
 #include "rootWindowGrid.xaml.h"
+#include "PopupContent.h"
 namespace Reddit
 {
 	/// <summary>

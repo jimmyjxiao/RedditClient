@@ -8,9 +8,11 @@
     xmlns:ac="using:account"
     Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
+    <Grid.Resources>
+        <local:CurrentUserSubscribedConverter x:Key="SubscribedVisibility"/>
+    </Grid.Resources>
     <Grid.RowDefinitions>
-        <RowDefinition x:ConnectionId='2' x:Name="titleRowDef"/>
+        <RowDefinition x:ConnectionId='2' x:Name="titleRowDef" x:FieldModifier="Internal"/>
         <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <Grid x:ConnectionId='3' Grid.Row="0" Margin="0" Padding="0" x:Name="titleGrid" Background="Transparent" >
@@ -21,12 +23,12 @@
         </Grid.ColumnDefinitions>
         <Rectangle x:ConnectionId='5' Fill="{ThemeResource SystemControlChromeHighAcrylicWindowMediumBrush}" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" x:Name="titleRec"/>
         <StackPanel Grid.Column="1" HorizontalAlignment="Center"  Orientation="Horizontal">
-            <ComboBox x:ConnectionId='10'   PlaceholderText="Not Logged In!"                       HorizontalContentAlignment="Center"                                               x:Name="accountBox">
+            <ComboBox x:ConnectionId='11'   PlaceholderText="Not Logged In!"                       HorizontalContentAlignment="Center"                                               x:Name="accountBox">
                 <ComboBox.ItemTemplateSelector>
                     <local:comboboxTemplateSelector>
                         <local:comboboxTemplateSelector.listTemplate>
                             <DataTemplate                            >
-                                <Grid x:ConnectionId='13'>
+                                <Grid x:ConnectionId='14'>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
@@ -36,10 +38,10 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
                                     <SymbolIcon Symbol="Contact2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
-                                    <TextBlock x:ConnectionId='14' Grid.Column="1"                          FontWeight="Bold"/>
+                                    <TextBlock x:ConnectionId='15' Grid.Column="1"                          FontWeight="Bold"/>
                                     <Border BorderBrush="{ThemeResource AppBarSeparatorForegroundThemeBrush}" BorderThickness="0,2,0,0" Grid.Column="1" Grid.Row="1" >
                                         <TextBlock>
-                                Comment Karma: <Run x:ConnectionId='15'                              /> | Post Karma <Run x:ConnectionId='16'                           />
+                                Comment Karma: <Run x:ConnectionId='16'                              /> | Post Karma <Run x:ConnectionId='17'                           />
                                         </TextBlock>
                                     </Border>
                                 </Grid>
@@ -47,8 +49,8 @@
                         </local:comboboxTemplateSelector.listTemplate>
                         <local:comboboxTemplateSelector.closedTemplate>
                             <DataTemplate                            >
-                                <TextBlock x:ConnectionId='17' FontWeight="Bold">
-                                /u/<Run x:ConnectionId='18'                         /> <Hyperlink x:ConnectionId='19' FontWeight="Normal"                        >(<Run x:ConnectionId='20'                           /> | <Run x:ConnectionId='21'                              />)</Hyperlink>
+                                <TextBlock x:ConnectionId='18' FontWeight="Bold">
+                                /u/<Run x:ConnectionId='19'                         /> <Hyperlink x:ConnectionId='20' FontWeight="Normal"                        >(<Run x:ConnectionId='21'                           /> | <Run x:ConnectionId='22'                              />)</Hyperlink>
                                 </TextBlock>
                             </DataTemplate>
                         </local:comboboxTemplateSelector.closedTemplate>
@@ -63,7 +65,7 @@
                     </local:comboboxTemplateSelector>
                 </ComboBox.ItemTemplateSelector>
             </ComboBox>
-            <local:NoToggleBehaviorButton x:ConnectionId='11'                                                               >
+            <local:NoToggleBehaviorButton x:ConnectionId='12'                                                               >
                 <local:NoToggleBehaviorButton.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.ThemeDictionaries>
@@ -74,7 +76,7 @@
                     </ResourceDictionary>
                 </local:NoToggleBehaviorButton.Resources>
                 <FlyoutBase.AttachedFlyout>
-                    <Flyout x:ConnectionId='12'                          >
+                    <Flyout x:ConnectionId='13'                          >
 
                     </Flyout>
                 </FlyoutBase.AttachedFlyout>
@@ -100,9 +102,9 @@
                         </Grid.RowDefinitions>
                         <TextBlock x:ConnectionId='8'                       FontWeight="Bold" FontSize="24" />
                         <TextBlock Grid.Row="1">
-                            <Run x:ConnectionId='9'                            /> Subscribers
+                            <Run x:ConnectionId='10'                            /> Subscribers
                         </TextBlock>
-                        <SymbolIcon Symbol="Accept" Grid.Column="1" Grid.RowSpan="2"/>
+                        <SymbolIcon x:ConnectionId='9' Symbol="Accept" Grid.Column="1" Grid.RowSpan="2"                                                                                   />
                     </Grid>
                 </DataTemplate>
             </AutoSuggestBox.ItemTemplate>

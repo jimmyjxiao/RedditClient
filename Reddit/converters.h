@@ -6,6 +6,17 @@ namespace converters
 	{
 		std::size_t operator()(Platform::Object^ _Left) const;
 	};
+	public ref class DistinguishedAuthorBadge  sealed :Windows::UI::Xaml::Data::IValueConverter
+	{
+	public:
+		virtual Platform::Object^ Convert(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language);
+		virtual Platform::Object^ ConvertBack(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language)
+		{
+			throw ref new Platform::NotImplementedException();
+		}
+	};
 	public ref class upvotechecked sealed : Windows::UI::Xaml::Data::IValueConverter
 	{
 	public:

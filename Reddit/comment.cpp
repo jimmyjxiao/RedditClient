@@ -5,7 +5,7 @@
 
 namespace account
 {
-	account::comment::comment(Windows::Data::Json::JsonObject ^ json, Platform::String^ plink, Platform::String^ subreddit) : VotableThing(json), RedditCreated(json)
+	account::comment::comment(Windows::Data::Json::JsonObject ^ json, Platform::String^ plink, Platform::String^ subreddit) : VotableThing(json)
 	{
 		try {
 			if (subreddit != nullptr)

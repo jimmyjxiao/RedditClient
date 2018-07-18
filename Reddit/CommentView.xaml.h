@@ -12,7 +12,17 @@
 #include "reportFlyout.h"
 namespace Reddit
 {
-	
+	public ref class DepthToColor sealed : Windows::UI::Xaml::Data::IValueConverter
+	{
+	public:
+		virtual Platform::Object^ Convert(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language);
+		virtual Platform::Object^ ConvertBack(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language)
+		{
+			throw ref new Platform::NotImplementedException();
+		}
+	};
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class CommentView sealed
@@ -22,7 +32,7 @@ namespace Reddit
 		
 	internal:
 		Platform::Collections::Vector<account::reportReason>^ reportingReasons;
-		static void recursiveNode(TreeViewControl::TreeNode^ par, account::CommentUWPitem^ com);
+		static void recursiveNode(TreeViewControl::TreeNode^ par, account::CommentUWPitem^ com, unsigned int& depthcounter);
 		void setHeaderpost(account::subpostUWP^ post);
 		void SetVec(std::vector<account::CommentUWPitem^> vec);
 		void clear()
@@ -32,6 +42,7 @@ namespace Reddit
 	protected:
 		void OnApplyTemplate() override;
 	private:
+		unsigned int max_depth = 0;
 		std::function<void(account::commentUWPlisting*, account::CommentUWPitem^)> callbackfunc;
 		static ExpanderControl::Expander^ findExpanderRecurse(Windows::UI::Xaml::FrameworkElement^ parent);
 		bool contentExpanded = false;

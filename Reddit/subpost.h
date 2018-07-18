@@ -43,7 +43,7 @@ namespace account
 			return ((a.subscribers == b.subscribers) && (a.name == b.name) && (a.sidebar_html == b.sidebar_html) && (a.desc == b.desc) && (a.NSFW == b.NSFW) && (a.submissions == b.submissions) && (a.subscribed == b.subscribed));
 		}
 	};
-	struct subpost : VotableThing, RedditCreated
+	struct subpost : VotableThing
 	{
 		static subredditInfo getSubredditInfoFromJson(Windows::Data::Json::JsonObject^ sub);
 		postContentType contentType;

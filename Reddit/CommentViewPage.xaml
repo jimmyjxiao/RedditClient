@@ -83,7 +83,7 @@
             <SplitView.Pane>
                 <WebView x:Name="sideBarWebView"/>
             </SplitView.Pane>
-            <local:CommentView x:Name="commentControl" />
+            <local:CommentView x:Name="commentControl"/>
         </SplitView>
     </Grid>
 

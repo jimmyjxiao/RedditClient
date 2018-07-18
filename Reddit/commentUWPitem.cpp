@@ -4,32 +4,55 @@
 #include "globalvars.h"
 #include "DelegateCommand.h"
 #include "CommentView.xaml.h"
+#include "linkHandler.h"
 void account::CommentUWPitem::_changedownvote(Platform::Object ^)
 {
-	if (helper.myvote == nullptr || helper.myvote->Value)
-		Liked = false;
-	else if (helper.myvote->Value == false)
-		Liked = nullptr;
+	int cvote = helper.getMyVote();
+	if (cvote == 0 || cvote == 1)
+		Liked = -1;
+	else if (cvote == -1)
+		Liked = 0;
 }
 void account::CommentUWPitem::_changeupvote(Platform::Object ^)
 {
-	//__debugbreak();
-	if (helper.myvote == nullptr || helper.myvote->Value == false)
+	int cvote = helper.getMyVote();
+	if (cvote == 0 || cvote == 1)
 		Liked = true;
-	else if (helper.myvote->Value == true)
-		Liked = nullptr;
+	else if (cvote == 1)
+		Liked = 0;
 }
 
 void account::CommentUWPitem::cacheMDElements()
 {
 	try
 	{
-		mdCmds = ref new mdblock::refMDElements(helper.markdown);
-		//__debugbreak();
+		mdCmds = ref new mdblock::refMDElements(std::move(helper.markdown));
+		helper.markdown = nullptr;
+		for (auto x : mdCmds->Links)
+		{ 
+			Reddit::linkHandler::urlLookupTasks.insert(std::make_pair(x->GetHashCode(), account::serviceHelpers::urlHelper(x)));
+		}
+	}
+	catch (Platform::Exception^ e)
+	{
+		__debugbreak();
+	}
+	catch (std::exception e)
+	{
+		__debugbreak();
 	}
 	catch (...)
 	{
 		__debugbreak();
+	}
+}
+
+void account::CommentUWPitem::recursivelyCacheMDElements()
+{
+	cacheMDElements();
+	if (replies != nullptr)
+	{
+		concurrency::parallel_for_each(replies->commentList.begin(), replies->commentList.end(), [](CommentUWPitem^& a) {a->recursivelyCacheMDElements(); });
 	}
 }
 
@@ -98,11 +121,10 @@ account::CommentUWPitem::~CommentUWPitem()
 	delete replies;
 }
 
-void account::CommentUWPitem::Liked::set(Platform::IBox<bool>^ newvalue)
+void account::CommentUWPitem::Liked::set(int newvalue)
 {
-	if (newvalue != helper.myvote)
+	if (newvalue != helper.getMyVote())
 	{
-		auto orig = helper.myvote;
 		helper.vote(newvalue); //Todo: error handling
 		PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("Liked"));
 		PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("score"));
@@ -110,7 +132,7 @@ void account::CommentUWPitem::Liked::set(Platform::IBox<bool>^ newvalue)
 }
 void account::CommentUWPitem::saved::set(bool s)
 {
-	if (s != helper.saved)
+	if (s != helper.getIsSaved())
 	{
 		if (s)
 			helper.save();
@@ -126,7 +148,7 @@ void account::moreComments::clickedFunc()
 	{
 		
 		auto data = static_cast<CommentUWPitem^>(p->Data);
-		globalvars::currentacc->getmorecomments(this, data->helper.plink_id, data->helper.id).then([p,data](commentUWPlisting & a) {
+		globalvars::currentacc->getmorecomments(this, data->helper.plink_id, data->helper.getId()).then([p,data](commentUWPlisting & a) {
 			data->replies->commentList.reserve(data->replies->commentList.size() + a.commentList.size());
 			std::move(a.commentList.begin(), a.commentList.end(), std::back_inserter(data->replies->commentList));
 			data->replies->more = a.more;
@@ -142,7 +164,8 @@ void account::moreComments::clickedFunc()
 					{
 						for (auto &ve : i->replies->commentList)
 						{
-							Reddit::CommentView::recursiveNode(newnode, ve);
+							unsigned int x;
+							Reddit::CommentView::recursiveNode(newnode, ve, x);
 						}
 					}
 					else

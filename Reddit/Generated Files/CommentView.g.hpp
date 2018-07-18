@@ -244,7 +244,10 @@ public:
                 this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
                 break;
             case 15: // CommentView.xaml line 34
-                this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+                this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::ContentPresenter^>(__target);
+                break;
+            case 16: // CommentView.xaml line 35
+                this->obj16 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
         }
     }
@@ -305,7 +308,8 @@ private:
     ::Windows::UI::Xaml::Controls::AppBarButton^ obj11;
     ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj12;
     ::Windows::UI::Xaml::Controls::HyperlinkButton^ obj14;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj15;
+    ::Windows::UI::Xaml::Controls::ContentPresenter^ obj15;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj16;
     
     // Fields for binding tracking.
     ::Platform::WeakReference cachePC_;
@@ -361,6 +365,11 @@ private:
             {
                 Set_Windows_UI_Xaml_FrameworkElement_Margin(this->obj6.Resolve<::Windows::UI::Xaml::Controls::Grid>(), safe_cast<::Windows::UI::Xaml::Thickness>(this->LookupConverter("IntToIndConverter")->Convert(obj, ::Windows::UI::Xaml::Thickness::typeid, nullptr, nullptr)));
             }
+            // CommentView.xaml line 24
+            if (this->obj6 != nullptr)
+            {
+                Set_Windows_UI_Xaml_Controls_Panel_Background(this->obj6.Resolve<::Windows::UI::Xaml::Controls::Grid>(), safe_cast<::Windows::UI::Xaml::Media::Brush^>(this->LookupConverter("itemBrushConv")->Convert(obj, ::Windows::UI::Xaml::Media::Brush::typeid, nullptr, nullptr)), nullptr);
+            }
         }
     }
     void Update_Data(::Platform::Object^ obj, int phase)
@@ -406,6 +415,7 @@ private:
             {
                 this->Update_Data_Cast_Data_To_CommentUWPitem_isMine(obj->isMine, phase);
                 this->Update_Data_Cast_Data_To_CommentUWPitem_author(obj->author, phase);
+                this->Update_Data_Cast_Data_To_CommentUWPitem_DistinguishedAuthorType(obj->DistinguishedAuthorType, phase);
             }
             if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
             {
@@ -428,7 +438,7 @@ private:
             Set_mdblock_mdRichProperties_MDElements(this->obj7, obj, nullptr);
         }
     }
-    void Update_Data_Cast_Data_To_CommentUWPitem_Liked(::Platform::IBox<::Platform::Boolean>^ obj, int phase)
+    void Update_Data_Cast_Data_To_CommentUWPitem_Liked(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
@@ -508,12 +518,20 @@ private:
             Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj14, obj, nullptr);
         }
     }
+    void Update_Data_Cast_Data_To_CommentUWPitem_DistinguishedAuthorType(::account::DistinguishedAccountTypes obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
+        {
+            // CommentView.xaml line 34
+            Set_Windows_UI_Xaml_Controls_ContentPresenter_Content(this->obj15, safe_cast<::Platform::Object^>(this->LookupConverter("DistinguishedOPBadge")->Convert(obj, ::Platform::Object::typeid, nullptr, nullptr)), nullptr);
+        }
+    }
     void Update_Data_Cast_Data_To_CommentUWPitem_score(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // CommentView.xaml line 34
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj15, safe_cast<::Platform::String^>(this->LookupConverter("scoreVis")->Convert(obj, ::Platform::String::typeid, nullptr, nullptr)), nullptr);
+            // CommentView.xaml line 35
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj16, safe_cast<::Platform::String^>(this->LookupConverter("scoreVis")->Convert(obj, ::Platform::String::typeid, nullptr, nullptr)), nullptr);
         }
     }
 
@@ -646,6 +664,14 @@ private:
     {
         obj->Margin = value;
     }
+    static void Set_Windows_UI_Xaml_Controls_Panel_Background(::Windows::UI::Xaml::Controls::Panel^ obj, ::Windows::UI::Xaml::Media::Brush^ value, ::Platform::String^ targetNullValue)
+    {
+        if (value == nullptr && targetNullValue != nullptr)
+        {
+            value = (::Windows::UI::Xaml::Media::Brush^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Windows::UI::Xaml::Media::Brush::typeid, targetNullValue);
+        }
+        obj->Background = value;
+    }
     static void Set_mdblock_mdRichProperties_MDElements(::Windows::UI::Xaml::UIElement^ obj, ::mdblock::refMDElements^ value, ::Platform::String^ targetNullValue)
     {
         if (value == nullptr && targetNullValue != nullptr)
@@ -675,6 +701,14 @@ private:
         obj->Visibility = value;
     }
     static void Set_Windows_UI_Xaml_Controls_ContentControl_Content(::Windows::UI::Xaml::Controls::ContentControl^ obj, ::Platform::Object^ value, ::Platform::String^ targetNullValue)
+    {
+        if (value == nullptr && targetNullValue != nullptr)
+        {
+            value = (::Platform::Object^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Platform::Object::typeid, targetNullValue);
+        }
+        obj->Content = value;
+    }
+    static void Set_Windows_UI_Xaml_Controls_ContentPresenter_Content(::Windows::UI::Xaml::Controls::ContentPresenter^ obj, ::Platform::Object^ value, ::Platform::String^ targetNullValue)
     {
         if (value == nullptr && targetNullValue != nullptr)
         {
@@ -713,7 +747,7 @@ void ::Reddit::CommentView::Connect(int __connectionId, ::Platform::Object^ __ta
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&CommentView::replyButton_Click);
         }
         break;
-    case 16:
+    case 17:
         {
             this->commentTree = safe_cast<::TreeViewControl::TreeView^>(__target);
             (safe_cast<::TreeViewControl::TreeView^>(this->commentTree))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::CommentView::*)

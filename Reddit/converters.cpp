@@ -81,11 +81,12 @@ namespace converters
 	Platform::Object ^ downvotechecked::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
 	{
 
-		auto x = safe_cast<Platform::IBox<bool>^>(value);
-		if (x == nullptr)
+		auto x = safe_cast<int>(value);
+		if (x == 0 || x == 1)
 			return false;
 		else
-			return !x->Value;
+			return true;
+
 
 	}
 	Platform::Object ^ downvotechecked::ConvertBack(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
@@ -95,11 +96,12 @@ namespace converters
 	}
 	Platform::Object ^ upvotechecked::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
 	{
-		auto x = safe_cast<Platform::IBox<bool>^>(value);
-		if (x == nullptr)
+		auto x = safe_cast<int>(value);
+		if (x == 0 || x == -1)
 			return false;
 		else
-			return x->Value;
+			return true;
+
 	}
 	Platform::Object ^ upvotechecked::ConvertBack(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
 	{
@@ -132,7 +134,7 @@ namespace converters
 			return Windows::UI::Xaml::Visibility::Collapsed;
 		else if (a == account::postContentType::selftype)
 		{
-			if(parameter == nullptr || static_cast<Platform::String^>(parameter) == "")
+			if (parameter == nullptr || static_cast<Platform::String^>(parameter) == "")
 				return Windows::UI::Xaml::Visibility::Collapsed;
 			else
 				return Windows::UI::Xaml::Visibility::Visible;
@@ -140,6 +142,56 @@ namespace converters
 		else
 		{
 			return Windows::UI::Xaml::Visibility::Visible;
+		}
+	}
+
+	Platform::Object ^ DistinguishedAuthorBadge::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
+	{
+		auto x = static_cast<account::DistinguishedAccountTypes>(value);
+		if (x != account::DistinguishedAccountTypes::none)
+		{
+			auto border = ref new Windows::UI::Xaml::Controls::Border();
+			static auto bluecolor = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Blue);
+			static auto whitebrush = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::White);
+			if (x != account::DistinguishedAccountTypes::me)
+			{
+				auto textblock = ref new Windows::UI::Xaml::Controls::TextBlock();
+				Windows::UI::Xaml::Media::SolidColorBrush^* backgroundcolor;
+				switch (x)
+				{
+				case account::DistinguishedAccountTypes::mod:
+					textblock->Text = L"[M]";
+					static auto zzz = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Green);
+					backgroundcolor = &zzz;
+					break;
+				case account::DistinguishedAccountTypes::admin:
+					static auto zz = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Red);
+					backgroundcolor = &zz;
+					textblock->Text = L"[A]";
+					break;
+				case account::DistinguishedAccountTypes::op:
+					textblock->Text = L"[OP]";
+					backgroundcolor = &bluecolor;
+					break;
+				default:
+					__assume(0);
+				}
+				textblock->Foreground = whitebrush;
+				border->Child = std::move(textblock);
+				border->Background = *backgroundcolor;
+			}
+			else
+			{
+				border->Background = bluecolor;
+				auto symbol = ref new Windows::UI::Xaml::Controls::SymbolIcon(Windows::UI::Xaml::Controls::Symbol::WebCam);
+				symbol->Foreground = whitebrush;
+				border->Child = std::move(symbol);
+			}
+			return border;
+		}
+		else
+		{
+			return nullptr;
 		}
 	}
 }

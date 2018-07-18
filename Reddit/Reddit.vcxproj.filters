@@ -59,6 +59,10 @@
     <ClCompile Include="TestPage.xaml.cpp" />
     <ClCompile Include="UserPage.xaml.cpp" />
     <ClCompile Include="NavPage.cpp" />
+    <ClCompile Include="message.cpp">
+      <Filter>account</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagesViewer.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -107,6 +111,10 @@
     </ClInclude>
     <ClInclude Include="TestPage.xaml.h" />
     <ClInclude Include="UserPage.xaml.h" />
+    <ClInclude Include="message.h">
+      <Filter>account</Filter>
+    </ClInclude>
+    <ClInclude Include="MessagesViewer.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
@@ -148,6 +156,8 @@
     <Page Include="ReplyBox.xaml" />
     <Page Include="TestPage.xaml" />
     <Page Include="UserPage.xaml" />
+    <Page Include="MessagesViewer.xaml" />
+    <Page Include="ContentDiag.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ToDo.txt" />

@@ -93,7 +93,7 @@ rootWindowGrid::rootWindowGrid()
 	
 }
 rootWindowGrid^ Reddit::rootWindowGrid::singleT;
-rootWindowGrid ^ Reddit::rootWindowGrid::getCurrent()
+rootWindowGrid ^& Reddit::rootWindowGrid::getCurrent()
 {
 	return singleT;
 }
@@ -378,4 +378,16 @@ void Reddit::rootWindowGrid::Hyperlink_Click(Windows::UI::Xaml::Documents::Hyper
 		return (x.first.Name == ((Windows::UI::Xaml::Interop::TypeName)(UserPage::typeid)).Name && nav->account.username == static_cast<UserNavState*>(x.second)->account.username);
 	}))
 		NavigateToNewPage(UserPage::typeid, globalvars::addNav(UserPage::typeid, std::move(nav)));
+}
+
+Platform::Object ^ Reddit::CurrentUserSubscribedConverter::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
+{
+	if ((bool)(static_cast<int64>(value) & globalvars::currentacc->me.bitflag))
+	{
+		return Windows::UI::Xaml::Visibility::Visible;
+	}
+	else
+	{
+		return Windows::UI::Xaml::Visibility::Collapsed;
+	}
 }

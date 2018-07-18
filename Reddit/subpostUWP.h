@@ -72,22 +72,29 @@ namespace account
 			}
 		}
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ PropertyChanged;
+		virtual property account::DistinguishedAccountTypes  DistinguishedAuthorType
+		{
+			account::DistinguishedAccountTypes get()
+			{
+				return helper.getAuthorIsDistinguished();
+			}
+		}
 		virtual property unsigned int Golds
 		{
 			unsigned int get()
 			{
-				return helper.gilded;
+				return helper.GetGilded();
 			}
 		}
 		virtual property bool saved
 		{
 			bool get()
 			{
-				return helper.saved;
+				return helper.getIsSaved();
 			}
 			void set(bool nw)
 			{
-				if (nw != helper.saved)
+				if (nw != helper.getIsSaved())
 				{
 					if (nw)
 					{
@@ -104,16 +111,16 @@ namespace account
 		{
 			int get()
 			{
-				return helper.score;
+				return helper.GetScore();
 			}
 		}
-		virtual property Platform::IBox<bool>^ Liked
+		virtual property int Liked
 		{
-			Platform::IBox<bool>^ get()
+			int get()
 			{
-				return helper.myvote;
+				return helper.getMyVote();
 			}
-			void set(Platform::IBox<bool>^ input);
+			void set(int input);
 		}
 		property Windows::UI::Xaml::Input::ICommand^ previewCommand;
 		virtual property Windows::UI::Xaml::Input::ICommand^ changeupvote
@@ -171,7 +178,7 @@ namespace account
 		{
 			Platform::String^ get()
 			{
-				return helper.author;
+				return helper.Getauthor();
 			}
 		}
 		property Platform::String^ Title
@@ -191,7 +198,7 @@ namespace account
 				}
 				else
 				{
-					return ref new Windows::Foundation::Uri(L"https://www.reddit.com", helper.permalink);
+					return ref new Windows::Foundation::Uri(L"https://www.reddit.com", helper.Getpermalink());
 				}
 			}
 		}

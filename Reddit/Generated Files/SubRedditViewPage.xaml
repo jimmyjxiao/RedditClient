@@ -27,14 +27,17 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <CommandBar x:ConnectionId='2' x:Name="commandBar"                                                                                                OverflowButtonVisibility="Auto"                                                                                          >
-            <AppBarToggleButton x:ConnectionId='12' Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False" />
-            <AppBarToggleButton x:ConnectionId='13'                                            />
+            <AppBarToggleButton x:ConnectionId='12'                                             >
+                Subscribed
+            </AppBarToggleButton>
+            <AppBarToggleButton x:ConnectionId='13' Icon="OpenPane" Label="View Sidebar" x:Name="sideBarButton" IsThreeState="False" />
+            <AppBarToggleButton x:ConnectionId='14'                                            />
             <AppBarButton Icon="PreviewLink" Label="Wiki" />
-            <AppBarButton x:ConnectionId='14' Icon="Filter" x:Name="timeButton" Label="Filter Posts By:">
+            <AppBarButton x:ConnectionId='15' Icon="Filter" x:Name="timeButton" Label="Filter Posts By:">
                 <AppBarButton.Flyout>
                     <Flyout>
                         <StackPanel>
-                            <ListView x:ConnectionId='16' Header="Posts from:" SelectedValuePath="Tag"                                                                                  x:Name="timeSelector"                                                    >
+                            <ListView x:ConnectionId='17' Header="Posts from:" SelectedValuePath="Tag"                                                                                  x:Name="timeSelector"                                                    >
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -71,14 +74,14 @@
                                     </TextBlock.Tag>
                                 </TextBlock>
                             </ListView>
-                            <MenuFlyoutSeparator x:ConnectionId='17'                                                                                 />
+                            <MenuFlyoutSeparator x:ConnectionId='18'                                                                                 />
                             <ToggleMenuFlyoutItem Text="Show NSFW posts" IsChecked="True"/>
                             <ToggleMenuFlyoutItem Text="Show Spoilers" IsChecked="True"/>
                         </StackPanel>
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
-            <AppBarButton x:ConnectionId='15' Icon="Add" Label="Post"                         >
+            <AppBarButton x:ConnectionId='16' Icon="Add" Label="Post"                         >
                 <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Link" Icon="Link"/>
@@ -88,7 +91,7 @@
             </AppBarButton>
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                    <ListView x:ConnectionId='18' SelectionMode="Single" VerticalAlignment="Stretch" Padding="0" SelectedValuePath="Tag" x:Name="sortSelector"                                                 >
+                    <ListView x:ConnectionId='19' SelectionMode="Single" VerticalAlignment="Stretch" Padding="0" SelectedValuePath="Tag" x:Name="sortSelector"                                                 >
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal" Padding="0"/>

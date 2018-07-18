@@ -13,7 +13,7 @@
 #define JsonGetBooleanWithDefault(vname, jname, jobj,defaultvalue) try{vname = jobj->GetNamedBoolean(jname, defaultvalue);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" Bool" + jname);}
 #define JsonGetNumberWithDefault(vname, jname, jobj,defaultvalue) try{vname = jobj->GetNamedNumber(jname, defaultvalue);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" Number" + jname);}
 #define JsonGetNumber(vname, jname, jobj) try{vname = jobj->GetNamedNumber(jname);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" Number:" + jname);}
-
+#define JsonInitString (jname, jobj) try{vname = jobj->GetNamedString(jname);} catch(Platform::COMException^ e){globalvars::LogChannel->LogMessage(e->Message + L" String:" + jname);}
 namespace account
 {
 	struct NewAccountLoginFailure : std::exception
@@ -80,9 +80,9 @@ namespace account
 		AccountInterface(Platform::String^ refresh, Platform::String^ currentauth);
 		concurrency::task<subredditInfo> GetSubredditInfo(Platform::String^ subreddit, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<subredditInfo> GetSubredditInfo(subredditInfo s, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
-		Concurrency::task<void> vote(Platform::IBox<bool>^ dir, Platform::String^ id, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
+		Concurrency::task<void> vote(int8_t dir, Platform::String^ id, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<void> giveGold(Platform::String^ fullname, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
-		concurrency::task<Windows::Web::Http::HttpResponseMessage^> comment(Platform::String^ ID, Platform::String^ md, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
+		concurrency::task<Windows::Web::Http::HttpResponseMessage^> comment(Platform::String^ ID,Platform::String^ md, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		static Concurrency::task<AccountInterface*> LoginNewAcc(concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<Windows::Data::Json::JsonObject^> getObjectInfo(Platform::String^ fullname, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<Windows::Data::Json::JsonObject^> getObjectInfo(std::queue<Platform::String^> fullnames, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());

@@ -55,10 +55,16 @@ void Reddit::CommentView::SetVec(std::vector<account::CommentUWPitem^> vec)
 			{
 				if (!x->reply_is_only_more)
 				{
+					unsigned int currentmax = 1;
 					for (auto ve : x->replies->commentList)
 					{
-						recursiveNode(node, ve);
+						unsigned int _c = 0;
+						recursiveNode(node, ve, _c);
+						if (_c > currentmax)
+							currentmax = _c;
 					}
+					if (currentmax > max_depth)
+						max_depth = currentmax;
 				}
 				else
 				{
@@ -109,9 +115,9 @@ ExpanderControl::Expander^ Reddit::CommentView::findExpanderRecurse(Windows::UI:
 	return returning;
 }
 
-void Reddit::CommentView::recursiveNode(TreeViewControl::TreeNode ^ par, account::CommentUWPitem ^ com)
+void Reddit::CommentView::recursiveNode(TreeViewControl::TreeNode ^ par, account::CommentUWPitem ^ com, unsigned int& depthcounter)
 {
-
+	depthcounter++;
 	auto newnode = ref new TreeViewControl::TreeNode();
 	newnode->Data = com;
 	par->Append(newnode);
@@ -119,10 +125,16 @@ void Reddit::CommentView::recursiveNode(TreeViewControl::TreeNode ^ par, account
 	{
 		if (!com->reply_is_only_more)
 		{
+			unsigned int currentmax = depthcounter + 1;
 			for (auto v : com->replies->commentList)
 			{
 				if (v->hasReplies)
-					recursiveNode(newnode, v);
+				{
+					unsigned int _c = depthcounter;
+					recursiveNode(newnode, v, _c);
+					if (_c > currentmax)
+						currentmax = _c;
+				}
 				else
 				{
 					auto noChildNode = ref new TreeViewControl::TreeNode();
@@ -130,6 +142,7 @@ void Reddit::CommentView::recursiveNode(TreeViewControl::TreeNode ^ par, account
 					newnode->Append(noChildNode);
 				}
 			}
+			depthcounter = currentmax;
 			if (com->replies->more != nullptr)
 			{
 				auto moreNode = ref new TreeViewControl::TreeNode();
@@ -311,4 +324,18 @@ void Reddit::CommentView::OnCommentSubmitted(Platform::Object ^sender, account::
 	node->InsertAt(0, newnode);
 
 	
+}
+
+Platform::Object ^ Reddit::DepthToColor::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
+{
+	if (static_cast<int>(value)&1)
+	{
+		static auto brush = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::LightGray);
+		return brush;
+	}
+	else
+	{
+		static auto whitebrush = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::White);
+		return whitebrush;
+	}
 }

@@ -51,12 +51,12 @@ namespace Reddit
         bool _contentLoaded;
     
         class rootWindowGrid_obj7_Bindings;
-        class rootWindowGrid_obj13_Bindings;
-        class rootWindowGrid_obj17_Bindings;
+        class rootWindowGrid_obj14_Bindings;
+        class rootWindowGrid_obj18_Bindings;
         class rootWindowGrid_obj1_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
-        private: ::Windows::UI::Xaml::Controls::RowDefinition^ titleRowDef;
+        internal: ::Windows::UI::Xaml::Controls::RowDefinition^ titleRowDef;
         private: ::Windows::UI::Xaml::Controls::Grid^ titleGrid;
         internal: ::Windows::UI::Xaml::Controls::Frame^ rootFrame;
         private: ::Windows::UI::Xaml::Shapes::Rectangle^ titleRec;

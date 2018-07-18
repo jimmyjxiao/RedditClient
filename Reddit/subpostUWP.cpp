@@ -4,15 +4,17 @@
 #include "DelegateCommand.h"
 #include <regex>
 #include "ApplicationDataHelper.h"
+#include "App.xaml.h"
+#include "PopupContent.h"
 using namespace Windows::Foundation;
 using namespace Windows::Data::Json;
 namespace wsaw = Windows::Security::Authentication::Web;
 using namespace account;
 
 
-	void account::subpostUWP::Liked::set(Platform::IBox<bool>^ input)
+	void account::subpostUWP::Liked::set(int input)
 	{
-		if (input != helper.myvote)
+		if (input != helper.getMyVote())
 		{
 			helper.vote(input); //Todo: error handling
 			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("Liked"));
@@ -21,44 +23,38 @@ using namespace account;
 	}
 	void account::subpostUWP::_changeupvote(Platform::Object ^ param)
 	{
-		//__debugbreak();
-		if (helper.myvote == nullptr || helper.myvote->Value == false)
+		int cvote = helper.getMyVote();
+		if (cvote == 0 || cvote == 1)
 			Liked = true;
-		else if (helper.myvote->Value == true)
-			Liked = nullptr;
+		else if (cvote == 1)
+			Liked = 0;
 	}
 
 	void account::subpostUWP::_changedownvote(Platform::Object ^ param)
 	{
 		//__debugbreak();
-		if (helper.myvote == nullptr || helper.myvote->Value == true)
-			Liked = false;
-		else if (helper.myvote->Value == false)
-			Liked = nullptr;
+		int cvote = helper.getMyVote();
+		if (cvote == 0 || cvote == 1)
+			Liked = -1;
+		else if (cvote == -1)
+			Liked = 0;
 	}
 
 	void account::subpostUWP::previewDialog(Platform::Object ^)
 	{
+		
+		/*dialog->PrimaryButtonText = "Go to Comments";
+		dialog->CloseButtonText = "Close";*/
 		if (std::holds_alternative<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(contentHelper))
 		{
-			nonC:
-			auto dialog = ref new Windows::UI::Xaml::Controls::ContentDialog();
-			dialog->Content = std::get<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(contentHelper)->viewerControl();
-			dialog->PrimaryButtonText = "Go to Comments";
-			dialog->CloseButtonText = "Close";
-			dialog->ShowAsync();
+		nonC:
+			Reddit::PopupContent::OpenPreviewPopup(std::get<std::unique_ptr<account::serviceHelpers::previewHelperbase>>(contentHelper).get());
 		}
 		else
 		{
 			try {
 				std::get<concurrency::task<serviceHelpers::previewHelperbase*>>(contentHelper).then([](account::serviceHelpers::previewHelperbase* p) {
-					Windows::ApplicationModel::Core::CoreApplication::MainView->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::High, ref new Windows::UI::Core::DispatchedHandler([p]() {
-						auto dialog = ref new Windows::UI::Xaml::Controls::ContentDialog();
-						dialog->Content = p->viewerControl();
-						dialog->PrimaryButtonText = "Go to Comments";
-						dialog->CloseButtonText = "Close";
-						dialog->ShowAsync();
-					}));
+					Reddit::PopupContent::OpenPreviewPopup(p);
 				});
 			}
 			catch (std::bad_variant_access& b)

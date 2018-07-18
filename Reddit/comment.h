@@ -4,7 +4,7 @@ namespace account
 {
 
 	class comment :
-		public VotableThing, RedditCreated
+		public VotableThing
 	{
 	public:
 		//Platform::String^ htmltext;

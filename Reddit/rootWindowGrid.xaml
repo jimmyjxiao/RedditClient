@@ -8,9 +8,11 @@
     xmlns:ac="using:account"
     Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
+    <Grid.Resources>
+        <local:CurrentUserSubscribedConverter x:Key="SubscribedVisibility"/>
+    </Grid.Resources>
     <Grid.RowDefinitions>
-        <RowDefinition x:Name="titleRowDef"/>
+        <RowDefinition x:Name="titleRowDef" x:FieldModifier="Internal"/>
         <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <Grid Grid.Row="0" Margin="0" Padding="0" x:Name="titleGrid" Background="Transparent" >
@@ -102,7 +104,7 @@
                         <TextBlock Grid.Row="1">
                             <Run Text="{x:Bind subscribers}"/> Subscribers
                         </TextBlock>
-                        <SymbolIcon Symbol="Accept" Grid.Column="1" Grid.RowSpan="2"/>
+                        <SymbolIcon Symbol="Accept" Grid.Column="1" Grid.RowSpan="2" Visibility="{x:Bind subscribed, Converter={StaticResource SubscribedVisibility}}" />
                     </Grid>
                 </DataTemplate>
             </AutoSuggestBox.ItemTemplate>

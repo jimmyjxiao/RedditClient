@@ -70,7 +70,7 @@ namespace Reddit
 	public ref class EXplaceHolder sealed : Windows::UI::Xaml::Controls::ContentControl
 	{
 	private:
-		std::variant<std::unique_ptr<account::serviceHelpers::previewHelperbase>, concurrency::task<account::serviceHelpers::previewHelperbase*>> * contentH;
+		void *contentPtr;
 	public:
 		property bool contentLoaded {
 			bool get()
@@ -81,12 +81,10 @@ namespace Reddit
 		EXplaceHolder();
 		property account::subpostUWP^ post
 		{
-			void set(account::subpostUWP^ sa)
-			{
-				contentH = &sa->contentHelper;
-			}
+			void set(account::subpostUWP^ sa);
 		}
 	internal:
+		EXplaceHolder(account::serviceHelpers::previewHelperbase* ptr);
 		void OnExpanding(Platform::Object^, Platform::Object^);
 		void  OnLoaded(Platform::Object ^sender, Windows::UI::Xaml::RoutedEventArgs ^e);
 	};

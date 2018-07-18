@@ -36,33 +36,37 @@ CommentViewPage::CommentViewPage()
 void Reddit::CommentViewPage::OnNavigatedToPageCode()
 {
 	auto list = globalvars::currentacc->getCommentAsyncVec(nav->postID, nav->sort);
-	const char16_t* substr = (const char16_t*)nav->post->subreddit->Data();
-
-	try
-	{
-		ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(substr, commentControl->reportingReasons);
-	}
-	catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> m)
-	{
-
-		m.retrieveTask.then([this](std::vector<account::reportReason> z) {
-			commentControl->reportingReasons->ReplaceAll(Platform::ArrayReference<account::reportReason>(z.data(), z.size()));
-		});
-	}
 	if (nav->post != nullptr)
 	{
+		const char16_t* substr = (const char16_t*)nav->post->subreddit->Data();
 		try {
 			_subInfo = ApplicationDataHelper::subredditHelpers::trysubredditInfoCache(substr);
-
+			ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(_subInfo.subredditIndex, commentControl->reportingReasons);
 		}
 		catch (ApplicationDataHelper::cacheMiss<account::subredditInfo> m)
 		{
 			m.retrieveTask.then([this](account::subredditInfo v) {
-				_subInfo = v;
+				_subInfo = std::move(v);
 				this->PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("subInfo"));
+				try
+				{
+					ApplicationDataHelper::subredditHelpers::trysubredditRulesCache(_subInfo.subredditIndex, commentControl->reportingReasons);
+				}
+				catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> m)
+				{
+
+					m.retrieveTask.then([this](std::vector<account::reportReason> z) {
+						commentControl->reportingReasons->ReplaceAll(Platform::ArrayReference<account::reportReason>(z.data(), z.size()));
+					});
+				}
 			});
 		}
-
+		catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> m)
+		{
+			m.retrieveTask.then([this](std::vector<account::reportReason> z) {
+				commentControl->reportingReasons->ReplaceAll(Platform::ArrayReference<account::reportReason>(z.data(), z.size()));
+			});
+		}
 		this->commentControl->setHeaderpost(nav->post);
 
 	}
@@ -73,14 +77,10 @@ void Reddit::CommentViewPage::OnNavigatedToPageCode()
 	list.then([this](account::commentUWPlisting z) {
 
 
-		concurrency::parallel_for_each(z.commentList.begin(), z.commentList.end(), [](account::CommentUWPitem^ item) {
+		concurrency::parallel_for_each(z.commentList.begin(), z.commentList.end(), [](account::CommentUWPitem^& item) {
 			try
 			{
-				item->cacheMDElements();
-				for (auto && a : item->mdElements->Links)
-				{
-					//linkHandler::urlLookupTasks.insert(std::make_pair<int, concurrency::task<std::pair<account::postContentType, account::serviceHelpers::previewHelperbase*>>>(a->GetHashCode(), account::serviceHelpers::urlHelper(a)));
-				}
+				item->recursivelyCacheMDElements();
 			}
 			catch (...)
 			{
