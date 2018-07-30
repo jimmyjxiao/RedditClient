@@ -11,6 +11,7 @@
 #include "subpost.h"
 #include "subpostUWP.h"
 #include "MyResources.xaml.h"
+#include "NewPostPopup.xaml.h"
 namespace Reddit
 {
 	/// <summary>
@@ -32,6 +33,8 @@ namespace Reddit
 				return SubRedditViewPage::typeid;
 			}
 		}
+		static void NavigateToSubreddit(Platform::String^ sub, account::postSort sort = account::postSort::Defaultsort, account::timerange range = account::timerange::Default);
+		static void NavigateToSubreddit(account::subredditInfo sub, account::postSort sort = account::postSort::Defaultsort, account::timerange range = account::timerange::Default);
 		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> ContentGridItemRecycle;
 		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> SelfGridItemRecycle;
 		static std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> AdGridItemRecycle;
@@ -91,6 +94,7 @@ namespace Reddit
 	protected:
 		virtual void OnNavigatedToPageCode() override final;
 	private:
+		NewPostPopup ^ SubmitPopup = nullptr;
 		void updateSidebar();
 		bool useCss = true;
 		std::unique_ptr<account::subredditlisting> lPtr;
@@ -115,6 +119,17 @@ namespace Reddit
 		void listView_ChoosingItemContainer(Windows::UI::Xaml::Controls::ListViewBase^ sender, Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^ args);
 		void postButton_click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 };
+	public ref class SubscribersConverter sealed : Windows::UI::Xaml::Data::IValueConverter
+	{
+	public:
+		virtual Platform::Object^ Convert(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language);
+		virtual Platform::Object^ ConvertBack(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
+			Platform::Object^ parameter, Platform::String^ language)
+		{
+			throw ref new Platform::NotImplementedException;
+		}
+	};
 	public ref class sortToTimeRangeVis sealed : Windows::UI::Xaml::Data::IValueConverter
 	{
 	public:

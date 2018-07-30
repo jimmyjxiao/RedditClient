@@ -3,6 +3,7 @@
 #include "globalvars.h"
 #include <regex>
 #include <ppl.h>
+#include "subpostUWP.h"
 #include <concurrent_queue.h>
 #include <concurrent_vector.h>
 using namespace account;
@@ -18,61 +19,79 @@ typedef std::pair<account::postContentType, previewHelperbase*>(*straightHelper)
 
 //#define _SERVICE_HELPER_FUNC_SIG_C(xii) concurrency::task<std::pair<account::postContentType, previewHelperbase*>> xii (std::variant<Windows::Data::Json::JsonObject^, Windows::Foundation::Uri^> v)
 //#define _SERVICE_HELPER_FUNC_SIG_S(xii) std::pair<account::postContentType, previewHelperbase*> xii (std::variant<Windows::Data::Json::JsonObject^, Windows::Foundation::Uri^> v)
-
-
-
+namespace account::serviceHelpers
+{
+	struct CrossPostDisplay final : previewHelperbase
+	{
+	private:
+		Platform::WeakReference ParentPost;
+	public:
+		CrossPostDisplay(account::subpostUWP^ s) : previewHelperbase(s->link)
+		{
+			easypreview = true;
+			ParentPost = s;
+		}
+		virtual Windows::UI::Xaml::UIElement^ viewerControl();
+	};
+}
 concurrency::task<std::pair<account::postContentType, previewHelperbase*>> serviceHelpers::jsonHelper(Windows::Data::Json::JsonObject^ z)
 {
 	return concurrency::create_task([z]() {
-		auto url = ref new Windows::Foundation::Uri(z->GetNamedString("url"));
-		try
+		if (z->HasKey("crosspost_parent"))
 		{
-			auto td = z->GetNamedValue("media");
-			if (td->ValueType != Windows::Data::Json::JsonValueType::Null)
+			return concurrency::task_from_result(std::pair<account::postContentType, previewHelperbase*>(postContentType::xpost, new CrossPostDisplay(ref new account::subpostUWP(z->GetNamedArray("crosspost_parent_list")->GetObjectAt(0)))));
+		}
+		else
+		{
+			auto url = ref new Windows::Foundation::Uri(z->GetNamedString("url"));
+			try
 			{
-				if (td->GetObject()->HasKey("reddit_video"))
+				auto td = z->GetNamedValue("media");
+				if (td->ValueType != Windows::Data::Json::JsonValueType::Null)
 				{
-					auto reddVideo = td->GetObject()->GetNamedObject("reddit_video");
-					auto hlsUrl = ref new Windows::Foundation::Uri(reddVideo->GetNamedString("hls_url"));
-					if (reddVideo->GetNamedBoolean("is_gif"))
+					if (td->GetObject()->HasKey("reddit_video"))
 					{
-						return concurrency::task_from_result(std::pair<account::postContentType, previewHelperbase*>(account::postContentType::giftype, new gifvDisplay(hlsUrl, url)));
+						auto reddVideo = td->GetObject()->GetNamedObject("reddit_video");
+						auto hlsUrl = ref new Windows::Foundation::Uri(reddVideo->GetNamedString("hls_url"));
+						if (reddVideo->GetNamedBoolean("is_gif"))
+						{
+							return concurrency::task_from_result(std::pair<account::postContentType, previewHelperbase*>(account::postContentType::giftype, new gifvDisplay(hlsUrl, url)));
+						}
+						else
+						{
+
+							return concurrency::create_task(Windows::Media::Streaming::Adaptive::AdaptiveMediaSource::CreateFromUriAsync(hlsUrl)).then([](Windows::Media::Streaming::Adaptive::AdaptiveMediaSourceCreationResult^ res) {
+
+								if (res->Status == Windows::Media::Streaming::Adaptive::AdaptiveMediaSourceCreationStatus::Success)
+								{
+									res->MediaSource->InitialBitrate = *std::max_element(Windows::Foundation::Collections::begin(res->MediaSource->AvailableBitrates), Windows::Foundation::Collections::end(res->MediaSource->AvailableBitrates));
+									return res->MediaSource;
+								}
+								else
+								{
+									res->HttpResponseMessage->EnsureSuccessStatusCode();
+
+									throw ref new Platform::Exception(res->ExtendedError.Value, res->Status.ToString());
+								}
+
+							}).then([hlsUrl, url](concurrency::task<Windows::Media::Streaming::Adaptive::AdaptiveMediaSource^> z) {
+								try { return std::pair<account::postContentType, previewHelperbase*>(account::postContentType::videotype, new videoDisplay(hlsUrl, url, z.get())); }
+								catch (Platform::Exception^ e)
+								{
+									__debugbreak();
+								}
+								catch (...)
+								{
+									__debugbreak();
+								}
+							});
+						}
 					}
-					else
+					else if (td->GetObject()->HasKey("oembed"))
 					{
 
-						return concurrency::create_task(Windows::Media::Streaming::Adaptive::AdaptiveMediaSource::CreateFromUriAsync(hlsUrl)).then([](Windows::Media::Streaming::Adaptive::AdaptiveMediaSourceCreationResult^ res) {
-
-							if (res->Status == Windows::Media::Streaming::Adaptive::AdaptiveMediaSourceCreationStatus::Success)
-							{
-								res->MediaSource->InitialBitrate = *std::max_element(Windows::Foundation::Collections::begin(res->MediaSource->AvailableBitrates), Windows::Foundation::Collections::end(res->MediaSource->AvailableBitrates));
-								return res->MediaSource;
-							}
-							else
-							{
-								res->HttpResponseMessage->EnsureSuccessStatusCode();
-
-								throw ref new Platform::Exception(res->ExtendedError.Value, res->Status.ToString());
-							}
-
-						}).then([hlsUrl, url](concurrency::task<Windows::Media::Streaming::Adaptive::AdaptiveMediaSource^> z) {
-							try { return std::pair<account::postContentType, previewHelperbase*>(account::postContentType::videotype, new videoDisplay(hlsUrl, url, z.get())); }
-							catch (Platform::Exception^ e)
-							{
-								__debugbreak();
-							}
-							catch (...)
-							{
-								__debugbreak();
-							}
-						});
 					}
 				}
-				else if (td->GetObject()->HasKey("oembed"))
-				{
-
-				}
-			}
 				auto it = domainMap.find(std::wstring_view(z->GetNamedString("domain")->Data()));
 				if (it == domainMap.end())
 					return concurrency::task_from_result(std::pair<account::postContentType, previewHelperbase*>(postContentType::linktype, new previewHelperbase(url)));
@@ -80,14 +99,14 @@ concurrency::task<std::pair<account::postContentType, previewHelperbase*>> servi
 				{
 					return it->second(z);
 				}
-			
-		}
-		catch (Platform::Exception^ e)
-		{
-			__debugbreak();
-			return concurrency::task_from_result(std::pair<account::postContentType, previewHelperbase*>(postContentType::linktype ,new previewHelperbase(url)));
-		}
 
+			}
+			catch (Platform::Exception^ e)
+			{
+				__debugbreak();
+				return concurrency::task_from_result(std::pair<account::postContentType, previewHelperbase*>(postContentType::linktype, new previewHelperbase(url)));
+			}
+		}
 	});
 
 }
@@ -129,6 +148,10 @@ concurrency::task<std::pair<account::postContentType, previewHelperbase*>> accou
 
 std::tuple<account::postContentType, previewHelperbase*, const ServiceHelper* const> account::serviceHelpers::prelimContentHelper(Windows::Data::Json::JsonObject ^ z)
 {
+	if (z->HasKey("crosspost_parent"))
+	{
+		return std::tuple<account::postContentType, previewHelperbase*, const ServiceHelper* const>(postContentType::xpost, new CrossPostDisplay(ref new account::subpostUWP(z->GetNamedArray("crosspost_parent_list")->GetObjectAt(0))), nullptr);
+	}
 	auto it = domainMap.find(std::wstring_view(z->GetNamedString("domain")->Data()));
 	if (it != domainMap.end())
 	{
@@ -537,14 +560,17 @@ const struct gfycat final : ServiceHelper
 	}
 	pjsoncall
 	{
-		if (json->GetNamedString("post_hint" ) == "rich:video")
+		try {
+			if ((json->HasKey("post_hint") && (json->GetNamedString("post_hint" ) == "rich:video") ) || (json->GetNamedObject("secure_media")->GetNamedObject("oembed")->GetNamedString("type") == "video"))
 		{
 			return prelimCall(ref new Windows::Foundation::Uri(json->GetNamedString("url")));
 		}
-		else
-		{
-			return {postContentType::linktype, new previewHelperbase(ref new Windows::Foundation::Uri(json->GetNamedString("url")))};
 		}
+		catch (...)
+		{
+
+		}
+			return {postContentType::giftype, new previewHelperbase(ref new Windows::Foundation::Uri(json->GetNamedString("url")))};
 	}
 }gfycatHelper;
 const struct streamable final : ServiceHelper
@@ -592,24 +618,52 @@ const struct streamable final : ServiceHelper
 }streamableHelper;
 const struct vReddit final : ServiceHelper
 {
-	vReddit(){}
-	urioperator
+	vReddit() {}
+	jsonoperator
 	{
-		auto hlsurl = uri->ToString();
-		hlsurl += L"/HLSPlaylist.m3u8";
-		auto hlsuri = ref new Windows::Foundation::Uri(std::move(hlsurl));
-		auto http = ref new HttpRequestMessage(Windows::Web::Http::HttpMethod::Head, hlsuri);
-		return concurrency::create_task(globalvars::generalHttp->SendRequestAsync(http, Windows::Web::Http::HttpCompletionOption::ResponseHeadersRead)).then([hlsuri, uri](Windows::Web::Http::HttpResponseMessage^ m) {
-			if (m->Content->Headers->ContentType->MediaType == "application/x-mpegURL")
-			{
-				return std::pair<account::postContentType, previewHelperbase*>(account::postContentType::videotype, new videoDisplay(hlsuri, uri));
-			}
-			else
-			{
-				std::pair<account::postContentType, previewHelperbase*>(account::postContentType::linktype, new previewHelperbase(uri));
-			}
-		});
+		auto x = prelimCall(json);
+	if (x.second != nullptr)
+	{
+		return concurrency::task_from_result(std::move(x));
+		}
+	else
+	{
+		return operator()(ref new Windows::Foundation::Uri(json->GetNamedString("url")));
 	}
+	}
+		urioperator
+	{
+	return concurrency::create_task(globalvars::currentacc->GetRedirectUri(uri)).then([](Windows::Foundation::Uri^ u) {return globalvars::currentacc->httpClient->GetStringAsync(ref new Windows::Foundation::Uri(u->ToString() + ".json")); }).then([uri](Platform::String^ s) {
+		try
+		{
+			return std::pair<account::postContentType, previewHelperbase*>(account::postContentType::xpost, new CrossPostDisplay(ref new account::subpostUWP(Windows::Data::Json::JsonArray::Parse(s)->GetObjectAt(0)->GetNamedObject("data")->GetNamedArray("children")->GetObjectAt(0)->GetNamedObject("data"))));
+		}
+		catch (...)
+		{
+			try
+			{
+				auto hlsurl = uri->ToString();
+				hlsurl += L"/HLSPlaylist.m3u8";
+				auto hlsuri = ref new Windows::Foundation::Uri(std::move(hlsurl));
+				auto http = ref new HttpRequestMessage(Windows::Web::Http::HttpMethod::Head, hlsuri);
+				return concurrency::create_task(globalvars::generalHttp->SendRequestAsync(http, Windows::Web::Http::HttpCompletionOption::ResponseHeadersRead)).then([hlsuri, uri](Windows::Web::Http::HttpResponseMessage^ m) {
+					if (m->Content->Headers->ContentType->MediaType == "application/x-mpegURL")
+					{
+						return std::pair<account::postContentType, previewHelperbase*>(account::postContentType::videotype, new videoDisplay(hlsuri, uri));
+					}
+					else
+					{
+						std::pair<account::postContentType, previewHelperbase*>(account::postContentType::linktype, new previewHelperbase(uri));
+					}
+				}).get();
+			}
+			catch (...)
+			{
+				return std::pair<account::postContentType, previewHelperbase*>(account::postContentType::linktype, new previewHelperbase(uri));
+			}
+		}
+	});
+		}
 	puricall
 	{
 		auto hlsurl = uri->ToString();
@@ -618,6 +672,7 @@ const struct vReddit final : ServiceHelper
 	}
 	pjsoncall
 	{
+		try {
 		auto rd = json->GetNamedObject("secure_media")->GetNamedObject("reddit_video");
 		auto videoUrl = ref new Windows::Foundation::Uri(rd->GetNamedString("hls_url"));
 		auto url = ref new Windows::Foundation::Uri(json->GetNamedString("url"));
@@ -629,6 +684,12 @@ const struct vReddit final : ServiceHelper
 		{
 			return { postContentType::videotype, new videoDisplay(std::move(videoUrl), std::move(url)) };
 		}
+		}
+	catch (...)
+	{
+		return {postContentType::videotype, nullptr};
+ }
+		
 	}
 }vRedditHelper;
 
@@ -719,14 +780,23 @@ account::serviceHelpers::gifvDisplay::gifvDisplay(Windows::Foundation::Uri ^ ima
 
 Windows::UI::Xaml::UIElement ^ account::serviceHelpers::gifvDisplay::viewerControl()
 {
-
-	auto element = ref new Windows::UI::Xaml::Controls::MediaPlayerElement();
-	element->Source = this->source;
-	element->MediaPlayer->IsLoopingEnabled = true;
-	element->AutoPlay = true;
-	element->AreTransportControlsEnabled = false;
-	element->Stretch = Windows::UI::Xaml::Media::Stretch::Uniform;
-	return element;
+	try {
+		auto x = this->contentLink->ToString();
+		auto v = this->Link->ToString();
+		auto element = ref new Windows::UI::Xaml::Controls::MediaPlayerElement();
+		element->Source = this->source;
+		element->MediaPlayer->IsLoopingEnabled = true;
+		element->AutoPlay = true;
+		element->AreTransportControlsEnabled = false;
+		element->Stretch = Windows::UI::Xaml::Media::Stretch::Uniform;
+		return element;
+	}
+	catch (...)
+	{
+		
+		__debugbreak();
+	}
+	
 }
 
 Windows::UI::Xaml::UIElement ^ account::serviceHelpers::previewHelperbase::viewerControl()
@@ -961,4 +1031,13 @@ account::serviceHelpers::QualityScaleGifv::QualityScaleGifv(std::vector<std::pai
 	Link = std::move(url);
 	contentLink = q.begin()->second;
 	Qualities = std::move(q);
+	source = Windows::Media::Core::MediaSource::CreateFromUri(contentLink);
+}
+
+Windows::UI::Xaml::UIElement ^ account::serviceHelpers::CrossPostDisplay::viewerControl()
+{
+	auto contentPres = ref new Windows::UI::Xaml::Controls::ContentPresenter();
+	contentPres->ContentTemplate = static_cast<Reddit::App^>(Windows::UI::Xaml::Application::Current)->listTemplateRes->listSelfPost;
+	contentPres->Content = ParentPost.Resolve<account::subpostUWP>();
+	return std::move(contentPres);
 }

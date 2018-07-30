@@ -33,16 +33,6 @@ namespace converters
 		virtual Platform::Object^ ConvertBack(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
 			Platform::Object^ parameter, Platform::String^ language);
 	};
-	public ref class ScoreText sealed : Windows::UI::Xaml::Data::IValueConverter
-	{
-	public:
-		virtual Platform::Object^ Convert(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
-			Platform::Object^ parameter, Platform::String^ language);
-		virtual Platform::Object^ ConvertBack(Platform::Object^ value, Windows::UI::Xaml::Interop::TypeName targetType,
-			Platform::Object^ parameter, Platform::String^ language) {
-			throw ref new Platform::NotImplementedException();
-		}
-	};
 	public ref class add15 sealed : Windows::UI::Xaml::Data::IValueConverter
 	{
 	public:

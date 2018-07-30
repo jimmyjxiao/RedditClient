@@ -37,7 +37,10 @@ namespace TreeViewControl {
 
         //This event is used to expose an alternative to itemclick to developers.
         event TreeViewItemClickHandler^ TreeViewItemClick;
-
+		Windows::UI::Xaml::DependencyObject^ PublicGetTemplateChild(Platform::String^ String)
+		{
+			return GetTemplateChild(std::move(String));
+		}
         //This RootNode property is used by the TreeView to handle additions into the TreeView and
         //accurate VectorChange with multiple 'root level nodes'. This node will not be placed
         //in the flatViewModel, but has it's vectorchanged event hooked up to flatViewModel's
@@ -49,8 +52,6 @@ namespace TreeViewControl {
         }
 
         void TreeView_OnItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ args);
-
-      
 
         void ExpandNode(TreeNode^ targetNode);
 

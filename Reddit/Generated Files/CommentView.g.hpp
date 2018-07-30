@@ -44,15 +44,18 @@ public:
     {
         switch(__connectionId)
         {
-            case 4: // CommentView.xaml line 73
-                this->obj4 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
+            case 4: // CommentView.xaml line 72
+                this->obj4 = safe_cast<::Windows::UI::Xaml::Controls::Border^>(__target);
+                break;
+            case 5: // CommentView.xaml line 73
+                this->obj5 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
                 (safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target))->Click += ref new Windows::UI::Xaml::RoutedEventHandler([this] (::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e)
                 {
                     (safe_cast<::account::moreComments^>(this->GetDataRoot()->Data))->clickedFunc();
                 });
                 break;
-            case 5: // CommentView.xaml line 75
-                this->obj5 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 6: // CommentView.xaml line 75
+                this->obj6 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -75,7 +78,7 @@ public:
                 this->SetDataRoot(static_cast<::TreeViewControl::TreeNode^>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj4.Resolve<::Windows::UI::Xaml::Controls::HyperlinkButton>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj4.Resolve<::Windows::UI::Xaml::Controls::Border>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -105,7 +108,8 @@ public:
 private:
     // Fields for each control that has bindings.
     ::Platform::WeakReference obj4;
-    ::Windows::UI::Xaml::Documents::Run^ obj5;
+    ::Windows::UI::Xaml::Controls::HyperlinkButton^ obj5;
+    ::Windows::UI::Xaml::Documents::Run^ obj6;
 
     // Update methods for each path node used in binding steps.
     void Update_(::TreeViewControl::TreeNode^ obj, int phase)
@@ -123,10 +127,10 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 73
+            // CommentView.xaml line 72
             if (this->obj4 != nullptr)
             {
-                Set_Windows_UI_Xaml_FrameworkElement_Margin(this->obj4.Resolve<::Windows::UI::Xaml::Controls::HyperlinkButton>(), safe_cast<::Windows::UI::Xaml::Thickness>(this->LookupConverter("IntToIndConverter")->Convert(obj, ::Windows::UI::Xaml::Thickness::typeid, nullptr, nullptr)));
+                Set_Windows_UI_Xaml_FrameworkElement_Margin(this->obj4.Resolve<::Windows::UI::Xaml::Controls::Border>(), safe_cast<::Windows::UI::Xaml::Thickness>(this->LookupConverter("IntToIndConverter")->Convert(obj, ::Windows::UI::Xaml::Thickness::typeid, nullptr, nullptr)));
             }
         }
     }
@@ -155,7 +159,7 @@ private:
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
             // CommentView.xaml line 75
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj5, obj.ToString(), nullptr);
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj6, obj.ToString(), nullptr);
         }
     }
     static void Set_Windows_UI_Xaml_FrameworkElement_Margin(::Windows::UI::Xaml::FrameworkElement^ obj, ::Windows::UI::Xaml::Thickness value)
@@ -175,20 +179,20 @@ private:
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::CommentView::CommentView_obj6_Bindings 
+class Reddit::CommentView::CommentView_obj7_Bindings 
     : public ::XamlBindingInfo::ReferenceTypeXamlBindings<::TreeViewControl::TreeNode, ::XamlBindingInfo::XamlBindingTrackingBase>
     , public ::XamlBindingInfo::IXamlBindingTracking
 {
             ::Windows::UI::Xaml::ResourceDictionary^ localResources;
             ::Platform::WeakReference converterLookupRoot;
 public:
-    CommentView_obj6_Bindings()
+    CommentView_obj7_Bindings()
     {
         InitializeTracking(this);
     }
 
 private:
-    ~CommentView_obj6_Bindings()
+    ~CommentView_obj7_Bindings()
     {
         ReleaseAllListeners();
     }
@@ -199,55 +203,58 @@ public:
     {
         switch(__connectionId)
         {
-            case 6: // CommentView.xaml line 24
-                this->obj6 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            case 7: // CommentView.xaml line 23
+                this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 7: // CommentView.xaml line 39
-                this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::RichTextBlock^>(__target);
+            case 8: // CommentView.xaml line 38
+                this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::RichTextBlock^>(__target);
                 break;
-            case 8: // CommentView.xaml line 42
-                this->obj8 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
-                break;
-            case 9: // CommentView.xaml line 47
+            case 9: // CommentView.xaml line 41
                 this->obj9 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
                 break;
-            case 10: // CommentView.xaml line 52
-                this->obj10 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-                this->obj10->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
+            case 10: // CommentView.xaml line 46
+                this->obj10 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
+                break;
+            case 11: // CommentView.xaml line 51
+                this->obj11 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+                this->obj11->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
                         [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
                         {
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                (safe_cast<::account::CommentUWPitem^>(this->GetDataRoot()->Data))->saved = this->obj10->IsChecked ? this->obj10->IsChecked->Value : false;
+                                (safe_cast<::account::CommentUWPitem^>(this->GetDataRoot()->Data))->saved = this->obj11->IsChecked ? this->obj11->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 11: // CommentView.xaml line 58
-                this->obj11 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            case 12: // CommentView.xaml line 57
+                this->obj12 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
                 break;
-            case 12: // CommentView.xaml line 60
-                this->obj12 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-                this->obj12->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
+            case 13: // CommentView.xaml line 59
+                this->obj13 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+                this->obj13->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
                         [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
                         {
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->IsExpanded = safe_cast<::Platform::Boolean>(this->LookupConverter("inverseBoolConverter")->ConvertBack(this->obj12->IsChecked, ::Platform::Boolean::typeid, nullptr, nullptr));
+                                this->GetDataRoot()->IsExpanded = safe_cast<::Platform::Boolean>(this->LookupConverter("inverseBoolConverter")->ConvertBack(this->obj13->IsChecked, ::Platform::Boolean::typeid, nullptr, nullptr));
                             }
                         }));
                 break;
-            case 14: // CommentView.xaml line 33
-                this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
+            case 15: // CommentView.xaml line 31
+                this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
                 break;
-            case 15: // CommentView.xaml line 34
-                this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::ContentPresenter^>(__target);
+            case 16: // CommentView.xaml line 32
+                this->obj16 = safe_cast<::Windows::UI::Xaml::Controls::ContentPresenter^>(__target);
                 break;
-            case 16: // CommentView.xaml line 35
-                this->obj16 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 17: // CommentView.xaml line 34
+                this->obj17 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+                break;
+            case 18: // CommentView.xaml line 34
+                this->obj18 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -271,7 +278,7 @@ public:
                 this->SetDataRoot(static_cast<::TreeViewControl::TreeNode^>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj6.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj7.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -300,16 +307,17 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj6;
-    ::Windows::UI::Xaml::Controls::RichTextBlock^ obj7;
-    ::Reddit::AppBarToggleColoredButton^ obj8;
+    ::Platform::WeakReference obj7;
+    ::Windows::UI::Xaml::Controls::RichTextBlock^ obj8;
     ::Reddit::AppBarToggleColoredButton^ obj9;
-    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj10;
-    ::Windows::UI::Xaml::Controls::AppBarButton^ obj11;
-    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj12;
-    ::Windows::UI::Xaml::Controls::HyperlinkButton^ obj14;
-    ::Windows::UI::Xaml::Controls::ContentPresenter^ obj15;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj16;
+    ::Reddit::AppBarToggleColoredButton^ obj10;
+    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj11;
+    ::Windows::UI::Xaml::Controls::AppBarButton^ obj12;
+    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj13;
+    ::Windows::UI::Xaml::Controls::HyperlinkButton^ obj15;
+    ::Windows::UI::Xaml::Controls::ContentPresenter^ obj16;
+    ::Windows::UI::Xaml::Documents::Run^ obj17;
+    ::Windows::UI::Xaml::Documents::Run^ obj18;
     
     // Fields for binding tracking.
     ::Platform::WeakReference cachePC_;
@@ -349,10 +357,10 @@ private:
         }
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 24
-            if (this->obj6 != nullptr)
+            // CommentView.xaml line 23
+            if (this->obj7 != nullptr)
             {
-                Set_Windows_UI_Xaml_FrameworkElement_Tag(this->obj6.Resolve<::Windows::UI::Xaml::Controls::Grid>(), obj, nullptr);
+                Set_Windows_UI_Xaml_FrameworkElement_Tag(this->obj7.Resolve<::Windows::UI::Xaml::Controls::Grid>(), obj, nullptr);
             }
         }
     }
@@ -360,15 +368,15 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 24
-            if (this->obj6 != nullptr)
+            // CommentView.xaml line 23
+            if (this->obj7 != nullptr)
             {
-                Set_Windows_UI_Xaml_FrameworkElement_Margin(this->obj6.Resolve<::Windows::UI::Xaml::Controls::Grid>(), safe_cast<::Windows::UI::Xaml::Thickness>(this->LookupConverter("IntToIndConverter")->Convert(obj, ::Windows::UI::Xaml::Thickness::typeid, nullptr, nullptr)));
+                Set_Windows_UI_Xaml_FrameworkElement_Margin(this->obj7.Resolve<::Windows::UI::Xaml::Controls::Grid>(), safe_cast<::Windows::UI::Xaml::Thickness>(this->LookupConverter("IntToIndConverter")->Convert(obj, ::Windows::UI::Xaml::Thickness::typeid, nullptr, nullptr)));
             }
-            // CommentView.xaml line 24
-            if (this->obj6 != nullptr)
+            // CommentView.xaml line 23
+            if (this->obj7 != nullptr)
             {
-                Set_Windows_UI_Xaml_Controls_Panel_Background(this->obj6.Resolve<::Windows::UI::Xaml::Controls::Grid>(), safe_cast<::Windows::UI::Xaml::Media::Brush^>(this->LookupConverter("itemBrushConv")->Convert(obj, ::Windows::UI::Xaml::Media::Brush::typeid, nullptr, nullptr)), nullptr);
+                Set_Windows_UI_Xaml_Controls_Panel_Background(this->obj7.Resolve<::Windows::UI::Xaml::Controls::Grid>(), safe_cast<::Windows::UI::Xaml::Media::Brush^>(this->LookupConverter("itemBrushConv")->Convert(obj, ::Windows::UI::Xaml::Media::Brush::typeid, nullptr, nullptr)), nullptr);
             }
         }
     }
@@ -419,7 +427,11 @@ private:
             }
             if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
             {
-                this->Update_Data_Cast_Data_To_CommentUWPitem_score(obj->score, phase);
+                this->Update_Data_Cast_Data_To_CommentUWPitem_ScoreText(obj->ScoreText, phase);
+            }
+            if ((phase & (NOT_PHASED | (1 << 0))) != 0)
+            {
+                this->Update_Data_Cast_Data_To_CommentUWPitem_CreatedString(obj->CreatedString, phase);
             }
         }
         else
@@ -434,42 +446,42 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 39
-            Set_mdblock_mdRichProperties_MDElements(this->obj7, obj, nullptr);
+            // CommentView.xaml line 38
+            Set_mdblock_mdRichProperties_MDElements(this->obj8, obj, nullptr);
         }
     }
     void Update_Data_Cast_Data_To_CommentUWPitem_Liked(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // CommentView.xaml line 42
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj8, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconverter")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
-            // CommentView.xaml line 47
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj9, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconverter")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // CommentView.xaml line 41
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj9, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconverter")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // CommentView.xaml line 46
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj10, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconverter")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_Data_Cast_Data_To_CommentUWPitem_changeupvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 42
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj8, obj, nullptr);
+            // CommentView.xaml line 41
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj9, obj, nullptr);
         }
     }
     void Update_Data_Cast_Data_To_CommentUWPitem_changedownvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 47
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj9, obj, nullptr);
+            // CommentView.xaml line 46
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj10, obj, nullptr);
         }
     }
     void Update_Data_Cast_Data_To_CommentUWPitem_saved(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // CommentView.xaml line 52
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj10, obj, nullptr);
+            // CommentView.xaml line 51
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj11, obj, nullptr);
         }
     }
     void Update_Data_Cast_Data_To_CommentUWPitem_isMine(::Platform::Boolean obj, int phase)
@@ -483,8 +495,8 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 58
-            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj11, obj);
+            // CommentView.xaml line 57
+            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj12, obj);
         }
     }
     void Update_HasItems(::Platform::Boolean obj, int phase)
@@ -498,40 +510,48 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 60
-            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj12, obj);
+            // CommentView.xaml line 59
+            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj13, obj);
         }
     }
     void Update_IsExpanded(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // CommentView.xaml line 60
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj12, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("inverseBoolConverter")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // CommentView.xaml line 59
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj13, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("inverseBoolConverter")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_Data_Cast_Data_To_CommentUWPitem_author(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 33
-            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj14, obj, nullptr);
+            // CommentView.xaml line 31
+            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj15, obj, nullptr);
         }
     }
     void Update_Data_Cast_Data_To_CommentUWPitem_DistinguishedAuthorType(::account::DistinguishedAccountTypes obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 34
-            Set_Windows_UI_Xaml_Controls_ContentPresenter_Content(this->obj15, safe_cast<::Platform::Object^>(this->LookupConverter("DistinguishedOPBadge")->Convert(obj, ::Platform::Object::typeid, nullptr, nullptr)), nullptr);
+            // CommentView.xaml line 32
+            Set_Windows_UI_Xaml_Controls_ContentPresenter_Content(this->obj16, safe_cast<::Platform::Object^>(this->LookupConverter("DistinguishedOPBadge")->Convert(obj, ::Platform::Object::typeid, nullptr, nullptr)), nullptr);
         }
     }
-    void Update_Data_Cast_Data_To_CommentUWPitem_score(::default::int32 obj, int phase)
+    void Update_Data_Cast_Data_To_CommentUWPitem_ScoreText(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // CommentView.xaml line 35
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj16, safe_cast<::Platform::String^>(this->LookupConverter("scoreVis")->Convert(obj, ::Platform::String::typeid, nullptr, nullptr)), nullptr);
+            // CommentView.xaml line 34
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj17, obj, nullptr);
+        }
+    }
+    void Update_Data_Cast_Data_To_CommentUWPitem_CreatedString(::Platform::String^ obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
+        {
+            // CommentView.xaml line 34
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj18, obj, nullptr);
         }
     }
 
@@ -549,8 +569,8 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // CommentView.xaml line 33
-            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj14, (::Platform::Object^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Platform::Object::typeid, "username"), nullptr);
+            // CommentView.xaml line 31
+            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj15, (::Platform::Object^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Platform::Object::typeid, "username"), nullptr);
         }
     }
 
@@ -607,7 +627,7 @@ private:
                 {
                     this->Update_Data_Cast_Data_To_CommentUWPitem_Liked(obj->Liked, DATA_CHANGED);
                     this->Update_Data_Cast_Data_To_CommentUWPitem_saved(obj->saved, DATA_CHANGED);
-                    this->Update_Data_Cast_Data_To_CommentUWPitem_score(obj->score, DATA_CHANGED);
+                    this->Update_Data_Cast_Data_To_CommentUWPitem_ScoreText(obj->ScoreText, DATA_CHANGED);
                 }
             }
             else if (propName == "Liked")
@@ -624,11 +644,11 @@ private:
                     this->Update_Data_Cast_Data_To_CommentUWPitem_saved(obj->saved, DATA_CHANGED);
                 }
             }
-            else if (propName == "score")
+            else if (propName == "ScoreText")
             {
                 if (obj != nullptr)
                 {
-                    this->Update_Data_Cast_Data_To_CommentUWPitem_score(obj->score, DATA_CHANGED);
+                    this->Update_Data_Cast_Data_To_CommentUWPitem_ScoreText(obj->ScoreText, DATA_CHANGED);
                 }
             }
         }
@@ -716,7 +736,7 @@ private:
         }
         obj->Content = value;
     }
-    static void Set_Windows_UI_Xaml_Controls_TextBlock_Text(::Windows::UI::Xaml::Controls::TextBlock^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
+    static void Set_Windows_UI_Xaml_Documents_Run_Text(::Windows::UI::Xaml::Documents::Run^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
     {
         if (value == nullptr && targetNullValue != nullptr)
         {
@@ -740,14 +760,14 @@ void ::Reddit::CommentView::Connect(int __connectionId, ::Platform::Object^ __ta
             this->loadmorebutton = safe_cast<::Windows::UI::Xaml::DataTemplate^>(__target);
         }
         break;
-    case 13:
+    case 14:
         {
-            ::Windows::UI::Xaml::Controls::AppBarToggleButton^ element13 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(element13))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::CommentView::*)
+            ::Windows::UI::Xaml::Controls::AppBarToggleButton^ element14 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(element14))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::CommentView::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&CommentView::replyButton_Click);
         }
         break;
-    case 17:
+    case 19:
         {
             this->commentTree = safe_cast<::TreeViewControl::TreeView^>(__target);
             (safe_cast<::TreeViewControl::TreeView^>(this->commentTree))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::CommentView::*)
@@ -765,9 +785,9 @@ void ::Reddit::CommentView::Connect(int __connectionId, ::Platform::Object^ __ta
     ::XamlBindingInfo::XamlBindings^ bindings = nullptr;
     switch (__connectionId)
     {
-        case 4: // CommentView.xaml line 73
+        case 4: // CommentView.xaml line 72
             {
-                ::Windows::UI::Xaml::Controls::HyperlinkButton^ element4 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
+                ::Windows::UI::Xaml::Controls::Border^ element4 = safe_cast<::Windows::UI::Xaml::Controls::Border^>(__target);
                 CommentView_obj4_Bindings* objBindings = new CommentView_obj4_Bindings();
                 objBindings->SetDataRoot(element4->DataContext);
                 objBindings->SetConverterLookupRoot(this);
@@ -777,16 +797,16 @@ void ::Reddit::CommentView::Connect(int __connectionId, ::Platform::Object^ __ta
                 ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element4, bindings);
             }
             break;
-        case 6: // CommentView.xaml line 24
+        case 7: // CommentView.xaml line 23
             {
-                ::Windows::UI::Xaml::Controls::Grid^ element6 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-                CommentView_obj6_Bindings* objBindings = new CommentView_obj6_Bindings();
-                objBindings->SetDataRoot(element6->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                CommentView_obj7_Bindings* objBindings = new CommentView_obj7_Bindings();
+                objBindings->SetDataRoot(element7->DataContext);
                 objBindings->SetConverterLookupRoot(this);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element6);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element6, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element6, bindings);
+                bindings->SubscribeForDataContextChanged(element7);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element7, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element7, bindings);
             }
             break;
     }

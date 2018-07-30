@@ -44,14 +44,13 @@ namespace Reddit
     private:
         bool _contentLoaded;
     
-        class MyResources_obj8_Bindings;
-        class MyResources_obj26_Bindings;
-        class MyResources_obj35_Bindings;
-        class MyResources_obj46_Bindings;
+        class MyResources_obj7_Bindings;
+        class MyResources_obj27_Bindings;
+        class MyResources_obj36_Bindings;
+        class MyResources_obj47_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
         private: ::Windows::UI::Xaml::Controls::ControlTemplate^ inlineExpanderButtoning;
-        internal: ::Windows::UI::Xaml::Controls::ControlTemplate^ ContentDiagTemplate;
         internal: ::Windows::UI::Xaml::DataTemplate^ listSelfPost;
     };
 }

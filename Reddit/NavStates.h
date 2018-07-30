@@ -50,14 +50,21 @@ struct subredditNavstate final : baseNavState
 	account::postSort sort = account::postSort::hot;
 	account::timerange rng = account::timerange::Default;
 	subredditNavstate(Platform::String^ s) {
+		if (s == nullptr)
+		{
+			sort = account::postSort::Defaultsort;
+		}
 		info.name = std::move(s);
 		info.subredditIndex = INT_MAX;
 	}
+	subredditNavstate(account::subredditInfo i, account::postSort s, account::timerange r) :sort(std::move(s)), info(i), rng(std::move(r))
+		{
+
+		}
 	subredditNavstate(Platform::String^ s, account::postSort ss, account::timerange t) : sort(std::move(ss)), rng(std::move(t)) {
 		info.name = std::move(s);
 		info.subredditIndex = INT_MAX;
 	}
-	subredditNavstate(account::subredditInfo i) : info(std::move(i)){}
 };
 struct UserNavState final : baseNavState
 {

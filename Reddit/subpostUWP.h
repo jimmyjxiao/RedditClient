@@ -63,6 +63,34 @@ namespace account
 		subpost helper;
 		std::variant<std::unique_ptr<serviceHelpers::previewHelperbase>, concurrency::task<serviceHelpers::previewHelperbase*>> contentHelper = nullptr;
 	public:
+		property Platform::String^ domain
+		{
+			Platform::String^ get()
+			{
+				if (helper.self)
+				{
+					return "self";
+				}
+				else
+				{
+					return helper.link->Domain;
+				}
+			}
+		}
+		virtual property Platform::String^ CreatedString
+		{
+			Platform::String^ get()
+			{
+				return helper.getElapsedCreatedStr();
+			}
+		}
+		virtual property Platform::String^ ScoreText
+		{
+			Platform::String^ get()
+			{
+				return helper.getScoreText();
+			}
+		}
 		// Inherited via IRedditTypeIdentifier
 		virtual property RedditType rType
 		{

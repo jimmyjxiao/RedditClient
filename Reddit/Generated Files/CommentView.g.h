@@ -39,7 +39,7 @@ namespace Reddit
         bool _contentLoaded;
     
         class CommentView_obj4_Bindings;
-        class CommentView_obj6_Bindings;
+        class CommentView_obj7_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
         private: ::Windows::UI::Xaml::DataTemplate^ commentTemplate;

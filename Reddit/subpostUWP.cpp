@@ -18,13 +18,13 @@ using namespace account;
 		{
 			helper.vote(input); //Todo: error handling
 			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("Liked"));
-			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("score"));
+			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("ScoreText"));
 		}
 	}
 	void account::subpostUWP::_changeupvote(Platform::Object ^ param)
 	{
 		int cvote = helper.getMyVote();
-		if (cvote == 0 || cvote == 1)
+		if (cvote == 0 || cvote == -1)
 			Liked = true;
 		else if (cvote == 1)
 			Liked = 0;

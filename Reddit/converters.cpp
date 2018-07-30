@@ -120,13 +120,7 @@ namespace converters
 		else
 			return Windows::UI::Xaml::ElementTheme::Light;
 	}
-	Platform::Object ^ ScoreText::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language) {
-		if (static_cast<int>(value) < (INT_MIN + 4))
-		{
-			return ref new Platform::String(L"Score Hidden");
-		}
-		else return value->ToString() + " points";
-	}
+
 	Platform::Object ^ HasPreview::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
 	{
 		auto && a = static_cast<account::postContentType>(value);

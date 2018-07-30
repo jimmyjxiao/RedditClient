@@ -79,29 +79,30 @@ namespace Reddit
 		void Hyperlink_Click(Windows::UI::Xaml::Documents::Hyperlink^ sender, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^ args);
 	internal:
 		static rootWindowGrid^& getCurrent();
-		template <typename func> bool TryNavigateToCachedPage(func&& CompareFunc);
+		template <typename func> static bool TryNavigateToCachedPage(func&& CompareFunc);
 		
 		
+	private:
+		void MenuFlyoutItem_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};
 
 		
 	template<typename func>
-	inline bool rootWindowGrid::TryNavigateToCachedPage(func && CompareFunc)
+	static inline bool rootWindowGrid::TryNavigateToCachedPage(func && CompareFunc)
 	{
-		{
-			if (globalvars::NavState.size() > 1)
+			if (globalvars::NavState.size() > 0)
 			{
-				std::vector<navVariant>::const_reverse_iterator rend;
-				if (globalvars::NavState.size() > 3)
-				{
-					rend = globalvars::NavState.crbegin() + 3;
-				}
-				else
-				{
-					rend = globalvars::NavState.crend();
-				}
-				auto res = std::find_if(globalvars::NavState.crbegin(), rend, CompareFunc);
-				if (res != rend)
+				auto res = std::find_if(globalvars::NavState.crbegin(), globalvars::NavState.crend(), [&CompareFunc](const navVariant& a) mutable{
+					if (a.second->pageState == nullptr)
+					{
+						return true;
+					}
+					else
+					{
+						return CompareFunc(a);
+					}
+				});
+				if ((res != globalvars::NavState.crend()) && (res->second->pageState != nullptr))
 				{
 					if (App::CurrentManualFrameContent != nullptr)
 					{
@@ -122,7 +123,6 @@ namespace Reddit
 			}
 			else
 				return false;
-		}
 	}
 
 }

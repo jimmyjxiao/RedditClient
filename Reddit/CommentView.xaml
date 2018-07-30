@@ -17,12 +17,10 @@
         <local:DepthToColor x:Key="itemBrushConv"/>
         <converters:downvotechecked x:Key="downvoteconverter"/>
         <converters:upvotechecked x:Key="upvoteconverter"/>
-        
+
         <converters:InverseBool x:Key="inverseBoolConverter"/>
-        <converters:ScoreText x:Key="scoreVis"/>
         <DataTemplate x:DataType="tree:TreeNode" x:Name="commentTemplate" >
             <Grid Tag="{x:Bind}"  Margin="{x:Bind Depth, Converter={StaticResource IntToIndConverter}}" HorizontalAlignment="Stretch" Background="{x:Bind Depth, Converter={StaticResource itemBrushConv}}">
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32"/>
                     <RowDefinition/>
@@ -32,8 +30,9 @@
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <HyperlinkButton x:Name="user" Content="{x:Bind ((acc:CommentUWPitem)Data).author, FallbackValue=username}" FontSize="16" VerticalAlignment="Bottom"/>
                     <ContentPresenter VerticalAlignment="Center" VerticalContentAlignment="Center" Content="{x:Bind ((acc:CommentUWPitem)Data).DistinguishedAuthorType, Converter={StaticResource DistinguishedOPBadge}}"/>
-                    <TextBlock FontSize="16" VerticalAlignment="Center" Text="{x:Bind ((acc:CommentUWPitem)Data).score, Mode=OneWay, Converter={StaticResource scoreVis}}" Margin="4,0,0,0"/>
-                    <TextBlock x:Name="time"/>
+                    <TextBlock FontSize="16" VerticalAlignment="Center"  Margin="4,0,0,0">
+                        <Run Text="{x:Bind ((acc:CommentUWPitem)Data).ScoreText, Mode=OneWay}"/> • <Run Text="{x:Bind ((acc:CommentUWPitem)Data).CreatedString}"/>
+                    </TextBlock>
                 </StackPanel>
                 <!--<RichTextBlock Name="comment" Grid.Row="1" common:Properties.Html="{x:Bind ((acc:CommentUWPitem)Data).htmltext}"/>-->
                 <RichTextBlock Grid.Row="1" md:mdRichProperties.MDElements="{x:Bind ((acc:CommentUWPitem)Data).mdElements}"/>
@@ -56,7 +55,7 @@
                         </AppBarButton.Flyout>
                     </AppBarButton>
                     <AppBarButton Icon="Edit" Label="Edit" Visibility="{x:Bind ((acc:CommentUWPitem)Data).isMine}"/>
-                    <AppBarButton Icon="ReShare" Label="Share"/>
+                    <AppBarButton Icon="Share" Label="Share"/>
                     <AppBarToggleButton Icon="HideBcc" Label="Hide Replies" Visibility="{x:Bind HasItems}" IsChecked="{x:Bind IsExpanded, Converter={StaticResource inverseBoolConverter}, Mode=TwoWay}"/>
                     <AppBarToggleButton Label="Reply" Name="replyButton" Click="replyButton_Click" IsThreeState="False">
                         <AppBarToggleButton.Icon>
@@ -70,20 +69,22 @@
 
         </DataTemplate>
         <DataTemplate x:DataType="tree:TreeNode" x:Name="loadmorebutton">
-            <HyperlinkButton Margin="{x:Bind Depth, Converter={StaticResource IntToIndConverter}}" Click="{x:Bind ((acc:moreComments)Data).clickedFunc}">
-                <TextBlock>
+            <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="0" HorizontalAlignment="Stretch" Margin="{x:Bind Depth, Converter={StaticResource IntToIndConverter}}" Height="45">
+                <HyperlinkButton Padding="0"  Click="{x:Bind ((acc:moreComments)Data).clickedFunc}" HorizontalAlignment="Stretch" >
+                    <TextBlock>
                     Load More Comments (<Run Text="{x:Bind ((acc:moreComments)Data).count}"/>)
-                </TextBlock>
-            </HyperlinkButton>
+                    </TextBlock>
+                </HyperlinkButton>
+            </Border>
+           
         </DataTemplate>
     </UserControl.Resources>
 
     <tree:TreeView  x:Name="commentTree" x:FieldModifier="internal" SelectionMode="None" Loaded="commentTree_Loaded" ChoosingItemContainer="commentTree_ChoosingItemContainer" HeaderTemplate="{StaticResource listSelfPost}">
         <tree:TreeView.Template>
             <ControlTemplate TargetType="tree:TreeView">
-                <Grid BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
-                    <Rectangle  HorizontalAlignment="Left" Fill="{ThemeResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Stretch"  Margin="24,0,0,0"  Width="22"/>
-                    <ScrollViewer x:Name="ScrollViewer"
+                <Grid Name="rootygrid" BorderBrush="{TemplateBinding BorderBrush}"  Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <ScrollViewer x:Name="ScrollViewer" 
                             TabNavigation="{TemplateBinding TabNavigation}"
                             HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
                             HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"

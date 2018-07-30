@@ -30,19 +30,19 @@ void ::Reddit::MyResources::InitializeComponent()
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::MyResources::MyResources_obj8_Bindings 
+class Reddit::MyResources::MyResources_obj7_Bindings 
     : public ::XamlBindingInfo::ReferenceTypeXamlBindings<::account::subpostUWP, ::XamlBindingInfo::XamlBindingTrackingBase>
     , public ::XamlBindingInfo::IXamlBindingTracking
 {
             ::Windows::UI::Xaml::ResourceDictionary^ localResources;
 public:
-    MyResources_obj8_Bindings()
+    MyResources_obj7_Bindings()
     {
         InitializeTracking(this);
     }
 
 private:
-    ~MyResources_obj8_Bindings()
+    ~MyResources_obj7_Bindings()
     {
         ReleaseAllListeners();
     }
@@ -53,57 +53,63 @@ public:
     {
         switch(__connectionId)
         {
-            case 8: // MyResources.xaml line 357
-                this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            case 7: // MyResources.xaml line 201
+                this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 9: // MyResources.xaml line 367
-                this->obj9 = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
+            case 8: // MyResources.xaml line 211
+                this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
                 break;
-            case 10: // MyResources.xaml line 369
-                this->obj10 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 9: // MyResources.xaml line 217
+                this->obj9 = safe_cast<::ExpanderControl::Expander^>(__target);
                 break;
-            case 11: // MyResources.xaml line 371
-                this->obj11 = safe_cast<::ExpanderControl::Expander^>(__target);
+            case 11: // MyResources.xaml line 232
+                this->obj11 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
                 break;
-            case 13: // MyResources.xaml line 386
-                this->obj13 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
+            case 12: // MyResources.xaml line 238
+                this->obj12 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
                 break;
-            case 14: // MyResources.xaml line 392
-                this->obj14 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
-                break;
-            case 15: // MyResources.xaml line 397
-                this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-                this->obj15->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
+            case 13: // MyResources.xaml line 243
+                this->obj13 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+                this->obj13->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
                         [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
                         {
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->saved = this->obj15->IsChecked ? this->obj15->IsChecked->Value : false;
+                                this->GetDataRoot()->saved = this->obj13->IsChecked ? this->obj13->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 17: // MyResources.xaml line 409
-                this->obj17 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            case 15: // MyResources.xaml line 255
+                this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
                 break;
-            case 18: // MyResources.xaml line 400
-                this->obj18 = safe_cast<::Reddit::reportFlyout^>(__target);
+            case 16: // MyResources.xaml line 246
+                this->obj16 = safe_cast<::Reddit::reportFlyout^>(__target);
                 break;
-            case 21: // MyResources.xaml line 381
+            case 17: // MyResources.xaml line 224
+                this->obj17 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+                break;
+            case 20: // MyResources.xaml line 227
+                this->obj20 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+                break;
+            case 21: // MyResources.xaml line 227
                 this->obj21 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 22: // MyResources.xaml line 381
+            case 22: // MyResources.xaml line 224
                 this->obj22 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 23: // MyResources.xaml line 378
+            case 23: // MyResources.xaml line 224
                 this->obj23 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 24: // MyResources.xaml line 378
-                this->obj24 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 24: // MyResources.xaml line 221
+                this->obj24 = safe_cast<::Reddit::EXplaceHolder^>(__target);
                 break;
-            case 25: // MyResources.xaml line 375
-                this->obj25 = safe_cast<::Reddit::EXplaceHolder^>(__target);
+            case 25: // MyResources.xaml line 214
+                this->obj25 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+                break;
+            case 26: // MyResources.xaml line 214
+                this->obj26 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -127,7 +133,7 @@ public:
                 this->SetDataRoot(static_cast<::account::subpostUWP^>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj8.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj7.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -151,20 +157,22 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj8;
-    ::Windows::UI::Xaml::Controls::Button^ obj9;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj10;
-    ::ExpanderControl::Expander^ obj11;
-    ::Reddit::AppBarToggleColoredButton^ obj13;
-    ::Reddit::AppBarToggleColoredButton^ obj14;
-    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj15;
-    ::Windows::UI::Xaml::Controls::AppBarButton^ obj17;
-    ::Reddit::reportFlyout^ obj18;
+    ::Platform::WeakReference obj7;
+    ::Windows::UI::Xaml::Controls::Button^ obj8;
+    ::ExpanderControl::Expander^ obj9;
+    ::Reddit::AppBarToggleColoredButton^ obj11;
+    ::Reddit::AppBarToggleColoredButton^ obj12;
+    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj13;
+    ::Windows::UI::Xaml::Controls::AppBarButton^ obj15;
+    ::Reddit::reportFlyout^ obj16;
+    ::Windows::UI::Xaml::Documents::Run^ obj17;
+    ::Windows::UI::Xaml::Documents::Run^ obj20;
     ::Windows::UI::Xaml::Documents::Run^ obj21;
     ::Windows::UI::Xaml::Documents::Run^ obj22;
     ::Windows::UI::Xaml::Documents::Run^ obj23;
-    ::Windows::UI::Xaml::Documents::Run^ obj24;
-    ::Reddit::EXplaceHolder^ obj25;
+    ::Reddit::EXplaceHolder^ obj24;
+    ::Windows::UI::Xaml::Documents::Run^ obj25;
+    ::Windows::UI::Xaml::Documents::Run^ obj26;
     
     // Fields for binding tracking.
     ::Platform::WeakReference cachePC_;
@@ -180,7 +188,6 @@ private:
             {
                 this->Update_thumbnail(obj->thumbnail, phase);
                 this->Update_previewCommand(obj->previewCommand, phase);
-                this->Update_Title(obj->Title, phase);
             }
             if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
             {
@@ -199,123 +206,142 @@ private:
             if ((phase & (NOT_PHASED | (1 << 0))) != 0)
             {
                 this->Update_subreddit(obj->subreddit, phase);
+                this->Update_CreatedString(obj->CreatedString, phase);
             }
             if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
             {
-                this->Update_score(obj->score, phase);
+                this->Update_ScoreText(obj->ScoreText, phase);
             }
             if ((phase & (NOT_PHASED | (1 << 0))) != 0)
             {
                 this->Update_num_comments(obj->num_comments, phase);
                 this->Update_author(obj->author, phase);
+                this->Update_Title(obj->Title, phase);
+                this->Update_domain(obj->domain, phase);
             }
         }
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 409
-            Set_Windows_UI_Xaml_FrameworkElement_DataContext(this->obj17, obj, nullptr);
-            // MyResources.xaml line 375
-            Set_Reddit_EXplaceHolder_post(this->obj25, obj, nullptr);
+            // MyResources.xaml line 255
+            Set_Windows_UI_Xaml_FrameworkElement_Tag(this->obj15, obj, nullptr);
+            // MyResources.xaml line 221
+            Set_Reddit_EXplaceHolder_post(this->obj24, obj, nullptr);
         }
     }
     void Update_thumbnail(::Windows::UI::Xaml::FrameworkElement^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 367
-            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj9, obj, nullptr);
+            // MyResources.xaml line 211
+            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj8, obj, nullptr);
         }
     }
     void Update_previewCommand(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 367
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj9, obj, nullptr);
-        }
-    }
-    void Update_Title(::Platform::String^ obj, int phase)
-    {
-        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
-        {
-            // MyResources.xaml line 369
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj10, obj, nullptr);
+            // MyResources.xaml line 211
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj8, obj, nullptr);
         }
     }
     void Update_contentType(::account::postContentType obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 371
-            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj11, safe_cast<::Windows::UI::Xaml::Visibility>(this->LookupConverter("prevConv")->Convert(obj, ::Windows::UI::Xaml::Visibility::typeid, "self", nullptr)));
+            // MyResources.xaml line 217
+            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj9, safe_cast<::Windows::UI::Xaml::Visibility>(this->LookupConverter("prevConv")->Convert(obj, ::Windows::UI::Xaml::Visibility::typeid, "self", nullptr)));
         }
     }
     void Update_Liked(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 386
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj13, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
-            // MyResources.xaml line 392
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj14, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 232
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj11, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 238
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj12, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_changeupvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 386
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj13, obj, nullptr);
+            // MyResources.xaml line 232
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj11, obj, nullptr);
         }
     }
     void Update_changedownvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 392
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj14, obj, nullptr);
+            // MyResources.xaml line 238
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj12, obj, nullptr);
         }
     }
     void Update_saved(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 397
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj15, obj, nullptr);
+            // MyResources.xaml line 243
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj13, obj, nullptr);
         }
     }
     void Update_subreddit(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 400
-            Set_Reddit_reportFlyout_subreddit(this->obj18, obj, nullptr);
-            // MyResources.xaml line 378
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj23, obj, nullptr);
+            // MyResources.xaml line 246
+            Set_Reddit_reportFlyout_subreddit(this->obj16, obj, nullptr);
+            // MyResources.xaml line 224
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj22, obj, nullptr);
         }
     }
-    void Update_score(::default::int32 obj, int phase)
+    void Update_CreatedString(::Platform::String^ obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
+        {
+            // MyResources.xaml line 224
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj17, obj, nullptr);
+        }
+    }
+    void Update_ScoreText(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 381
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj21, safe_cast<::Platform::String^>(this->LookupConverter("scoreVis")->Convert(obj, ::Platform::String::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 227
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj20, obj, nullptr);
         }
     }
     void Update_num_comments(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 381
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj22, obj.ToString(), nullptr);
+            // MyResources.xaml line 227
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj21, obj.ToString(), nullptr);
         }
     }
     void Update_author(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 378
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj24, obj, nullptr);
+            // MyResources.xaml line 224
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj23, obj, nullptr);
+        }
+    }
+    void Update_Title(::Platform::String^ obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
+        {
+            // MyResources.xaml line 214
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj25, obj, nullptr);
+        }
+    }
+    void Update_domain(::Platform::String^ obj, int phase)
+    {
+        if((phase & ((1 << 0) | NOT_PHASED )) != 0)
+        {
+            // MyResources.xaml line 214
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj26, obj, nullptr);
         }
     }
 
@@ -337,7 +363,7 @@ private:
                     this->Update_contentType(obj->contentType, DATA_CHANGED);
                     this->Update_Liked(obj->Liked, DATA_CHANGED);
                     this->Update_saved(obj->saved, DATA_CHANGED);
-                    this->Update_score(obj->score, DATA_CHANGED);
+                    this->Update_ScoreText(obj->ScoreText, DATA_CHANGED);
                 }
             }
             else if (propName == "contentType")
@@ -361,11 +387,11 @@ private:
                     this->Update_saved(obj->saved, DATA_CHANGED);
                 }
             }
-            else if (propName == "score")
+            else if (propName == "ScoreText")
             {
                 if (obj != nullptr)
                 {
-                    this->Update_score(obj->score, DATA_CHANGED);
+                    this->Update_ScoreText(obj->ScoreText, DATA_CHANGED);
                 }
             }
         }
@@ -405,14 +431,6 @@ private:
         }
         obj->Command = value;
     }
-    static void Set_Windows_UI_Xaml_Controls_TextBlock_Text(::Windows::UI::Xaml::Controls::TextBlock^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
-    {
-        if (value == nullptr && targetNullValue != nullptr)
-        {
-            value = targetNullValue;
-        }
-        obj->Text = value;
-    }
     static void Set_Windows_UI_Xaml_UIElement_Visibility(::Windows::UI::Xaml::UIElement^ obj, ::Windows::UI::Xaml::Visibility value)
     {
         obj->Visibility = value;
@@ -425,13 +443,13 @@ private:
         }
         obj->IsChecked = value;
     }
-    static void Set_Windows_UI_Xaml_FrameworkElement_DataContext(::Windows::UI::Xaml::FrameworkElement^ obj, ::Platform::Object^ value, ::Platform::String^ targetNullValue)
+    static void Set_Windows_UI_Xaml_FrameworkElement_Tag(::Windows::UI::Xaml::FrameworkElement^ obj, ::Platform::Object^ value, ::Platform::String^ targetNullValue)
     {
         if (value == nullptr && targetNullValue != nullptr)
         {
             value = (::Platform::Object^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Platform::Object::typeid, targetNullValue);
         }
-        obj->DataContext = value;
+        obj->Tag = value;
     }
     static void Set_Reddit_reportFlyout_subreddit(::Reddit::reportFlyout^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
     {
@@ -462,19 +480,19 @@ private:
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::MyResources::MyResources_obj26_Bindings 
+class Reddit::MyResources::MyResources_obj27_Bindings 
     : public ::XamlBindingInfo::ReferenceTypeXamlBindings<::account::subpostUWP, ::XamlBindingInfo::XamlBindingTrackingBase>
     , public ::XamlBindingInfo::IXamlBindingTracking
 {
             ::Windows::UI::Xaml::ResourceDictionary^ localResources;
 public:
-    MyResources_obj26_Bindings()
+    MyResources_obj27_Bindings()
     {
         InitializeTracking(this);
     }
 
 private:
-    ~MyResources_obj26_Bindings()
+    ~MyResources_obj27_Bindings()
     {
         ReleaseAllListeners();
     }
@@ -485,32 +503,32 @@ public:
     {
         switch(__connectionId)
         {
-            case 26: // MyResources.xaml line 308
-                this->obj26 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            case 27: // MyResources.xaml line 152
+                this->obj27 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 27: // MyResources.xaml line 314
-                this->obj27 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
-                break;
-            case 28: // MyResources.xaml line 315
+            case 28: // MyResources.xaml line 158
                 this->obj28 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 29: // MyResources.xaml line 346
+            case 29: // MyResources.xaml line 159
                 this->obj29 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 30: // MyResources.xaml line 350
-                this->obj30 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 30: // MyResources.xaml line 190
+                this->obj30 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 31: // MyResources.xaml line 320
-                this->obj31 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+            case 31: // MyResources.xaml line 194
+                this->obj31 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 32: // MyResources.xaml line 332
-                this->obj32 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 32: // MyResources.xaml line 164
+                this->obj32 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
                 break;
-            case 33: // MyResources.xaml line 333
-                this->obj33 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+            case 33: // MyResources.xaml line 176
+                this->obj33 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 34: // MyResources.xaml line 317
-                this->obj34 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 34: // MyResources.xaml line 177
+                this->obj34 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+                break;
+            case 35: // MyResources.xaml line 161
+                this->obj35 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -534,7 +552,7 @@ public:
                 this->SetDataRoot(static_cast<::account::subpostUWP^>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj26.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj27.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -558,15 +576,15 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj26;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj27;
+    ::Platform::WeakReference obj27;
     ::Windows::UI::Xaml::Controls::TextBlock^ obj28;
     ::Windows::UI::Xaml::Controls::TextBlock^ obj29;
-    ::Windows::UI::Xaml::Documents::Run^ obj30;
-    ::Reddit::NoToggleBehaviorButton^ obj31;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj32;
-    ::Reddit::NoToggleBehaviorButton^ obj33;
-    ::Windows::UI::Xaml::Documents::Run^ obj34;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj30;
+    ::Windows::UI::Xaml::Documents::Run^ obj31;
+    ::Reddit::NoToggleBehaviorButton^ obj32;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj33;
+    ::Reddit::NoToggleBehaviorButton^ obj34;
+    ::Windows::UI::Xaml::Documents::Run^ obj35;
     
     // Fields for binding tracking.
     ::Platform::WeakReference cachePC_;
@@ -608,74 +626,74 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 314
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj27, obj, nullptr);
+            // MyResources.xaml line 158
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj28, obj, nullptr);
         }
     }
     void Update_author(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 315
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj28, obj, nullptr);
+            // MyResources.xaml line 159
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj29, obj, nullptr);
         }
     }
     void Update_selftext(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 346
-            Set_mdblock_mdRichProperties_MD(this->obj29, obj, nullptr);
+            // MyResources.xaml line 190
+            Set_mdblock_mdRichProperties_MD(this->obj30, obj, nullptr);
         }
     }
     void Update_num_comments(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 350
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj30, obj.ToString(), nullptr);
+            // MyResources.xaml line 194
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj31, obj.ToString(), nullptr);
         }
     }
     void Update_Liked(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 320
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj31, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
-            // MyResources.xaml line 333
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj33, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 164
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj32, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 177
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj34, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_changeupvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 320
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj31, obj, nullptr);
+            // MyResources.xaml line 164
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj32, obj, nullptr);
         }
     }
     void Update_score(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 332
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj32, obj.ToString(), nullptr);
+            // MyResources.xaml line 176
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj33, obj.ToString(), nullptr);
         }
     }
     void Update_changedownvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 333
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj33, obj, nullptr);
+            // MyResources.xaml line 177
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj34, obj, nullptr);
         }
     }
     void Update_subreddit(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 317
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj34, obj, nullptr);
+            // MyResources.xaml line 161
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj35, obj, nullptr);
         }
     }
 
@@ -778,19 +796,19 @@ private:
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::MyResources::MyResources_obj35_Bindings 
+class Reddit::MyResources::MyResources_obj36_Bindings 
     : public ::XamlBindingInfo::ReferenceTypeXamlBindings<::account::subpostUWP, ::XamlBindingInfo::XamlBindingTrackingBase>
     , public ::XamlBindingInfo::IXamlBindingTracking
 {
             ::Windows::UI::Xaml::ResourceDictionary^ localResources;
 public:
-    MyResources_obj35_Bindings()
+    MyResources_obj36_Bindings()
     {
         InitializeTracking(this);
     }
 
 private:
-    ~MyResources_obj35_Bindings()
+    ~MyResources_obj36_Bindings()
     {
         ReleaseAllListeners();
     }
@@ -801,38 +819,38 @@ public:
     {
         switch(__connectionId)
         {
-            case 35: // MyResources.xaml line 272
-                this->obj35 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            case 36: // MyResources.xaml line 116
+                this->obj36 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 36: // MyResources.xaml line 278
-                this->obj36 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
-                break;
-            case 37: // MyResources.xaml line 279
+            case 37: // MyResources.xaml line 122
                 this->obj37 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 38: // MyResources.xaml line 289
-                this->obj38 = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
+            case 38: // MyResources.xaml line 123
+                this->obj38 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 39: // MyResources.xaml line 302
-                this->obj39 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 39: // MyResources.xaml line 133
+                this->obj39 = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
                 break;
-            case 40: // MyResources.xaml line 296
-                this->obj40 = safe_cast<::Windows::UI::Xaml::Shapes::Path^>(__target);
+            case 40: // MyResources.xaml line 146
+                this->obj40 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 41: // MyResources.xaml line 293
-                this->obj41 = safe_cast<::Windows::UI::Xaml::Media::Imaging::BitmapImage^>(__target);
+            case 41: // MyResources.xaml line 140
+                this->obj41 = safe_cast<::Windows::UI::Xaml::Shapes::Path^>(__target);
                 break;
-            case 42: // MyResources.xaml line 284
-                this->obj42 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+            case 42: // MyResources.xaml line 137
+                this->obj42 = safe_cast<::Windows::UI::Xaml::Media::Imaging::BitmapImage^>(__target);
                 break;
-            case 43: // MyResources.xaml line 285
-                this->obj43 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 43: // MyResources.xaml line 128
+                this->obj43 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
                 break;
-            case 44: // MyResources.xaml line 286
-                this->obj44 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+            case 44: // MyResources.xaml line 129
+                this->obj44 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 45: // MyResources.xaml line 281
-                this->obj45 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 45: // MyResources.xaml line 130
+                this->obj45 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
+                break;
+            case 46: // MyResources.xaml line 125
+                this->obj46 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
     }
@@ -856,7 +874,7 @@ public:
                 this->SetDataRoot(static_cast<::account::subpostUWP^>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj35.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj36.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -880,17 +898,17 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj35;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj36;
+    ::Platform::WeakReference obj36;
     ::Windows::UI::Xaml::Controls::TextBlock^ obj37;
-    ::Windows::UI::Xaml::Controls::Button^ obj38;
-    ::Windows::UI::Xaml::Documents::Run^ obj39;
-    ::Windows::UI::Xaml::Shapes::Path^ obj40;
-    ::Windows::UI::Xaml::Media::Imaging::BitmapImage^ obj41;
-    ::Reddit::NoToggleBehaviorButton^ obj42;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj43;
-    ::Reddit::NoToggleBehaviorButton^ obj44;
-    ::Windows::UI::Xaml::Documents::Run^ obj45;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj38;
+    ::Windows::UI::Xaml::Controls::Button^ obj39;
+    ::Windows::UI::Xaml::Documents::Run^ obj40;
+    ::Windows::UI::Xaml::Shapes::Path^ obj41;
+    ::Windows::UI::Xaml::Media::Imaging::BitmapImage^ obj42;
+    ::Reddit::NoToggleBehaviorButton^ obj43;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj44;
+    ::Reddit::NoToggleBehaviorButton^ obj45;
+    ::Windows::UI::Xaml::Documents::Run^ obj46;
     
     // Fields for binding tracking.
     ::Platform::WeakReference cachePC_;
@@ -940,90 +958,90 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 278
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj36, obj, nullptr);
+            // MyResources.xaml line 122
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj37, obj, nullptr);
         }
     }
     void Update_author(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 279
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj37, obj, nullptr);
+            // MyResources.xaml line 123
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj38, obj, nullptr);
         }
     }
     void Update_previewCommand(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 289
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj38, obj, nullptr);
+            // MyResources.xaml line 133
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj39, obj, nullptr);
         }
     }
     void Update_num_comments(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 302
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj39, obj.ToString(), nullptr);
+            // MyResources.xaml line 146
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj40, obj.ToString(), nullptr);
         }
     }
     void Update_contentType(::account::postContentType obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 296
-            Set_Windows_UI_Xaml_Shapes_Path_Data(this->obj40, safe_cast<::Windows::UI::Xaml::Media::Geometry^>(this->LookupConverter("pathdataconvz")->Convert(obj, ::Windows::UI::Xaml::Media::Geometry::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 140
+            Set_Windows_UI_Xaml_Shapes_Path_Data(this->obj41, safe_cast<::Windows::UI::Xaml::Media::Geometry^>(this->LookupConverter("pathdataconvz")->Convert(obj, ::Windows::UI::Xaml::Media::Geometry::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_previewURI(::Windows::Foundation::Uri^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 293
-            Set_Windows_UI_Xaml_Media_Imaging_BitmapImage_UriSource(this->obj41, obj, nullptr);
+            // MyResources.xaml line 137
+            Set_Windows_UI_Xaml_Media_Imaging_BitmapImage_UriSource(this->obj42, obj, nullptr);
         }
     }
     void Update_Liked(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 284
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj42, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
-            // MyResources.xaml line 286
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj44, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 128
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj43, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 130
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj45, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_changeupvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 284
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj42, obj, nullptr);
+            // MyResources.xaml line 128
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj43, obj, nullptr);
         }
     }
     void Update_score(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 285
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj43, obj.ToString(), nullptr);
+            // MyResources.xaml line 129
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj44, obj.ToString(), nullptr);
         }
     }
     void Update_changedownvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 286
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj44, obj, nullptr);
+            // MyResources.xaml line 130
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj45, obj, nullptr);
         }
     }
     void Update_subreddit(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 281
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj45, obj, nullptr);
+            // MyResources.xaml line 125
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj46, obj, nullptr);
         }
     }
 
@@ -1142,19 +1160,19 @@ private:
 /// <summary>
 /// Auto generated class for compiled bindings.
 /// </summary>
-class Reddit::MyResources::MyResources_obj46_Bindings 
+class Reddit::MyResources::MyResources_obj47_Bindings 
     : public ::XamlBindingInfo::ReferenceTypeXamlBindings<::account::CommentUWPitem, ::XamlBindingInfo::XamlBindingTrackingBase>
     , public ::XamlBindingInfo::IXamlBindingTracking
 {
             ::Windows::UI::Xaml::ResourceDictionary^ localResources;
 public:
-    MyResources_obj46_Bindings()
+    MyResources_obj47_Bindings()
     {
         InitializeTracking(this);
     }
 
 private:
-    ~MyResources_obj46_Bindings()
+    ~MyResources_obj47_Bindings()
     {
         ReleaseAllListeners();
     }
@@ -1165,42 +1183,42 @@ public:
     {
         switch(__connectionId)
         {
-            case 46: // MyResources.xaml line 66
-                this->obj46 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            case 47: // MyResources.xaml line 65
+                this->obj47 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 47: // MyResources.xaml line 80
-                this->obj47 = safe_cast<::Windows::UI::Xaml::Controls::RichTextBlock^>(__target);
+            case 48: // MyResources.xaml line 79
+                this->obj48 = safe_cast<::Windows::UI::Xaml::Controls::RichTextBlock^>(__target);
                 break;
-            case 48: // MyResources.xaml line 83
-                this->obj48 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
-                break;
-            case 49: // MyResources.xaml line 88
+            case 49: // MyResources.xaml line 82
                 this->obj49 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
                 break;
-            case 50: // MyResources.xaml line 93
-                this->obj50 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-                this->obj50->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
+            case 50: // MyResources.xaml line 87
+                this->obj50 = safe_cast<::Reddit::AppBarToggleColoredButton^>(__target);
+                break;
+            case 51: // MyResources.xaml line 92
+                this->obj51 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+                this->obj51->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
                         [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
                         {
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->saved = this->obj50->IsChecked ? this->obj50->IsChecked->Value : false;
+                                this->GetDataRoot()->saved = this->obj51->IsChecked ? this->obj51->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 51: // MyResources.xaml line 99
-                this->obj51 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            case 52: // MyResources.xaml line 98
+                this->obj52 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
                 break;
-            case 53: // MyResources.xaml line 96
-                this->obj53 = safe_cast<::Reddit::reportFlyout^>(__target);
+            case 54: // MyResources.xaml line 95
+                this->obj54 = safe_cast<::Reddit::reportFlyout^>(__target);
                 break;
-            case 54: // MyResources.xaml line 74
-                this->obj54 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
+            case 55: // MyResources.xaml line 73
+                this->obj55 = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
                 break;
-            case 55: // MyResources.xaml line 75
-                this->obj55 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 56: // MyResources.xaml line 74
+                this->obj56 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
         }
     }
@@ -1224,7 +1242,7 @@ public:
                 this->SetDataRoot(static_cast<::account::CommentUWPitem^>(item));
                 if (this->_dataContextChangedToken.Value != 0)
                 {
-                    this->obj46.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
+                    this->obj47.Resolve<::Windows::UI::Xaml::Controls::Grid>()->DataContextChanged -= this->_dataContextChangedToken;
                     this->_dataContextChangedToken.Value = 0;
                 }
                 this->_isInitialized = true;
@@ -1248,15 +1266,15 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Platform::WeakReference obj46;
-    ::Windows::UI::Xaml::Controls::RichTextBlock^ obj47;
-    ::Reddit::AppBarToggleColoredButton^ obj48;
+    ::Platform::WeakReference obj47;
+    ::Windows::UI::Xaml::Controls::RichTextBlock^ obj48;
     ::Reddit::AppBarToggleColoredButton^ obj49;
-    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj50;
-    ::Windows::UI::Xaml::Controls::AppBarButton^ obj51;
-    ::Reddit::reportFlyout^ obj53;
-    ::Windows::UI::Xaml::Controls::HyperlinkButton^ obj54;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj55;
+    ::Reddit::AppBarToggleColoredButton^ obj50;
+    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj51;
+    ::Windows::UI::Xaml::Controls::AppBarButton^ obj52;
+    ::Reddit::reportFlyout^ obj54;
+    ::Windows::UI::Xaml::Controls::HyperlinkButton^ obj55;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj56;
     
     // Fields for binding tracking.
     ::Platform::WeakReference cachePC_;
@@ -1293,7 +1311,7 @@ private:
             }
             if ((phase & (NOT_PHASED | DATA_CHANGED | (1 << 0))) != 0)
             {
-                this->Update_score(obj->score, phase);
+                this->Update_ScoreText(obj->ScoreText, phase);
             }
         }
         else
@@ -1305,10 +1323,10 @@ private:
         }
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 66
-            if (this->obj46 != nullptr)
+            // MyResources.xaml line 65
+            if (this->obj47 != nullptr)
             {
-                Set_Windows_UI_Xaml_FrameworkElement_Tag(this->obj46.Resolve<::Windows::UI::Xaml::Controls::Grid>(), obj, nullptr);
+                Set_Windows_UI_Xaml_FrameworkElement_Tag(this->obj47.Resolve<::Windows::UI::Xaml::Controls::Grid>(), obj, nullptr);
             }
         }
     }
@@ -1316,42 +1334,42 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 80
-            Set_mdblock_mdRichProperties_MDElements(this->obj47, obj, nullptr);
+            // MyResources.xaml line 79
+            Set_mdblock_mdRichProperties_MDElements(this->obj48, obj, nullptr);
         }
     }
     void Update_Liked(::default::int32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 83
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj48, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
-            // MyResources.xaml line 88
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj49, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 82
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj49, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("upvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 87
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj50, safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("downvoteconvert")->Convert(obj, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_changeupvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 83
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj48, obj, nullptr);
+            // MyResources.xaml line 82
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj49, obj, nullptr);
         }
     }
     void Update_changedownvote(::Windows::UI::Xaml::Input::ICommand^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 88
-            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj49, obj, nullptr);
+            // MyResources.xaml line 87
+            Set_Windows_UI_Xaml_Controls_Primitives_ButtonBase_Command(this->obj50, obj, nullptr);
         }
     }
     void Update_saved(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 93
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj50, obj, nullptr);
+            // MyResources.xaml line 92
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj51, obj, nullptr);
         }
     }
     void Update_isMine(::Platform::Boolean obj, int phase)
@@ -1365,32 +1383,32 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 99
-            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj51, obj);
+            // MyResources.xaml line 98
+            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj52, obj);
         }
     }
     void Update_ParentSubreddit(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 96
-            Set_Reddit_reportFlyout_subreddit(this->obj53, obj, nullptr);
+            // MyResources.xaml line 95
+            Set_Reddit_reportFlyout_subreddit(this->obj54, obj, nullptr);
         }
     }
     void Update_author(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 74
-            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj54, obj, nullptr);
+            // MyResources.xaml line 73
+            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj55, obj, nullptr);
         }
     }
-    void Update_score(::default::int32 obj, int phase)
+    void Update_ScoreText(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // MyResources.xaml line 75
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj55, safe_cast<::Platform::String^>(this->LookupConverter("scoreVis")->Convert(obj, ::Platform::String::typeid, nullptr, nullptr)), nullptr);
+            // MyResources.xaml line 74
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj56, obj, nullptr);
         }
     }
 
@@ -1398,8 +1416,8 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // MyResources.xaml line 74
-            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj54, (::Platform::Object^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Platform::Object::typeid, "username"), nullptr);
+            // MyResources.xaml line 73
+            Set_Windows_UI_Xaml_Controls_ContentControl_Content(this->obj55, (::Platform::Object^) ::Windows::UI::Xaml::Markup::XamlBindingHelper::ConvertValue(::Platform::Object::typeid, "username"), nullptr);
         }
     }
 
@@ -1420,7 +1438,7 @@ private:
                 {
                     this->Update_Liked(obj->Liked, DATA_CHANGED);
                     this->Update_saved(obj->saved, DATA_CHANGED);
-                    this->Update_score(obj->score, DATA_CHANGED);
+                    this->Update_ScoreText(obj->ScoreText, DATA_CHANGED);
                 }
             }
             else if (propName == "Liked")
@@ -1437,11 +1455,11 @@ private:
                     this->Update_saved(obj->saved, DATA_CHANGED);
                 }
             }
-            else if (propName == "score")
+            else if (propName == "ScoreText")
             {
                 if (obj != nullptr)
                 {
-                    this->Update_score(obj->score, DATA_CHANGED);
+                    this->Update_ScoreText(obj->ScoreText, DATA_CHANGED);
                 }
             }
         }
@@ -1538,74 +1556,69 @@ void ::Reddit::MyResources::Connect(int __connectionId, ::Platform::Object^ __ta
         break;
     case 3:
         {
-            this->ContentDiagTemplate = safe_cast<::Windows::UI::Xaml::Controls::ControlTemplate^>(__target);
+            this->listSelfPost = safe_cast<::Windows::UI::Xaml::DataTemplate^>(__target);
         }
         break;
-    case 4:
+    case 5:
         {
-            this->listSelfPost = safe_cast<::Windows::UI::Xaml::DataTemplate^>(__target);
+            ::Microsoft::Advertising::WinRT::UI::AdControl^ element5 = safe_cast<::Microsoft::Advertising::WinRT::UI::AdControl^>(__target);
+            (safe_cast<::Microsoft::Advertising::WinRT::UI::AdControl^>(element5))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MyResources::AdControl_Loaded);
         }
         break;
     case 6:
         {
-            ::Microsoft::Advertising::WinRT::UI::AdControl^ element6 = safe_cast<::Microsoft::Advertising::WinRT::UI::AdControl^>(__target);
-            (safe_cast<::Microsoft::Advertising::WinRT::UI::AdControl^>(element6))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
-                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MyResources::AdControl_Loaded);
-        }
-        break;
-    case 7:
-        {
-            ::Windows::UI::Xaml::Controls::RelativePanel^ element7 = safe_cast<::Windows::UI::Xaml::Controls::RelativePanel^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::RelativePanel^>(element7))->Loading += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::FrameworkElement^, ::Platform::Object^>(this, (void (::Reddit::MyResources::*)
+            ::Windows::UI::Xaml::Controls::RelativePanel^ element6 = safe_cast<::Windows::UI::Xaml::Controls::RelativePanel^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::RelativePanel^>(element6))->Loading += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::FrameworkElement^, ::Platform::Object^>(this, (void (::Reddit::MyResources::*)
                 (::Windows::UI::Xaml::FrameworkElement^, ::Platform::Object^))&MyResources::adcontainer_loading);
         }
         break;
-    case 11:
+    case 9:
         {
-            ::ExpanderControl::Expander^ element11 = safe_cast<::ExpanderControl::Expander^>(__target);
-            (safe_cast<::ExpanderControl::Expander^>(element11))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
+            ::ExpanderControl::Expander^ element9 = safe_cast<::ExpanderControl::Expander^>(__target);
+            (safe_cast<::ExpanderControl::Expander^>(element9))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MyResources::contentExpander_Loading);
         }
         break;
-    case 12:
+    case 10:
         {
-            ::Windows::UI::Xaml::Controls::TextBlock^ element12 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(element12))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
+            ::Windows::UI::Xaml::Controls::TextBlock^ element10 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(element10))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MyResources::TextBlock_Loaded);
         }
         break;
-    case 16:
+    case 14:
         {
-            ::Windows::UI::Xaml::Controls::AppBarToggleButton^ element16 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(element16))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
+            ::Windows::UI::Xaml::Controls::AppBarToggleButton^ element14 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(element14))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MyResources::replyButton_Click);
         }
         break;
-    case 17:
+    case 15:
         {
-            ::Windows::UI::Xaml::Controls::AppBarButton^ element17 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element17))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
+            ::Windows::UI::Xaml::Controls::AppBarButton^ element15 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element15))->Loaded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MyResources::AppBarButton_Loaded);
+        }
+        break;
+    case 18:
+        {
+            ::Windows::UI::Xaml::Documents::Hyperlink^ element18 = safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(element18))->Click += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^>(this, (void (::Reddit::MyResources::*)
+                (::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^))&MyResources::username_click);
         }
         break;
     case 19:
         {
             ::Windows::UI::Xaml::Documents::Hyperlink^ element19 = safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(__target);
             (safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(element19))->Click += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^>(this, (void (::Reddit::MyResources::*)
-                (::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^))&MyResources::username_click);
-        }
-        break;
-    case 20:
-        {
-            ::Windows::UI::Xaml::Documents::Hyperlink^ element20 = safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Documents::Hyperlink^>(element20))->Click += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^>(this, (void (::Reddit::MyResources::*)
                 (::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^))&MyResources::subreddit_click);
         }
         break;
-    case 52:
+    case 53:
         {
-            ::Windows::UI::Xaml::Controls::AppBarToggleButton^ element52 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(element52))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
+            ::Windows::UI::Xaml::Controls::AppBarToggleButton^ element53 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(element53))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::MyResources::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MyResources::replyButton_Click);
         }
         break;
@@ -1618,52 +1631,52 @@ void ::Reddit::MyResources::Connect(int __connectionId, ::Platform::Object^ __ta
     ::XamlBindingInfo::XamlBindings^ bindings = nullptr;
     switch (__connectionId)
     {
-        case 8: // MyResources.xaml line 357
+        case 7: // MyResources.xaml line 201
             {
-                ::Windows::UI::Xaml::Controls::Grid^ element8 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-                MyResources_obj8_Bindings* objBindings = new MyResources_obj8_Bindings();
-                objBindings->SetDataRoot(element8->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                MyResources_obj7_Bindings* objBindings = new MyResources_obj7_Bindings();
+                objBindings->SetDataRoot(element7->DataContext);
                 objBindings->SetConverterLookupRoot(this);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element8);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element8, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element8, bindings);
+                bindings->SubscribeForDataContextChanged(element7);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element7, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element7, bindings);
             }
             break;
-        case 26: // MyResources.xaml line 308
+        case 27: // MyResources.xaml line 152
             {
-                ::Windows::UI::Xaml::Controls::Grid^ element26 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-                MyResources_obj26_Bindings* objBindings = new MyResources_obj26_Bindings();
-                objBindings->SetDataRoot(element26->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element27 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                MyResources_obj27_Bindings* objBindings = new MyResources_obj27_Bindings();
+                objBindings->SetDataRoot(element27->DataContext);
                 objBindings->SetConverterLookupRoot(this);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element26);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element26, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element26, bindings);
+                bindings->SubscribeForDataContextChanged(element27);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element27, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element27, bindings);
             }
             break;
-        case 35: // MyResources.xaml line 272
+        case 36: // MyResources.xaml line 116
             {
-                ::Windows::UI::Xaml::Controls::Grid^ element35 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-                MyResources_obj35_Bindings* objBindings = new MyResources_obj35_Bindings();
-                objBindings->SetDataRoot(element35->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element36 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                MyResources_obj36_Bindings* objBindings = new MyResources_obj36_Bindings();
+                objBindings->SetDataRoot(element36->DataContext);
                 objBindings->SetConverterLookupRoot(this);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element35);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element35, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element35, bindings);
+                bindings->SubscribeForDataContextChanged(element36);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element36, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element36, bindings);
             }
             break;
-        case 46: // MyResources.xaml line 66
+        case 47: // MyResources.xaml line 65
             {
-                ::Windows::UI::Xaml::Controls::Grid^ element46 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-                MyResources_obj46_Bindings* objBindings = new MyResources_obj46_Bindings();
-                objBindings->SetDataRoot(element46->DataContext);
+                ::Windows::UI::Xaml::Controls::Grid^ element47 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+                MyResources_obj47_Bindings* objBindings = new MyResources_obj47_Bindings();
+                objBindings->SetDataRoot(element47->DataContext);
                 objBindings->SetConverterLookupRoot(this);
                 bindings = ref new ::XamlBindingInfo::XamlBindings(objBindings);
-                bindings->SubscribeForDataContextChanged(element46);
-                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element46, bindings);
-                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element46, bindings);
+                bindings->SubscribeForDataContextChanged(element47);
+                ::Windows::UI::Xaml::DataTemplate::SetExtensionInstance(element47, bindings);
+                ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element47, bindings);
             }
             break;
     }

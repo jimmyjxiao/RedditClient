@@ -125,6 +125,16 @@ namespace account
 			return JsonObject::Parse(content);
 		});
 	}
+	concurrency::task<Windows::Foundation::Uri^> AccountInterface::GetRedirectUri(Windows::Foundation::Uri ^ u)
+	{
+		u = ref new Windows::Foundation::Uri("https://v.redd.it/w1mkj5xrita11");
+		auto request = ref new Windows::Web::Http::HttpRequestMessage(Windows::Web::Http::HttpMethod::Head, u);
+		static auto basefilter = ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter();
+		basefilter->AllowAutoRedirect = false;
+		return concurrency::create_task(authyboi->SendRequestAsyncA(request, basefilter)).then([o = std::move(u)](HttpResponseMessage^ m) {
+			return m->Headers->Location;
+		});
+	}
 
 
 	concurrency::task<std::pair<Platform::Collections::Vector<IRedditTypeIdentifier^>^,const Platform::String^>>  AccountInterface::getMessages(Messages_Where m, concurrency::cancellation_token cToken)
@@ -205,7 +215,8 @@ namespace account
 
 	AccountInterface::AccountInterface(Platform::String ^ refresh, AccountInfo cachedInfo)
 	{
-		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh));
+		authyboi = ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh);
+		httpClient = ref new Windows::Web::Http::HttpClient(authyboi);
 		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
 		me = std::move(cachedInfo);
 		updateInfo();
@@ -213,8 +224,8 @@ namespace account
 
 	AccountInterface::AccountInterface(Platform::String ^ refresh)
 	{
-
-		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh));
+		authyboi = ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh);
+		httpClient = ref new Windows::Web::Http::HttpClient(authyboi);
 		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
 		updateInfo();
 		//updateInfo();
@@ -222,8 +233,17 @@ namespace account
 
 	AccountInterface::AccountInterface(Platform::String ^ refresh, Platform::String ^ currentauth)
 	{
-		httpClient = ref new Windows::Web::Http::HttpClient(ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh, currentauth));
+		authyboi = ref new authFilter(ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter(), refresh, currentauth);
+		httpClient = ref new Windows::Web::Http::HttpClient(authyboi);
 		httpClient->DefaultRequestHeaders->UserAgent->Append(ref new Windows::Web::Http::Headers::HttpProductInfoHeaderValue("Here's a user agent. You happy?"));
+	}
+	concurrency::task<void> AccountInterface::SubmitNewPost(Platform::String ^ Subreddit, Platform::String ^ Title, Platform::String ^ md, concurrency::cancellation_token cToken)
+	{
+		return concurrency::task<void>();
+	}
+	concurrency::task<void> AccountInterface::SubmitNewPost(Platform::String ^ Subreddit, Platform::String ^ Title, Windows::Foundation::Uri ^ link, concurrency::cancellation_token cToken)
+	{
+		return concurrency::task<void>();
 	}
 	concurrency::task<subredditInfo> AccountInterface::GetSubredditInfo(Platform::String^ subreddit, concurrency::cancellation_token cToken)
 	{
@@ -355,8 +375,8 @@ namespace account
 				else
 				{
 					auto it = std::find_if(refmap.rbegin(), refmap.rend(), [pid](CommentUWPitem^ c) {
-						//return (wcscmp(c->helper.getId->Data(), pid->Data()+3) == 0);
-						return false;
+						return (wcscmp(c->helper.getId()->Data(), pid->Data()+3) == 0);
+						//return false;
 					});
 					if (it == refmap.rend())
 						__debugbreak();
@@ -466,50 +486,63 @@ namespace account
 		listing->listing = ref new Platform::Collections::Vector<subpostUWP^>();
 		
 		listing->getTask = getJsonAsync(ref new Uri(baseURI, Platform::StringReference(urlstr.data())), std::move(cToken)).then([listing](Windows::Data::Json::JsonObject^ json) {
-			auto data = json->GetNamedObject("data");
-			try
-			{
-				auto v = data->GetNamedValue("before");
-				if (v->ValueType == Windows::Data::Json::JsonValueType::String)
+			try {
+				auto data = json->GetNamedObject("data");
+				try
 				{
-					listing->before = v->GetString();
+					auto v = data->GetNamedValue("before");
+					if (v->ValueType == Windows::Data::Json::JsonValueType::String)
+					{
+						listing->before = v->GetString();
+					}
+					else
+					{
+						listing->before = nullptr;
+					}
 				}
-				else
+				catch (...)
 				{
 					listing->before = nullptr;
 				}
-			}
-			catch (...)
-			{
-				listing->before = nullptr;
-			}
-			try
-			{
-				auto v = data->GetNamedValue("after");
-				if (v->ValueType == Windows::Data::Json::JsonValueType::String)
+				try
 				{
-					listing->after = v->GetString();
+					auto v = data->GetNamedValue("after");
+					if (v->ValueType == Windows::Data::Json::JsonValueType::String)
+					{
+						listing->after = v->GetString();
+					}
+					else
+					{
+						listing->after = nullptr;
+					}
 				}
-				else
+				catch (...)
 				{
 					listing->after = nullptr;
 				}
+
+				auto jsonPosts = data->GetNamedArray("children");
+
+				for (auto x : jsonPosts)
+				{
+					try
+					{
+						auto jsonpost = x->GetObject()->GetNamedObject("data");
+						subpostUWP^ addingpost = ref new subpostUWP(jsonpost);
+						listing->listing->Append(addingpost);
+					}
+					catch (...)
+					{
+						__debugbreak();
+					}
+
+				}
+				return listing->listing;
 			}
 			catch (...)
 			{
-				listing->after = nullptr;
+				__debugbreak();
 			}
-			
-			auto jsonPosts = data->GetNamedArray("children");
-			
-			for (auto x : jsonPosts)
-			{
-				auto jsonpost = x->GetObject()->GetNamedObject("data");
-				subpostUWP^ addingpost= ref new subpostUWP(jsonpost);
-				listing->listing->Append(addingpost);
-				
-			}
-			return listing->listing;
 		}), concurrency::task_continuation_context::use_arbitrary;
 		return std::unique_ptr<subredditlisting>(listing);
 	}
@@ -603,20 +636,22 @@ namespace account
 
 	Windows::Foundation::IAsyncOperationWithProgress<Windows::Web::Http::HttpResponseMessage^, Windows::Web::Http::HttpProgress>^ AccountInterface::authFilter::SendRequestAsync(Windows::Web::Http::HttpRequestMessage ^ request)
 	{
-		
+		return SendRequestAsyncA(std::move(request), innerFilter);
+	}
+
+	Windows::Foundation::IAsyncOperationWithProgress<Windows::Web::Http::HttpResponseMessage^, Windows::Web::Http::HttpProgress>^ AccountInterface::authFilter::SendRequestAsyncA(Windows::Web::Http::HttpRequestMessage ^ request, Windows::Web::Http::Filters::IHttpFilter ^ innerfilter)
+	{
 		return concurrency::create_async([=](concurrency::progress_reporter<HttpProgress> reporter, concurrency::cancellation_token token)
 		{
-
-
 			unsigned int retries = 0;
 			if (request->Properties->HasKey(L"retries"))
 			{
 				retries = static_cast<unsigned int>(request->Properties->Lookup(L"retries"));
 			}
-			
+
 			if (AuthHeader == nullptr)
 			{
-				return refreshauth().then([token,this, request](void){
+				return refreshauth().then([token, this, request, innerfilter](void) {
 					//IAsyncOperationWithProgress<HttpResponseMessage^, HttpProgress>^ operation = innerFilter->SendRequestAsync(request);
 					//operation->Progress = ref new AsyncOperationProgressHandler<HttpResponseMessage^, HttpProgress>([reporter, &retries](
 					//	IAsyncOperationWithProgress<HttpResponseMessage^, HttpProgress>^ asyncInfo,
@@ -627,14 +662,14 @@ namespace account
 					//});
 					request->Headers->Authorization = AuthHeader;
 					Platform::String^ eige = request->Headers->Authorization->ToString();
-					return concurrency::create_task(innerFilter->SendRequestAsync(request), token);
+					return concurrency::create_task(innerfilter->SendRequestAsync(request), token);
 				});
 			}
 			else
 			{
-			
+
 				request->Headers->Authorization = AuthHeader;
-				return concurrency::create_task(innerFilter->SendRequestAsync(request)).then([=](concurrency::task<HttpResponseMessage^> sendRequestTask)
+				return concurrency::create_task(innerfilter->SendRequestAsync(request)).then([request, innerfilter, token,this, retries](concurrency::task<HttpResponseMessage^> sendRequestTask)
 				{
 					HttpResponseMessage^ response = sendRequestTask.get();
 					//throw ref new Platform::NotImplementedException("need to figure out which status code for refresh");
@@ -642,8 +677,8 @@ namespace account
 					{
 						request->Headers->Authorization = AuthHeader;
 						request->Properties->Insert("retries", (retries + 1));
-						return refreshauth().then([=]() {
-							return create_task(SendRequestAsync(request), token);
+						return refreshauth().then([=]() mutable {
+							return concurrency::create_task(SendRequestAsyncA(request, innerfilter), token);
 						});
 					}
 					else return sendRequestTask;

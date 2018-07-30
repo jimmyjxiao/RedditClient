@@ -50,20 +50,24 @@ namespace account
 			virtual Windows::Foundation::IAsyncOperationWithProgress<
 				Windows::Web::Http::HttpResponseMessage^,
 				Windows::Web::Http::HttpProgress>^ SendRequestAsync(Windows::Web::Http::HttpRequestMessage^ request);
-
+		internal:
+			Windows::Foundation::IAsyncOperationWithProgress<
+				Windows::Web::Http::HttpResponseMessage^,
+				Windows::Web::Http::HttpProgress>^ SendRequestAsyncA(Windows::Web::Http::HttpRequestMessage^ request, Windows::Web::Http::Filters::IHttpFilter^ innerfilter);
 		private:
 			Windows::Web::Http::Headers::HttpCredentialsHeaderValue^ AuthHeader = nullptr;
 			Platform::String^ refreshToken;
 			concurrency::task<void> refreshauth();
 			Windows::Web::Http::Filters::IHttpFilter^ innerFilter;
 		};
-
-		
+		authFilter^ authyboi;
 		static AccountInfo jsontoinfo(Windows::Data::Json::JsonObject^ jsoninfo);
 		static const std::wstring apibase;
 		static Platform::String^ baseURI;
 		concurrency::task<Windows::Data::Json::JsonObject^> getJsonAsync(Windows::Foundation::Uri^ requestUri, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 	public:
+		Windows::Web::Http::HttpClient^ httpClient;
+		concurrency::task<Windows::Foundation::Uri^> GetRedirectUri(Windows::Foundation::Uri^ u);
 		enum class Messages_Where : byte
 		{
 			inbox, unread, sent
@@ -78,6 +82,8 @@ namespace account
 		AccountInterface(Platform::String^ refresh, AccountInfo cachedInfo);
 		AccountInterface(Platform::String^ refresh);
 		AccountInterface(Platform::String^ refresh, Platform::String^ currentauth);
+		concurrency::task<void> SubmitNewPost(Platform::String^ Subreddit, Platform::String^ Title, Platform::String^ md, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
+		concurrency::task<void> SubmitNewPost(Platform::String^ Subreddit, Platform::String^ Title, Windows::Foundation::Uri^ link, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<subredditInfo> GetSubredditInfo(Platform::String^ subreddit, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<subredditInfo> GetSubredditInfo(subredditInfo s, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		Concurrency::task<void> vote(int8_t dir, Platform::String^ id, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
@@ -92,7 +98,6 @@ namespace account
 		std::unique_ptr<subredditlisting> getsubredditAsyncVec(concurrency::cancellation_token cToken = concurrency::cancellation_token::none()); //assume get frontpage if no subreddit argument
 		std::unique_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		std::unique_ptr<subredditlisting> getsubredditAsyncVec(Platform::String^ subreddit, postSort sort, timerange range, concurrency::cancellation_token cToken = concurrency::cancellation_token::none()); //returns an empty vector that async populates
-		Windows::Web::Http::HttpClient^ httpClient;
 		concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> getDomain(Platform::String^ domain, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		concurrency::task<Platform::Collections::Vector<IRedditTypeIdentifier^>^> getMixedCollection(Platform::String^ endpoint, concurrency::cancellation_token cToken = concurrency::cancellation_token::none());
 		static IRedditTypeIdentifier^ ambiguousJsonResolver(Windows::Data::Json::JsonObject^ j);

@@ -7,6 +7,7 @@
 #include "SubRedditViewPage.xaml.h"
 #include "CommentViewPage.xaml.h"
 #include "ApplicationDataHelper.h"
+
 #include "MyResources.xaml.h"
 #define _NAV static_cast<subredditNavstate*>(baseRef)
 #define _sort _NAV->sort
@@ -31,6 +32,63 @@ std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> Reddit::SubR
 std::vector<Windows::UI::Xaml::Controls::Primitives::SelectorItem^> Reddit::SubRedditViewPage::AdGridItemRecycle;
 std::vector<Windows::UI::Xaml::Controls::ListViewItem^> Reddit::SubRedditViewPage::ListPostItemRecycle;
 std::vector<Windows::UI::Xaml::Controls::ListViewItem^> Reddit::SubRedditViewPage::ListAdItemRecycle;
+void Reddit::SubRedditViewPage::NavigateToSubreddit(Platform::String ^ sub, account::postSort sort, account::timerange range)
+{
+	account::subredditInfo* premadeInfo = nullptr;
+	if (sub != nullptr && sort == account::postSort::Defaultsort)
+	{
+		sort = account::postSort::hot;
+	}
+	if (!rootWindowGrid::TryNavigateToCachedPage([&sub, &sort, &range, &premadeInfo](const navVariant & a) {
+		if (a.first.Name == ((Windows::UI::Xaml::Interop::TypeName)(SubRedditViewPage::typeid)).Name)
+		{
+			auto x = static_cast<subredditNavstate*>(a.second);
+			if (x->info.name == sub)
+			{
+				premadeInfo = &x->info;
+				if ((x->rng == range) && (x->sort == sort))
+					return true;
+				else
+					return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}))
+	{
+		if (premadeInfo != nullptr)
+		{
+			rootWindowGrid::getCurrent()->NavigateToNewPage(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(*premadeInfo, std::move(sort), std::move(range))));
+		}
+		else
+		{
+			rootWindowGrid::getCurrent()->NavigateToNewPage(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(std::move(sub), std::move(sort), std::move(range))));
+		}
+	}
+	
+}
+void Reddit::SubRedditViewPage::NavigateToSubreddit(account::subredditInfo sub, account::postSort sort, account::timerange range)
+{
+	if (sub.name != nullptr && sort == account::postSort::Defaultsort)
+	{
+		sort = account::postSort::hot;
+	}
+	if (!rootWindowGrid::TryNavigateToCachedPage([i = sub.subredditIndex, &sort, &range](const navVariant & a) {
+		if (a.first.Name == ((Windows::UI::Xaml::Interop::TypeName)(SubRedditViewPage::typeid)).Name)
+		{
+			auto x = static_cast<subredditNavstate*>(a.second);
+			return ((x->info.subredditIndex == i) && (x->rng == range) && (x->sort == sort));
+		}
+		else
+		{
+			return false;
+		}
+	})) {
+		rootWindowGrid::getCurrent()->NavigateToNewPage(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(std::move(sub), sort, range)));
+	}
+}
 Reddit::SubRedditViewPage::~SubRedditViewPage()
 {
 	//__debugbreak();
@@ -98,10 +156,10 @@ void Reddit::SubRedditViewPage::Sort::set(account::postSort newsort)
 {
 	if (newsort != _sort && pageLoaded)
 	{
-		timeSelector->SelectedIndex = 3;
+		//timeSelector->SelectedIndex = 5;
 		if (newsort == account::postSort::controversial || newsort == account::postSort::top)
 		{
-			_NAV->rng = account::timerange::month;
+			_NAV->rng = account::timerange::all;
 			lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, newsort, _NAV->rng, RefreshSourceAndGetNewToken());
 			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs("posts"));
 		}
@@ -121,12 +179,29 @@ void Reddit::SubRedditViewPage::OnNavigatedToPageCode()
 	_subreddit = _NAV->info.name;
 	if (_subreddit == nullptr)
 	{
-		sideBarButton->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
 		_subInfo.pname = L"Frontpage";
-		lPtr = globalvars::currentacc->getsubredditAsyncVec(refreshCancelationSource.get_token());
+		
+		auto bestoption = ref new TextBlock();
+		bestoption->Text = "Best";
+		bestoption->Tag = account::postSort::Defaultsort;
+		sortSelector->Items->InsertAt(0, std::move(bestoption));
+		_sort = account::postSort::Defaultsort;
+		sortSelector->SelectedIndex = 0;
+		//mystate->IsActive = false;
+		goto notrealsubs;
+	}
+	else if (_subreddit == L"all" || _subreddit == L"popular")
+	{
+		_subInfo.pname = L"/r/" + _subreddit;
+	notrealsubs:
+		sideBarButton->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+		_subInfo.key_color = Windows::UI::Colors::Black;
 		commandBar->Background = static_cast<Windows::UI::Xaml::Media::SolidColorBrush^>(Application::Current->Resources->Lookup("SystemControlBackgroundChromeMediumBrush"));
-		subTextblock->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+		subInfopanel->Children->RemoveAtEnd();
+		subInfopanel->Children->RemoveAtEnd();
 		pageLoaded = true;
+		lPtr = globalvars::currentacc->getsubredditAsyncVec(_subreddit, _sort, _NAV->rng, refreshCancelationSource.get_token());
+
 	}
 	else
 	{
@@ -261,7 +336,7 @@ void Reddit::SubRedditViewPage::listGrid_ItemClick(Platform::Object^ sender, Win
 		auto navstuff = new commentNavstate();
 		navstuff->postID = clickedPost->helper.getId();
 		navstuff->post = clickedPost;
-		rootWindowGrid::getCurrent()->NavigateToNewPage(CommentViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, navstuff));
+		rootWindowGrid::getCurrent()->NavigateToNewPage(CommentViewPage::typeid, globalvars::addNav(CommentViewPage::typeid, navstuff));
 	}
 	
 }
@@ -447,5 +522,27 @@ void Reddit::SubRedditViewPage::listView_ChoosingItemContainer(Windows::UI::Xaml
 
 void Reddit::SubRedditViewPage::postButton_click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	//_posts->Append(nullptr);
+	if (SubmitPopup == nullptr)
+		SubmitPopup = ref new NewPostPopup();
+	SubmitPopup->Subreddit = _subreddit;
+	SubmitPopup->ShowAsync();
+}
+
+Platform::Object ^ Reddit::SubscribersConverter::Convert(Platform::Object ^ value, Windows::UI::Xaml::Interop::TypeName targetType, Platform::Object ^ parameter, Platform::String ^ language)
+{
+	wchar_t buffer[26];
+	wchar_t numbuf[9];
+	_itow_s(static_cast<unsigned int>(value), numbuf, 10);
+	static NUMBERFMTW numbfmt =
+	{
+		0,
+		0,
+		3,
+		L"",
+		L",",
+		0
+	};
+	GetNumberFormatEx(LOCALE_NAME_USER_DEFAULT, 0, numbuf, &numbfmt, buffer, 19);
+	auto err = wcscat_s(buffer, L" Subscribers");
+	return ref new Platform::String(buffer);
 }

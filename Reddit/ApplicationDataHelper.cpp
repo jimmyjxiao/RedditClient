@@ -10,9 +10,10 @@ namespace ApplicationDataHelper
 {
 	namespace rulesOneUnitCache
 	{
-		Platform::Collections::Vector<account::reportReason>^ oneUnitCache;
+		std::vector<account::reportReason> oneUnitCache;
 		std::u16string subredditCachedName;
 		unsigned int index = INT_MAX;
+		std::mutex mutex;
 	}
 	void initializeAppDB()
 	{
@@ -68,47 +69,59 @@ namespace ApplicationDataHelper
 	}
 	Platform::Collections::Vector<account::reportReason>^ subredditHelpers::trysubredditRulesCache(std::u16string subredditName, Platform::Collections::Vector<account::reportReason>^ v, concurrency::cancellation_token cToken)
 	{
+		std::lock_guard guard(rulesOneUnitCache::mutex);
 		if (subredditName == rulesOneUnitCache::subredditCachedName)
 		{
-			return rulesOneUnitCache::oneUnitCache;
+			v->ReplaceAll(Platform::ArrayReference<account::reportReason>(rulesOneUnitCache::oneUnitCache.data(), rulesOneUnitCache::oneUnitCache.size()));
+			return std::move(v);
 		}
 		int index =
 			FindSubIndex(subredditName);
 		
-		
+		std::vector<account::reportReason> newvec;
 		RulesPrepSt() << index
 			>>
-			[&v](std::u16string shortDesc, std::u16string longdesc, int applic) {
-			v->Append(account::reportReason{ Platform::StringReference((const wchar_t*)shortDesc.data()), Platform::StringReference((const wchar_t*)longdesc.data()), (account::reportApplicibility)applic });
+			[&newvec](std::u16string shortDesc, std::u16string longdesc, int applic) {
+			newvec.emplace_back( account::reportReason{ ref new Platform::String((const wchar_t*)shortDesc.data()), ref new Platform::String((const wchar_t*)longdesc.data()), (account::reportApplicibility)applic
+			});
 		};
-		rulesOneUnitCache::subredditCachedName = subredditName;
-		rulesOneUnitCache::oneUnitCache = v;
-		rulesOneUnitCache::index = index;
-		if (!v->Size == 0)
+		if (newvec.size() != 0)
 		{
-			return v;
+			rulesOneUnitCache::subredditCachedName = subredditName;
+			rulesOneUnitCache::oneUnitCache = std::move(newvec);
+			rulesOneUnitCache::index = index;
+			v->ReplaceAll(Platform::ArrayReference<account::reportReason>(rulesOneUnitCache::oneUnitCache.data(), rulesOneUnitCache::oneUnitCache.size()));
+			return std::move(v);
 		}
 		else
 		{
 			cacheMiss<std::vector<account::reportReason>> missException;
-			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data()), cToken).then([v, index](std::vector<account::reportReason> e) {
+			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data()), cToken).then([v, index, subredditName](std::vector<account::reportReason> e) {
+				v->ReplaceAll(Platform::ArrayReference<account::reportReason>(e.data(), e.size()));
+				std::lock_guard guard(rulesOneUnitCache::mutex);
 				storeSubredditRules(e, index);
-				v->ReplaceAll(ref new Platform::Array<account::reportReason>(e.data(), e.size()));
-				return e;
+				rulesOneUnitCache::subredditCachedName = std::move(subredditName);
+				rulesOneUnitCache::index = index;
+				rulesOneUnitCache::oneUnitCache = std::move(e);
+				return rulesOneUnitCache::oneUnitCache;
 			});
 			throw missException;
 		}
 	}
 	Platform::Collections::Vector<account::reportReason>^ subredditHelpers::trysubredditRulesCache(unsigned int index, Platform::Collections::Vector<account::reportReason>^ v , concurrency::cancellation_token cToken)
 	{
-		if (rulesOneUnitCache::index == index)
+		std::lock_guard guard(rulesOneUnitCache::mutex);
+		if (index == rulesOneUnitCache::index)
 		{
-			return rulesOneUnitCache::oneUnitCache;
+			v->ReplaceAll(Platform::ArrayReference<account::reportReason>(rulesOneUnitCache::oneUnitCache.data(), rulesOneUnitCache::oneUnitCache.size()));
+			return std::move(v);
 		}
+		std::vector<account::reportReason> newvec;
 		RulesPrepSt() << index
 			>>
-			[&v](std::u16string shortDesc, std::u16string longdesc, int applic) {
-			v->Append(account::reportReason{ Platform::StringReference((const wchar_t*)shortDesc.data()), Platform::StringReference((const wchar_t*)longdesc.data()), (account::reportApplicibility)applic });
+			[&newvec](std::u16string shortDesc, std::u16string longdesc, int applic) {
+			newvec.emplace_back(account::reportReason{ ref new Platform::String((const wchar_t*)shortDesc.data()), ref new Platform::String((const wchar_t*)longdesc.data()), (account::reportApplicibility)applic
+				});
 		};
 		static auto getname = *globalvars::AppDB << u"SELECT subreddit FROM SubredditInfo WHERE rowid = ?";
 		std::u16string subredditName;
@@ -120,22 +133,24 @@ namespace ApplicationDataHelper
 		{
 			__debugbreak();
 		}
-		
-		rulesOneUnitCache::oneUnitCache = v;
-		rulesOneUnitCache::index = index;
-		if (!v->Size == 0)
+		if (v->Size > 0)
 		{
+			rulesOneUnitCache::oneUnitCache = std::move(newvec);
+			rulesOneUnitCache::index = index;
 			rulesOneUnitCache::subredditCachedName = std::move(subredditName);
 			return v;
 		}
 		else
 		{
-			rulesOneUnitCache::subredditCachedName = subredditName;
 			cacheMiss<std::vector<account::reportReason>> missException;
-			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data()), std::move(cToken)).then([v, index](std::vector<account::reportReason> e) {
+			missException.retrieveTask = globalvars::currentacc->getRules(Platform::StringReference((const wchar_t*)subredditName.data()), std::move(cToken)).then([v, index, subredditName](std::vector<account::reportReason> e) {
+				v->ReplaceAll(Platform::ArrayReference<account::reportReason>(e.data(), e.size()));
+				std::lock_guard guard(rulesOneUnitCache::mutex);
 				storeSubredditRules(e, index);
-				v->ReplaceAll(ref new Platform::Array<account::reportReason>(e.data(), e.size()));
-				return e;
+				rulesOneUnitCache::subredditCachedName = std::move(subredditName);
+				rulesOneUnitCache::index = index;
+				rulesOneUnitCache::oneUnitCache = std::move(e);
+				return rulesOneUnitCache::oneUnitCache;
 			});
 			throw missException;
 		}

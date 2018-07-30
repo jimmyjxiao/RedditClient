@@ -1,0 +1,55 @@
+﻿<ContentDialog
+    x:Class="Reddit.NewPostPopup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Reddit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:md="using:mdblock"
+    Title="Submit New Post"
+    xmlns:conv="using:converters"
+    CloseButtonText="Cancel"
+    PrimaryButtonText="Submit"
+    Opened="ContentDialog_Opened"
+    IsPrimaryButtonEnabled="False"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    <ContentDialog.Resources>
+        <conv:InverseBool x:Key="boolFlipper"/>
+    </ContentDialog.Resources>
+    <RelativePanel>
+        <TextBox  Header="Title:" HorizontalAlignment="Stretch" x:Name="titleBox" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Text="{x:Bind PostTitle, Mode=TwoWay}" TextWrapping="Wrap" TextChanged="title_changed"/>
+        <TextBlock RelativePanel.AlignRightWithPanel="True" x:Name="charCounter"/>
+        <TextBox RelativePanel.Below="titleBox" Name="subbox" Header="Subreddit:" Text="{x:Bind Subreddit,Mode=OneWay}" PreviewKeyDown="subbox_PreviewKeyDown" TextChanged="subbox_TextChanged" BeforeTextChanging="subbox_BeforeTextChanging"  />
+        <TextBlock x:Name="subErrorBox" Foreground="Red" RelativePanel.RightOf="subbox" RelativePanel.AlignVerticalCenterWith="subbox" Visibility="Collapsed"/>
+        <ToggleSwitch RelativePanel.Below="subbox" Header="NSFW" x:Name="NSFWSwitch" OnContent="" OffContent="" IsOn="{x:Bind NSFW, Mode=TwoWay}"/>
+        <ToggleSwitch RelativePanel.RightOf="NSFWSwitch" Header="Spoiler" RelativePanel.Below="subbox" OnContent="" OffContent="" IsOn="{x:Bind Spoiler, Mode=TwoWay}"/>
+        <Border BorderBrush="{ThemeResource AppBarSeparatorForeground}" BorderThickness="0,1,0,0" RelativePanel.Below="NSFWSwitch">
+            <StackPanel>
+                <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Content (optional):" Name="contentHeader"/>
+                <Pivot Padding="0" Margin="0" >
+                    <PivotItem Header="Link" Padding="0">
+                        <StackPanel>
+                            <TextBox AcceptsReturn="False" Header="URL"/>
+                            <TextBlock Text="or"/>
+                            <Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Upload"/>
+                                    <TextBlock Text="Upload Image or Video"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </PivotItem>
+                    <PivotItem Header="Text" Padding="0">
+                        <StackPanel>
+                            <ToggleSwitch Header="Editor:" OffContent="Raw Markdown" x:Name="editorSwitch" OnContent="Enhanced Editor"/>
+                            <TextBox x:Load="{x:Bind editorSwitch.IsOn, Converter={StaticResource boolFlipper}, Mode=OneWay}" Text="{x:Bind md, Mode=OneWay}" x:Name="mdEditor" Loaded="mdEditor_Loaded" Unloaded="mdEditor_Unloaded"/>
+                            <md:MDFullEnhancedEditor x:Load="{x:Bind editorSwitch.IsOn, Mode=OneWay}" x:Name="WYSIWYG" Loading="WYSIWYG_Loading" Unloaded="WYSIWYG_Unloaded"/>
+                        </StackPanel>
+                    </PivotItem>
+                </Pivot>
+            </StackPanel>
+        </Border>
+    </RelativePanel>
+</ContentDialog>

@@ -10,6 +10,7 @@
 #include "serviceHelpers.h"
 #include <concurrent_vector.h>
 #include <ppl.h>
+#include "SubRedditViewPage.xaml.h"
 #define nav static_cast<commentNavstate*>(baseRef)
 using namespace Reddit;
 
@@ -54,18 +55,11 @@ void Reddit::CommentViewPage::OnNavigatedToPageCode()
 				}
 				catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> m)
 				{
-
-					m.retrieveTask.then([this](std::vector<account::reportReason> z) {
-						commentControl->reportingReasons->ReplaceAll(Platform::ArrayReference<account::reportReason>(z.data(), z.size()));
-					});
 				}
 			});
 		}
 		catch (ApplicationDataHelper::cacheMiss<std::vector<account::reportReason>> m)
 		{
-			m.retrieveTask.then([this](std::vector<account::reportReason> z) {
-				commentControl->reportingReasons->ReplaceAll(Platform::ArrayReference<account::reportReason>(z.data(), z.size()));
-			});
 		}
 		this->commentControl->setHeaderpost(nav->post);
 
@@ -155,4 +149,10 @@ void Reddit::CommentViewPage::AppBarButton_Click(Platform::Object^ sender, Windo
 
 void Reddit::CommentViewPage::OnhtmlLoadingFinished(Platform::Object ^sender, Windows::UI::Xaml::Controls::RichTextBlock ^args)
 {
+}
+
+
+void Reddit::CommentViewPage::subreddit_click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	SubRedditViewPage::NavigateToSubreddit(_subInfo);
 }

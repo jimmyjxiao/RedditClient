@@ -17,7 +17,6 @@ namespace Reddit
 	{
 	public:
 		event Windows::Foundation::EventHandler<account::CommentUWPitem^>^ CommentSubmitted;
-
 		Platform::String^ getMarkdown();
 	internal:
 		ReplyBox(account::VotableThing * p);

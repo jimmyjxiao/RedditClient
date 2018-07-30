@@ -54,74 +54,61 @@ public:
     {
         switch(__connectionId)
         {
-            case 2: // SubRedditViewPage.xaml line 29
-                this->obj2 = safe_cast<::Windows::UI::Xaml::Controls::CommandBar^>(__target);
+            case 3: // SubRedditViewPage.xaml line 41
+                this->obj3 = safe_cast<::Windows::UI::Xaml::Controls::CommandBar^>(__target);
                 break;
-            case 3: // SubRedditViewPage.xaml line 140
-                this->obj3 = safe_cast<::Windows::UI::Xaml::Controls::StackPanel^>(__target);
+            case 4: // SubRedditViewPage.xaml line 145
+                this->obj4 = safe_cast<::Windows::UI::Xaml::Controls::StackPanel^>(__target);
                 break;
-            case 4: // SubRedditViewPage.xaml line 147
-                this->obj4 = safe_cast<::Windows::UI::Xaml::Controls::SplitView^>(__target);
-                this->obj4->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::SplitView::IsPaneOpenProperty,
+            case 5: // SubRedditViewPage.xaml line 152
+                this->obj5 = safe_cast<::Windows::UI::Xaml::Controls::SplitView^>(__target);
+                this->obj5->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::SplitView::IsPaneOpenProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
                         [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
                         {
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->sideBarButton->IsChecked = safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("boxConv")->ConvertBack(this->obj4->IsPaneOpen, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr));
+                                this->GetDataRoot()->sideBarButton->IsChecked = safe_cast<::Platform::IBox<::Platform::Boolean>^>(this->LookupConverter("boxConv")->ConvertBack(this->obj5->IsPaneOpen, ::Platform::IBox<::Platform::Boolean>::typeid, nullptr, nullptr));
                             }
                         }));
                 break;
-            case 5: // SubRedditViewPage.xaml line 154
-                this->obj5 = safe_cast<::Windows::UI::Xaml::Controls::ToggleSwitch^>(__target);
-                this->obj5->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::ToggleSwitch::IsOnProperty,
+            case 6: // SubRedditViewPage.xaml line 159
+                this->obj6 = safe_cast<::Windows::UI::Xaml::Controls::ToggleSwitch^>(__target);
+                this->obj6->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::ToggleSwitch::IsOnProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
                         [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
                         {
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->SidebarUseCSS = this->obj5->IsOn;
+                                this->GetDataRoot()->SidebarUseCSS = this->obj6->IsOn;
                             }
                         }));
                 break;
-            case 7: // SubRedditViewPage.xaml line 161
-                this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::GridView^>(__target);
-                // SubRedditViewPage.xaml line 161
-                if (this->obj7 != nullptr)
-                {
-                    Set_Windows_UI_Xaml_Controls_ItemsControl_ItemsSource(this->obj7, this->obj7ItemsSourceDeferredValue, nullptr);
-                }
-                break;
-            case 8: // SubRedditViewPage.xaml line 162
-                this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
-                // SubRedditViewPage.xaml line 162
+            case 8: // SubRedditViewPage.xaml line 166
+                this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::GridView^>(__target);
+                // SubRedditViewPage.xaml line 166
                 if (this->obj8 != nullptr)
                 {
                     Set_Windows_UI_Xaml_Controls_ItemsControl_ItemsSource(this->obj8, this->obj8ItemsSourceDeferredValue, nullptr);
                 }
                 break;
-            case 9: // SubRedditViewPage.xaml line 141
-                this->obj9 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+            case 9: // SubRedditViewPage.xaml line 167
+                this->obj9 = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
+                // SubRedditViewPage.xaml line 167
+                if (this->obj9 != nullptr)
+                {
+                    Set_Windows_UI_Xaml_Controls_ItemsControl_ItemsSource(this->obj9, this->obj9ItemsSourceDeferredValue, nullptr);
+                }
                 break;
-            case 11: // SubRedditViewPage.xaml line 144
-                this->obj11 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
+            case 10: // SubRedditViewPage.xaml line 146
+                this->obj10 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 12: // SubRedditViewPage.xaml line 30
-                this->obj12 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
-                this->obj12->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
-                    ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
-                        [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
-                        {
-                            if (this->IsInitialized())
-                            {
-                                // Update Two Way binding
-                                this->GetDataRoot()->Subscribed = this->obj12->IsChecked ? this->obj12->IsChecked->Value : false;
-                            }
-                        }));
+            case 13: // SubRedditViewPage.xaml line 149
+                this->obj13 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 14: // SubRedditViewPage.xaml line 34
+            case 14: // SubRedditViewPage.xaml line 42
                 this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
                 this->obj14->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -130,15 +117,28 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->viewMode = this->obj14->IsChecked ? this->obj14->IsChecked->Value : false;
+                                this->GetDataRoot()->Subscribed = this->obj14->IsChecked ? this->obj14->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 17: // SubRedditViewPage.xaml line 40
-                this->obj17 = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
+            case 16: // SubRedditViewPage.xaml line 46
+                this->obj16 = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
+                this->obj16->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
+                    ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
+                        [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
+                        {
+                            if (this->IsInitialized())
+                            {
+                                // Update Two Way binding
+                                this->GetDataRoot()->viewMode = this->obj16->IsChecked ? this->obj16->IsChecked->Value : false;
+                            }
+                        }));
                 break;
-            case 18: // SubRedditViewPage.xaml line 77
-                this->obj18 = safe_cast<::Windows::UI::Xaml::Controls::MenuFlyoutSeparator^>(__target);
+            case 19: // SubRedditViewPage.xaml line 52
+                this->obj19 = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
+                break;
+            case 20: // SubRedditViewPage.xaml line 89
+                this->obj20 = safe_cast<::Windows::UI::Xaml::Controls::MenuFlyoutSeparator^>(__target);
                 break;
         }
     }
@@ -147,21 +147,21 @@ public:
     {
         switch (connectionId)
         {
-            case 7: // SubRedditViewPage.xaml line 161
-            {
-                if (this->obj7 != nullptr)
-                {
-                    this->obj7ItemsSourceDeferredValue = this->obj7->ItemsSource;
-                    this->obj7 = nullptr;
-                }
-                break;
-            }
-            case 8: // SubRedditViewPage.xaml line 162
+            case 8: // SubRedditViewPage.xaml line 166
             {
                 if (this->obj8 != nullptr)
                 {
                     this->obj8ItemsSourceDeferredValue = this->obj8->ItemsSource;
                     this->obj8 = nullptr;
+                }
+                break;
+            }
+            case 9: // SubRedditViewPage.xaml line 167
+            {
+                if (this->obj9 != nullptr)
+                {
+                    this->obj9ItemsSourceDeferredValue = this->obj9->ItemsSource;
+                    this->obj9 = nullptr;
                 }
                 break;
             }
@@ -176,29 +176,29 @@ public:
     {
         switch (connectionId)
         {
-            case 7: // SubRedditViewPage.xaml line 161
+            case 8: // SubRedditViewPage.xaml line 166
             {
-                // SubRedditViewPage.xaml line 161
-                if (this->obj7LoadDeferredValue)
+                // SubRedditViewPage.xaml line 166
+                if (this->obj8LoadDeferredValue)
                 {
                     this->GetDataRoot()->FindName("listGrid");
                 }
                 else
                 {
-                    this->GetDataRoot()->UnloadObject(this->obj7);
+                    this->GetDataRoot()->UnloadObject(this->obj8);
                 }
                 break;
             }
-            case 8: // SubRedditViewPage.xaml line 162
+            case 9: // SubRedditViewPage.xaml line 167
             {
-                // SubRedditViewPage.xaml line 162
-                if (this->obj8LoadDeferredValue)
+                // SubRedditViewPage.xaml line 167
+                if (this->obj9LoadDeferredValue)
                 {
                     this->GetDataRoot()->FindName("listView");
                 }
                 else
                 {
-                    this->GetDataRoot()->UnloadObject(this->obj8);
+                    this->GetDataRoot()->UnloadObject(this->obj9);
                 }
                 break;
             }
@@ -226,22 +226,22 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Windows::UI::Xaml::Controls::CommandBar^ obj2;
-    ::Windows::UI::Xaml::Controls::StackPanel^ obj3;
-    ::Windows::UI::Xaml::Controls::SplitView^ obj4;
-    ::Windows::UI::Xaml::Controls::ToggleSwitch^ obj5;
-    ::Windows::UI::Xaml::Controls::GridView^ obj7;
-    ::Platform::Object^ obj7ItemsSourceDeferredValue;
-    ::Platform::Boolean obj7LoadDeferredValue;
-    ::Windows::UI::Xaml::Controls::ListView^ obj8;
+    ::Windows::UI::Xaml::Controls::CommandBar^ obj3;
+    ::Windows::UI::Xaml::Controls::StackPanel^ obj4;
+    ::Windows::UI::Xaml::Controls::SplitView^ obj5;
+    ::Windows::UI::Xaml::Controls::ToggleSwitch^ obj6;
+    ::Windows::UI::Xaml::Controls::GridView^ obj8;
     ::Platform::Object^ obj8ItemsSourceDeferredValue;
     ::Platform::Boolean obj8LoadDeferredValue;
-    ::Windows::UI::Xaml::Controls::TextBlock^ obj9;
-    ::Windows::UI::Xaml::Documents::Run^ obj11;
-    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj12;
+    ::Windows::UI::Xaml::Controls::ListView^ obj9;
+    ::Platform::Object^ obj9ItemsSourceDeferredValue;
+    ::Platform::Boolean obj9LoadDeferredValue;
+    ::Windows::UI::Xaml::Controls::TextBlock^ obj10;
+    ::Windows::UI::Xaml::Documents::Run^ obj13;
     ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj14;
-    ::Windows::UI::Xaml::Controls::ListView^ obj17;
-    ::Windows::UI::Xaml::Controls::MenuFlyoutSeparator^ obj18;
+    ::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj16;
+    ::Windows::UI::Xaml::Controls::ListView^ obj19;
+    ::Windows::UI::Xaml::Controls::MenuFlyoutSeparator^ obj20;
     std::list<int> UnloadedElementsToUpdate;
     
     // Fields for binding tracking.
@@ -291,12 +291,12 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 29
-            Set_Windows_UI_Xaml_FrameworkElement_RequestedTheme(this->obj2, safe_cast<::Windows::UI::Xaml::ElementTheme>(this->LookupConverter("themeConv")->Convert(obj, ::Windows::UI::Xaml::ElementTheme::typeid, nullptr, nullptr)));
-            // SubRedditViewPage.xaml line 29
-            Set_Windows_UI_Xaml_Controls_Control_Background(this->obj2, safe_cast<::Windows::UI::Xaml::Media::Brush^>(this->LookupConverter("brushify")->Convert(obj, ::Windows::UI::Xaml::Media::Brush::typeid, nullptr, nullptr)), nullptr);
-            // SubRedditViewPage.xaml line 140
+            // SubRedditViewPage.xaml line 41
             Set_Windows_UI_Xaml_FrameworkElement_RequestedTheme(this->obj3, safe_cast<::Windows::UI::Xaml::ElementTheme>(this->LookupConverter("themeConv")->Convert(obj, ::Windows::UI::Xaml::ElementTheme::typeid, nullptr, nullptr)));
+            // SubRedditViewPage.xaml line 41
+            Set_Windows_UI_Xaml_Controls_Control_Background(this->obj3, safe_cast<::Windows::UI::Xaml::Media::Brush^>(this->LookupConverter("brushify")->Convert(obj, ::Windows::UI::Xaml::Media::Brush::typeid, nullptr, nullptr)), nullptr);
+            // SubRedditViewPage.xaml line 145
+            Set_Windows_UI_Xaml_FrameworkElement_RequestedTheme(this->obj4, safe_cast<::Windows::UI::Xaml::ElementTheme>(this->LookupConverter("themeConv")->Convert(obj, ::Windows::UI::Xaml::ElementTheme::typeid, nullptr, nullptr)));
         }
     }
     void Update_sideBarButton(::Windows::UI::Xaml::Controls::AppBarToggleButton^ obj, int phase)
@@ -314,32 +314,23 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 147
-            Set_Windows_UI_Xaml_Controls_SplitView_IsPaneOpen(this->obj4, safe_cast<::Platform::Boolean>(this->LookupConverter("boxConv")->Convert(obj, ::Platform::Boolean::typeid, nullptr, nullptr)));
+            // SubRedditViewPage.xaml line 152
+            Set_Windows_UI_Xaml_Controls_SplitView_IsPaneOpen(this->obj5, safe_cast<::Platform::Boolean>(this->LookupConverter("boxConv")->Convert(obj, ::Platform::Boolean::typeid, nullptr, nullptr)));
         }
     }
     void Update_SidebarUseCSS(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 154
-            Set_Windows_UI_Xaml_Controls_ToggleSwitch_IsOn(this->obj5, obj);
+            // SubRedditViewPage.xaml line 159
+            Set_Windows_UI_Xaml_Controls_ToggleSwitch_IsOn(this->obj6, obj);
         }
     }
     void Update_posts(::Windows::Foundation::Collections::IVector<::account::subpostUWP^>^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 161
-            if (this->obj7 != nullptr)
-            {
-                Set_Windows_UI_Xaml_Controls_ItemsControl_ItemsSource(this->obj7, obj, nullptr);
-            }
-            else
-            {
-                this->obj7ItemsSourceDeferredValue = obj;
-            }
-            // SubRedditViewPage.xaml line 162
+            // SubRedditViewPage.xaml line 166
             if (this->obj8 != nullptr)
             {
                 Set_Windows_UI_Xaml_Controls_ItemsControl_ItemsSource(this->obj8, obj, nullptr);
@@ -348,14 +339,23 @@ private:
             {
                 this->obj8ItemsSourceDeferredValue = obj;
             }
+            // SubRedditViewPage.xaml line 167
+            if (this->obj9 != nullptr)
+            {
+                Set_Windows_UI_Xaml_Controls_ItemsControl_ItemsSource(this->obj9, obj, nullptr);
+            }
+            else
+            {
+                this->obj9ItemsSourceDeferredValue = obj;
+            }
         }
     }
     void Update_viewMode(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 161
-            this->obj7LoadDeferredValue = safe_cast<::Platform::Boolean>(this->LookupConverter("boolFlipper")->Convert(obj, ::Platform::Boolean::typeid, nullptr, nullptr));
+            // SubRedditViewPage.xaml line 166
+            this->obj8LoadDeferredValue = safe_cast<::Platform::Boolean>(this->LookupConverter("boolFlipper")->Convert(obj, ::Platform::Boolean::typeid, nullptr, nullptr));
     
             if (safe_cast<::Platform::Boolean>(this->LookupConverter("boolFlipper")->Convert(obj, ::Platform::Boolean::typeid, nullptr, nullptr)))
             {
@@ -363,10 +363,10 @@ private:
             }
             else
             {
-                this->GetDataRoot()->UnloadObject(this->obj7);
+                this->GetDataRoot()->UnloadObject(this->obj8);
             }
-            // SubRedditViewPage.xaml line 162
-            this->obj8LoadDeferredValue = obj;
+            // SubRedditViewPage.xaml line 167
+            this->obj9LoadDeferredValue = obj;
     
             if (obj)
             {
@@ -374,44 +374,44 @@ private:
             }
             else
             {
-                this->GetDataRoot()->UnloadObject(this->obj8);
+                this->GetDataRoot()->UnloadObject(this->obj9);
             }
-            // SubRedditViewPage.xaml line 34
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj14, obj, nullptr);
+            // SubRedditViewPage.xaml line 46
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj16, obj, nullptr);
         }
     }
     void Update_subInfo_pname(::Platform::String^ obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 141
-            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj9, obj, nullptr);
+            // SubRedditViewPage.xaml line 146
+            Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj10, obj, nullptr);
         }
     }
     void Update_subInfo_subscribers(::default::uint32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 144
-            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj11, obj.ToString(), nullptr);
+            // SubRedditViewPage.xaml line 149
+            Set_Windows_UI_Xaml_Documents_Run_Text(this->obj13, safe_cast<::Platform::String^>(this->LookupConverter("subsconv")->Convert(obj, ::Platform::String::typeid, nullptr, nullptr)), nullptr);
         }
     }
     void Update_Subscribed(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 30
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj12, obj, nullptr);
+            // SubRedditViewPage.xaml line 42
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj14, obj, nullptr);
         }
     }
     void Update_Sort(::account::postSort obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // SubRedditViewPage.xaml line 40
-            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj17, safe_cast<::Windows::UI::Xaml::Visibility>(this->LookupConverter("rangeVisConv")->Convert(obj, ::Windows::UI::Xaml::Visibility::typeid, nullptr, nullptr)));
-            // SubRedditViewPage.xaml line 77
-            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj18, safe_cast<::Windows::UI::Xaml::Visibility>(this->LookupConverter("rangeVisConv")->Convert(obj, ::Windows::UI::Xaml::Visibility::typeid, nullptr, nullptr)));
+            // SubRedditViewPage.xaml line 52
+            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj19, safe_cast<::Windows::UI::Xaml::Visibility>(this->LookupConverter("rangeVisConv")->Convert(obj, ::Windows::UI::Xaml::Visibility::typeid, nullptr, nullptr)));
+            // SubRedditViewPage.xaml line 89
+            Set_Windows_UI_Xaml_UIElement_Visibility(this->obj20, safe_cast<::Windows::UI::Xaml::Visibility>(this->LookupConverter("rangeVisConv")->Convert(obj, ::Windows::UI::Xaml::Visibility::typeid, nullptr, nullptr)));
         }
     }
 
@@ -579,25 +579,30 @@ void ::Reddit::SubRedditViewPage::Connect(int __connectionId, ::Platform::Object
     {
     case 2:
         {
-            this->commandBar = safe_cast<::Windows::UI::Xaml::Controls::CommandBar^>(__target);
+            this->mystate = safe_cast<::Windows::UI::Xaml::AdaptiveTrigger^>(__target);
         }
         break;
     case 3:
         {
-            this->subInfopanel = safe_cast<::Windows::UI::Xaml::Controls::StackPanel^>(__target);
+            this->commandBar = safe_cast<::Windows::UI::Xaml::Controls::CommandBar^>(__target);
         }
         break;
     case 4:
         {
+            this->subInfopanel = safe_cast<::Windows::UI::Xaml::Controls::StackPanel^>(__target);
+        }
+        break;
+    case 5:
+        {
             this->splitSide = safe_cast<::Windows::UI::Xaml::Controls::SplitView^>(__target);
         }
         break;
-    case 6:
+    case 7:
         {
             this->sidebarWebview = safe_cast<::Windows::UI::Xaml::Controls::WebView^>(__target);
         }
         break;
-    case 7:
+    case 8:
         {
             this->listGrid = safe_cast<::Windows::UI::Xaml::Controls::GridView^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::GridView^>(this->listGrid))->ItemClick += ref new ::Windows::UI::Xaml::Controls::ItemClickEventHandler(this, (void (::Reddit::SubRedditViewPage::*)
@@ -606,7 +611,7 @@ void ::Reddit::SubRedditViewPage::Connect(int __connectionId, ::Platform::Object
                 (::Windows::UI::Xaml::Controls::ListViewBase^, ::Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^))&SubRedditViewPage::listGrid_ChoosingItemContainer);
         }
         break;
-    case 8:
+    case 9:
         {
             this->listView = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::ListView^>(this->listView))->ItemClick += ref new ::Windows::UI::Xaml::Controls::ItemClickEventHandler(this, (void (::Reddit::SubRedditViewPage::*)
@@ -615,36 +620,41 @@ void ::Reddit::SubRedditViewPage::Connect(int __connectionId, ::Platform::Object
                 (::Windows::UI::Xaml::Controls::ListViewBase^, ::Windows::UI::Xaml::Controls::ChoosingItemContainerEventArgs^))&SubRedditViewPage::listView_ChoosingItemContainer);
         }
         break;
-    case 10:
+    case 11:
+        {
+            this->seppy = safe_cast<::Windows::UI::Xaml::Controls::AppBarSeparator^>(__target);
+        }
+        break;
+    case 12:
         {
             this->subTextblock = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
         }
         break;
-    case 13:
+    case 15:
         {
             this->sideBarButton = safe_cast<::Windows::UI::Xaml::Controls::AppBarToggleButton^>(__target);
         }
         break;
-    case 15:
+    case 17:
         {
             this->timeButton = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
         }
         break;
-    case 16:
+    case 18:
         {
-            ::Windows::UI::Xaml::Controls::AppBarButton^ element16 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element16))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::SubRedditViewPage::*)
+            ::Windows::UI::Xaml::Controls::AppBarButton^ element18 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element18))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::SubRedditViewPage::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&SubRedditViewPage::postButton_click);
         }
         break;
-    case 17:
+    case 19:
         {
             this->timeSelector = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::ListView^>(this->timeSelector))->SelectionChanged += ref new ::Windows::UI::Xaml::Controls::SelectionChangedEventHandler(this, (void (::Reddit::SubRedditViewPage::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::Controls::SelectionChangedEventArgs^))&SubRedditViewPage::rangeSelector_SelectionChanged);
         }
         break;
-    case 19:
+    case 21:
         {
             this->sortSelector = safe_cast<::Windows::UI::Xaml::Controls::ListView^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::ListView^>(this->sortSelector))->SelectionChanged += ref new ::Windows::UI::Xaml::Controls::SelectionChangedEventHandler(this, (void (::Reddit::SubRedditViewPage::*)
@@ -659,15 +669,15 @@ void ::Reddit::SubRedditViewPage::UnloadObject(::Windows::UI::Xaml::DependencyOb
 {
     if (unloadableObject != nullptr)
     {
-        // SubRedditViewPage.xaml line 161
+        // SubRedditViewPage.xaml line 166
         if (unloadableObject == this->listGrid)
         {
-            this->DisconnectUnloadedObject(7);
+            this->DisconnectUnloadedObject(8);
         }
-        // SubRedditViewPage.xaml line 162
+        // SubRedditViewPage.xaml line 167
         if (unloadableObject == this->listView)
         {
-            this->DisconnectUnloadedObject(8);
+            this->DisconnectUnloadedObject(9);
         }
         ::Windows::UI::Xaml::Markup::XamlMarkupHelper::UnloadObject(unloadableObject);
     }
@@ -677,15 +687,15 @@ void ::Reddit::SubRedditViewPage::DisconnectUnloadedObject(int connectionId)
 {
     switch(connectionId)
     {
-        case 7: // SubRedditViewPage.xaml line 161
+        case 8: // SubRedditViewPage.xaml line 166
         {
-            this->Bindings->DisconnectUnloadedObject(7);
+            this->Bindings->DisconnectUnloadedObject(8);
             this->listGrid = nullptr;
             break;
         }
-        case 8: // SubRedditViewPage.xaml line 162
+        case 9: // SubRedditViewPage.xaml line 167
         {
-            this->Bindings->DisconnectUnloadedObject(8);
+            this->Bindings->DisconnectUnloadedObject(9);
             this->listView = nullptr;
             break;
         }

@@ -91,6 +91,13 @@ namespace account
 				return helper.Getauthor();
 			}
 		}
+		virtual property Platform::String^ ScoreText
+		{
+			Platform::String^ get()
+			{
+				return helper.getScoreText();
+			}
+		}
 		property mdblock::refMDElements^ mdElements
 		{
 			mdblock::refMDElements^ get()
@@ -114,6 +121,13 @@ namespace account
 			bool get()
 			{
 				return helper.getIsMine();
+			}
+		}
+		virtual property Platform::String^ CreatedString
+		{
+			Platform::String^ get()
+			{
+				return helper.getElapsedCreatedStr();
 			}
 		}
 		virtual property account::DistinguishedAccountTypes  DistinguishedAuthorType

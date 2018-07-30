@@ -15,6 +15,10 @@ namespace account
 	};
 	public interface struct VotableInterface
 	{
+		property Platform::String^ CreatedString
+		{
+			Platform::String^ get();
+		}
 		property bool saved;
 		property int score
 		{
@@ -45,16 +49,28 @@ namespace account
 		{
 			unsigned int get();
 		}
+		property Platform::String^ ScoreText
+		{
+			Platform::String^ get();
+		}
 	};
 	partial ref class CommentUWPitem;
 	struct RedditCreated
 	{
-		time_t createdUTC;
+	private:
+		Platform::String^ CreatedString;
+		uint32_t CreatedUTC = 0;
+		uint32_t EditedUTC = 0;
+		const wchar_t CreatedStringMarker = u'\uE000';
+	public:
+		
 		RedditCreated(Windows::Data::Json::JsonObject^ json);
+		Platform::String^& getElapsedCreatedStr();
 	};
-	class VotableThing : RedditCreated
+	class VotableThing : public RedditCreated
 	{
 	public:
+		Platform::String^& getScoreText();
 		Platform::String^& getFullname();
 		int getMyVote();
 		int GetScore();
@@ -75,6 +91,8 @@ namespace account
 		concurrency::task<void> giveGold();
 		concurrency::task<CommentUWPitem^> reply(Platform::String^ markdown);
 	private:
+		void updateScoreString();
+		Platform::String^ scoreText;
 		Platform::String^  fullname;
 		Platform::String^  id;
 		Platform::String^ permalink;

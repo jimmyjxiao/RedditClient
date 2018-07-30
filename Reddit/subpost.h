@@ -15,6 +15,7 @@ namespace account
 		ytvideotype = 6,
 		albumtype = 7,
 		imgurpending,
+		xpost,
 		none,
 		pending
 

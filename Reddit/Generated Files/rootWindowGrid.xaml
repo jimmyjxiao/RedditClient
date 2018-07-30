@@ -23,6 +23,16 @@
         </Grid.ColumnDefinitions>
         <Rectangle x:ConnectionId='5' Fill="{ThemeResource SystemControlChromeHighAcrylicWindowMediumBrush}" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" x:Name="titleRec"/>
         <StackPanel Grid.Column="1" HorizontalAlignment="Center"  Orientation="Horizontal">
+            <Button>
+                <SymbolIcon Symbol="Home"/>
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:ConnectionId='24' Text="Frontpage" HorizontalContentAlignment="Center"                             />
+                        <MenuFlyoutItem Text="/r/all" HorizontalContentAlignment="Center"/>
+                        <MenuFlyoutItem Text="/r/popular" HorizontalContentAlignment="Center"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
             <ComboBox x:ConnectionId='11'   PlaceholderText="Not Logged In!"                       HorizontalContentAlignment="Center"                                               x:Name="accountBox">
                 <ComboBox.ItemTemplateSelector>
                     <local:comboboxTemplateSelector>

@@ -44,16 +44,16 @@ public:
     {
         switch(__connectionId)
         {
-            case 7: // rootWindowGrid.xaml line 94
+            case 7: // rootWindowGrid.xaml line 104
                 this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 8: // rootWindowGrid.xaml line 103
+            case 8: // rootWindowGrid.xaml line 113
                 this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 9: // rootWindowGrid.xaml line 107
+            case 9: // rootWindowGrid.xaml line 117
                 this->obj9 = safe_cast<::Windows::UI::Xaml::Controls::SymbolIcon^>(__target);
                 break;
-            case 10: // rootWindowGrid.xaml line 105
+            case 10: // rootWindowGrid.xaml line 115
                 this->obj10 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
@@ -125,7 +125,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 103
+            // rootWindowGrid.xaml line 113
             Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj8, obj, nullptr);
         }
     }
@@ -133,7 +133,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 107
+            // rootWindowGrid.xaml line 117
             Set_Windows_UI_Xaml_UIElement_Visibility(this->obj9, safe_cast<::Windows::UI::Xaml::Visibility>(this->LookupConverter("SubscribedVisibility")->Convert(obj, ::Windows::UI::Xaml::Visibility::typeid, nullptr, nullptr)));
         }
     }
@@ -141,7 +141,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 105
+            // rootWindowGrid.xaml line 115
             Set_Windows_UI_Xaml_Documents_Run_Text(this->obj10, obj.ToString(), nullptr);
         }
     }
@@ -182,16 +182,16 @@ public:
     {
         switch(__connectionId)
         {
-            case 14: // rootWindowGrid.xaml line 31
+            case 14: // rootWindowGrid.xaml line 41
                 this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 break;
-            case 15: // rootWindowGrid.xaml line 41
+            case 15: // rootWindowGrid.xaml line 51
                 this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 16: // rootWindowGrid.xaml line 44
+            case 16: // rootWindowGrid.xaml line 54
                 this->obj16 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 17: // rootWindowGrid.xaml line 44
+            case 17: // rootWindowGrid.xaml line 54
                 this->obj17 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
@@ -248,7 +248,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 41
+            // rootWindowGrid.xaml line 51
             Set_Windows_UI_Xaml_Controls_TextBlock_Text(this->obj15, obj, nullptr);
         }
     }
@@ -256,7 +256,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 44
+            // rootWindowGrid.xaml line 54
             Set_Windows_UI_Xaml_Documents_Run_Text(this->obj16, obj.ToString(), nullptr);
         }
     }
@@ -264,7 +264,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 44
+            // rootWindowGrid.xaml line 54
             Set_Windows_UI_Xaml_Documents_Run_Text(this->obj17, obj.ToString(), nullptr);
         }
     }
@@ -301,16 +301,16 @@ public:
     {
         switch(__connectionId)
         {
-            case 18: // rootWindowGrid.xaml line 52
+            case 18: // rootWindowGrid.xaml line 62
                 this->obj18 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 break;
-            case 19: // rootWindowGrid.xaml line 53
+            case 19: // rootWindowGrid.xaml line 63
                 this->obj19 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 21: // rootWindowGrid.xaml line 53
+            case 21: // rootWindowGrid.xaml line 63
                 this->obj21 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
-            case 22: // rootWindowGrid.xaml line 53
+            case 22: // rootWindowGrid.xaml line 63
                 this->obj22 = safe_cast<::Windows::UI::Xaml::Documents::Run^>(__target);
                 break;
         }
@@ -367,7 +367,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 53
+            // rootWindowGrid.xaml line 63
             Set_Windows_UI_Xaml_Documents_Run_Text(this->obj19, obj, nullptr);
         }
     }
@@ -375,7 +375,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 53
+            // rootWindowGrid.xaml line 63
             Set_Windows_UI_Xaml_Documents_Run_Text(this->obj21, obj.ToString(), nullptr);
         }
     }
@@ -383,7 +383,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED )) != 0)
         {
-            // rootWindowGrid.xaml line 53
+            // rootWindowGrid.xaml line 63
             Set_Windows_UI_Xaml_Documents_Run_Text(this->obj22, obj.ToString(), nullptr);
         }
     }
@@ -422,7 +422,7 @@ public:
     {
         switch(__connectionId)
         {
-            case 12: // rootWindowGrid.xaml line 68
+            case 12: // rootWindowGrid.xaml line 78
                 this->obj12 = safe_cast<::Reddit::NoToggleBehaviorButton^>(__target);
                 break;
         }
@@ -457,7 +457,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // rootWindowGrid.xaml line 68
+            // rootWindowGrid.xaml line 78
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj12, obj, nullptr);
         }
     }
@@ -583,6 +583,13 @@ void ::Reddit::rootWindowGrid::Connect(int __connectionId, ::Platform::Object^ _
                 (::Windows::UI::Xaml::Documents::Hyperlink^, ::Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^))&rootWindowGrid::Hyperlink_Click);
         }
         break;
+    case 24:
+        {
+            ::Windows::UI::Xaml::Controls::MenuFlyoutItem^ element24 = safe_cast<::Windows::UI::Xaml::Controls::MenuFlyoutItem^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::MenuFlyoutItem^>(element24))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::Reddit::rootWindowGrid::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&rootWindowGrid::MenuFlyoutItem_Click);
+        }
+        break;
     }
     _contentLoaded = true;
 }
@@ -602,7 +609,7 @@ void ::Reddit::rootWindowGrid::Connect(int __connectionId, ::Platform::Object^ _
                 element1->Loading += ref new ::Windows::Foundation::TypedEventHandler<::Windows::UI::Xaml::FrameworkElement^, ::Platform::Object^>(bindings, &::XamlBindingInfo::XamlBindings::Loading);
             }
             break;
-        case 7: // rootWindowGrid.xaml line 94
+        case 7: // rootWindowGrid.xaml line 104
             {
                 ::Windows::UI::Xaml::Controls::Grid^ element7 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 rootWindowGrid_obj7_Bindings* objBindings = new rootWindowGrid_obj7_Bindings();
@@ -614,7 +621,7 @@ void ::Reddit::rootWindowGrid::Connect(int __connectionId, ::Platform::Object^ _
                 ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element7, bindings);
             }
             break;
-        case 14: // rootWindowGrid.xaml line 31
+        case 14: // rootWindowGrid.xaml line 41
             {
                 ::Windows::UI::Xaml::Controls::Grid^ element14 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
                 rootWindowGrid_obj14_Bindings* objBindings = new rootWindowGrid_obj14_Bindings();
@@ -625,7 +632,7 @@ void ::Reddit::rootWindowGrid::Connect(int __connectionId, ::Platform::Object^ _
                 ::Windows::UI::Xaml::Markup::XamlBindingHelper::SetDataTemplateComponent(element14, bindings);
             }
             break;
-        case 18: // rootWindowGrid.xaml line 52
+        case 18: // rootWindowGrid.xaml line 62
             {
                 ::Windows::UI::Xaml::Controls::TextBlock^ element18 = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
                 rootWindowGrid_obj18_Bindings* objBindings = new rootWindowGrid_obj18_Bindings();

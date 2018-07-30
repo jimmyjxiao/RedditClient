@@ -224,7 +224,7 @@ void Reddit::MyResources::ContentPresenter_Loading(Windows::UI::Xaml::FrameworkE
 
 void Reddit::MyResources::AppBarButton_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	const auto & send = static_cast<account::subpostUWP^>(static_cast<Windows::UI::Xaml::Controls::AppBarButton^>( sender)->DataContext);
+	const auto & send = static_cast<account::subpostUWP^>(static_cast<Windows::UI::Xaml::Controls::AppBarButton^>( sender)->Tag);
 	if (send != nullptr && send->contentType == account::postContentType::selftype)
 	{
 		static_cast<Windows::UI::Xaml::Controls::AppBarButton^>(sender)->Click += ref new Windows::UI::Xaml::RoutedEventHandler([](Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e) {
@@ -304,7 +304,7 @@ void Reddit::MyResources::username_click(Windows::UI::Xaml::Documents::Hyperlink
 
 void Reddit::MyResources::subreddit_click(Windows::UI::Xaml::Documents::Hyperlink^ sender, Windows::UI::Xaml::Documents::HyperlinkClickEventArgs^ args)
 {
-	rootWindowGrid::getCurrent()->NavigateToNewPage(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(static_cast<Windows::UI::Xaml::Documents::Run^>(sender->Inlines->GetAt(1))->Text)));
+	Reddit::SubRedditViewPage::NavigateToSubreddit(static_cast<Windows::UI::Xaml::Documents::Run^>(sender->Inlines->GetAt(1))->Text);
 }
 
 

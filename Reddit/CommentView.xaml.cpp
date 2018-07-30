@@ -77,6 +77,7 @@ void Reddit::CommentView::SetVec(std::vector<account::CommentUWPitem^> vec)
 			//commentTree->RootNode->Append(node);
 			newroot->Append(node);
 		}
+		addThreadlines();
 		commentTree->RootNode = newroot;
 	//}));
 
@@ -84,10 +85,25 @@ void Reddit::CommentView::SetVec(std::vector<account::CommentUWPitem^> vec)
 	//t.detach();
 }
 
-void Reddit::CommentView::OnApplyTemplate()
+
+
+void Reddit::CommentView::addThreadlines()
 {
-	auto x = commentTree->FindName("contentExpander");
-	__debugbreak();
+	auto c = static_cast<Grid^>(commentTree->PublicGetTemplateChild("rootygrid"));
+	for (unsigned int i = 1; i != max_depth; i++)
+	{
+		if ((i & 1))
+		{
+			auto rectangle = ref new Windows::UI::Xaml::Shapes::Rectangle();
+			rectangle->HorizontalAlignment = Windows::UI::Xaml::HorizontalAlignment::Left;
+			rectangle->Margin = Windows::UI::Xaml::ThicknessHelper::FromLengths(i * 20, 0, 0, 0);
+			static auto lightgray = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::LightGray);
+			rectangle->Fill = lightgray;
+			rectangle->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Stretch;
+			rectangle->Width = 20;
+			c->Children->InsertAt(0, std::move(rectangle));
+		}
+	}
 }
 
 ExpanderControl::Expander^ Reddit::CommentView::findExpanderRecurse(Windows::UI::Xaml::FrameworkElement^ parent)
@@ -259,7 +275,6 @@ void Reddit::CommentView::commentTree_Loaded(Platform::Object^ sender, Windows::
 			x->IsExpanded = false;
 		}
 	}
-
 }
 
 

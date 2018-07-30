@@ -11,6 +11,13 @@
 namespace Windows {
     namespace UI {
         namespace Xaml {
+            ref class AdaptiveTrigger;
+        }
+    }
+}
+namespace Windows {
+    namespace UI {
+        namespace Xaml {
             namespace Controls {
                 ref class CommandBar;
                 ref class StackPanel;
@@ -18,6 +25,7 @@ namespace Windows {
                 ref class WebView;
                 ref class GridView;
                 ref class ListView;
+                ref class AppBarSeparator;
                 ref class TextBlock;
                 ref class AppBarToggleButton;
                 ref class AppBarButton;
@@ -48,12 +56,14 @@ namespace Reddit
         class SubRedditViewPage_obj1_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
+        private: ::Windows::UI::Xaml::AdaptiveTrigger^ mystate;
         private: ::Windows::UI::Xaml::Controls::CommandBar^ commandBar;
         private: ::Windows::UI::Xaml::Controls::StackPanel^ subInfopanel;
         private: ::Windows::UI::Xaml::Controls::SplitView^ splitSide;
         private: ::Windows::UI::Xaml::Controls::WebView^ sidebarWebview;
         private: ::Windows::UI::Xaml::Controls::GridView^ listGrid;
         private: ::Windows::UI::Xaml::Controls::ListView^ listView;
+        private: ::Windows::UI::Xaml::Controls::AppBarSeparator^ seppy;
         private: ::Windows::UI::Xaml::Controls::TextBlock^ subTextblock;
         private: ::Windows::UI::Xaml::Controls::AppBarToggleButton^ sideBarButton;
         private: ::Windows::UI::Xaml::Controls::AppBarButton^ timeButton;

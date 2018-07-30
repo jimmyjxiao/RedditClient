@@ -206,6 +206,7 @@
     <ClInclude Include="contentResizer.h" />
     <ClInclude Include="converters.h" />
     <ClInclude Include="DelegateCommand.h" />
+    <ClInclude Include="ElapsedTimeStr.h" />
     <ClInclude Include="globalvars.h" />
     <ClInclude Include="linkhandler.h" />
     <ClInclude Include="message.h" />
@@ -217,6 +218,9 @@
       <DependentUpon>MyResources.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="NavStates.h" />
+    <ClInclude Include="NewPostPopup.xaml.h">
+      <DependentUpon>NewPostPopup.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="NoToggleBehaviorButton.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
@@ -254,6 +258,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MyResources.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NewPostPopup.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ReplyBox.xaml" />
@@ -302,6 +309,7 @@
     <ClCompile Include="contentResizer.cpp" />
     <ClCompile Include="converters.cpp" />
     <ClCompile Include="DelegateCommand.cpp" />
+    <ClCompile Include="ElapsedTimeStr.cpp" />
     <ClCompile Include="globalvars.cpp" />
     <ClCompile Include="linkhandler.cpp" />
     <ClCompile Include="message.cpp" />
@@ -313,6 +321,9 @@
       <DependentUpon>MyResources.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="NavPage.cpp" />
+    <ClCompile Include="NewPostPopup.xaml.cpp">
+      <DependentUpon>NewPostPopup.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="NoToggleBehaviorButton.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

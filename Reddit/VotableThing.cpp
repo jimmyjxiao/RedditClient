@@ -2,6 +2,8 @@
 #include "VotableThing.h"
 #include "globalvars.h"
 #include "commentUWPitem.h"
+#include "ElapsedTimeStr.h"
+#include <sstream>
 namespace account
 {
 	concurrency::task<void> VotableThing::giveGold()
@@ -18,6 +20,38 @@ namespace account
 			return ref new CommentUWPitem(newcommentjs->GetNamedObject("json")->GetNamedObject("data")->GetNamedArray("things")->GetObjectAt(0)->GetNamedObject("data"));
 		});
 	}
+	void VotableThing::updateScoreString()
+	{
+		if (score < (INT_MIN + 4))
+		{
+			scoreText = L"Score Hidden";
+		}
+		else
+		{
+			wchar_t buffer[19];
+			wchar_t numbuf[9];
+			_itow_s(score, numbuf, 10);
+			static NUMBERFMTW numbfmt =
+			{
+				0,
+				0,
+				3,
+				L"",
+				L",",
+				1
+			};
+			GetNumberFormatEx(LOCALE_NAME_USER_DEFAULT, 0, numbuf, &numbfmt, buffer, 19);
+			if (abs(score) != 1)
+			{
+				wcscat_s(buffer, L" points");
+			}
+			else
+			{
+				wcscat_s(buffer, L" point");
+			}
+			scoreText = ref new Platform::String(buffer);
+		}
+	}
 	/*concurrency::task<void> VotableThing::reply(Platform::String ^ markdown, AccountInterface * replyas)
 	{
 		return concurrency::task<void>();
@@ -28,7 +62,7 @@ namespace account
 		{
 			if (myvote == 0)
 			{
-				if (myvote == 1)
+				if (direction == 1)
 				{
 					score++;
 				}
@@ -56,14 +90,13 @@ namespace account
 				}
 				else
 				{
-					score += 2;
+score += 2;
 				}
 			}
 		}
 		myvote = direction;
-		return globalvars::currentacc->vote(direction, fullname).then([this, direction]() {
-
-		});
+		updateScoreString();
+		return globalvars::currentacc->vote(direction, fullname);
 	}
 	concurrency::task<void> VotableThing::save()
 	{
@@ -156,9 +189,21 @@ namespace account
 				}
 				else
 				{
-					is_special = DistinguishedAccountTypes::none;
+					try {
+						if(json->GetNamedBoolean("is_submitter"))
+						{
+							is_special = DistinguishedAccountTypes::op;
+						}
+						else
+							is_special = DistinguishedAccountTypes::none;
+					}
+					catch (...) {
+						is_special = DistinguishedAccountTypes::none;
+					}
+					
 				}
 			}
+			updateScoreString();
 		}
 		catch (...)
 		{
@@ -175,8 +220,24 @@ namespace account
 	}
 	RedditCreated::RedditCreated(Windows::Data::Json::JsonObject ^ json)
 	{
-		createdUTC = json->GetNamedNumber("created_utc");
+		CreatedUTC = json->GetNamedNumber("created_utc");
+		auto wstr = Reddit::ElapsedTimeStr::getStringFromCreatedUTC(CreatedUTC);
+		if (const auto& e = json->GetNamedValue("edited");  e->ValueType == Windows::Data::Json::JsonValueType::Number)
+		{
+			EditedUTC = (((unsigned int)e->GetNumber()) - ((unsigned int)json->GetNamedNumber("created")) + CreatedUTC);
+		}
+		CreatedString = ref new Platform::String(wstr.data(), wstr.length());
 	}
+	Platform::String^& RedditCreated::getElapsedCreatedStr()
+	{
+		return CreatedString;
+	}
+
+	Platform::String ^& VotableThing::getScoreText()
+	{
+		return scoreText;
+	}
+
 	Platform::String ^& VotableThing::getFullname()
 	{
 		return fullname;

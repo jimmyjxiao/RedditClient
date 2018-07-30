@@ -64,5 +64,7 @@ namespace Reddit
 
 		
 
+	private:
+		void subreddit_click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};
 }

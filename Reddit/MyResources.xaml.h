@@ -67,6 +67,21 @@ namespace Reddit
 		property Windows::UI::Xaml::DataTemplate^ CommentDataTemplate;
 	protected: virtual Windows::UI::Xaml::DataTemplate^ SelectTemplateCore(Platform::Object^ item) override;
 	};
+	public ref class ActiveSettableAdaptiveTrigger sealed : Windows::UI::Xaml::AdaptiveTrigger 
+	{
+	public:
+		ActiveSettableAdaptiveTrigger()
+		{
+			SetActive(true);
+		}
+		property bool IsActive
+		{
+			void set(bool n)
+			{
+				SetActive(std::move(n));
+			}
+		}
+	};
 	public ref class EXplaceHolder sealed : Windows::UI::Xaml::Controls::ContentControl
 	{
 	private:

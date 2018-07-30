@@ -39,9 +39,8 @@ namespace Reddit
 		{
 			this->commentTree->RootNode->Clear();
 		}
-	protected:
-		void OnApplyTemplate() override;
 	private:
+		void addThreadlines();
 		unsigned int max_depth = 0;
 		std::function<void(account::commentUWPlisting*, account::CommentUWPitem^)> callbackfunc;
 		static ExpanderControl::Expander^ findExpanderRecurse(Windows::UI::Xaml::FrameworkElement^ parent);

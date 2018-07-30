@@ -63,6 +63,8 @@
       <Filter>account</Filter>
     </ClCompile>
     <ClCompile Include="MessagesViewer.xaml.cpp" />
+    <ClCompile Include="PopupContent.cpp" />
+    <ClCompile Include="ElapsedTimeStr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -115,6 +117,8 @@
       <Filter>account</Filter>
     </ClInclude>
     <ClInclude Include="MessagesViewer.xaml.h" />
+    <ClInclude Include="PopupContent.h" />
+    <ClInclude Include="ElapsedTimeStr.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
@@ -157,7 +161,7 @@
     <Page Include="TestPage.xaml" />
     <Page Include="UserPage.xaml" />
     <Page Include="MessagesViewer.xaml" />
-    <Page Include="ContentDiag.xaml" />
+    <Page Include="NewPostPopup.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ToDo.txt" />

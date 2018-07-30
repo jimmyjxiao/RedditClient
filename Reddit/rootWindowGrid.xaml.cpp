@@ -231,7 +231,7 @@ void Reddit::rootWindowGrid::AutoSuggestBox_QuerySubmitted(Windows::UI::Xaml::Co
 				{
 					if (wstrValidGo(wstr + 3, sender->Text->Length() - 3))
 					{
-						rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate{ ref new Platform::String(wstr + 3, sender->Text->Length() - 3) }));
+						Reddit::SubRedditViewPage::NavigateToSubreddit(ref new Platform::String(wstr + 3, sender->Text->Length() - 3));
 					}
 				}
 			}
@@ -239,12 +239,12 @@ void Reddit::rootWindowGrid::AutoSuggestBox_QuerySubmitted(Windows::UI::Xaml::Co
 		}
 		else if (wstr[0] == L'r' && wstr[1] == L'/' && (wstrValidGo(wstr + 2, sender->Text->Length() - 2)))
 		{
-			rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate(ref new Platform::String(wstr + 2, sender->Text->Length() - 2) )));
+			Reddit::SubRedditViewPage::NavigateToSubreddit(ref new Platform::String(wstr + 2, sender->Text->Length() - 2));
 		}
 	}
 	else
 	{
-		rootFrame->Navigate(SubRedditViewPage::typeid, globalvars::addNav(SubRedditViewPage::typeid, new subredditNavstate{static_cast<account::subredditInfo>(args->ChosenSuggestion)}));
+		Reddit::SubRedditViewPage::NavigateToSubreddit(static_cast<account::subredditInfo>(args->ChosenSuggestion));
 	}
 }
 
@@ -390,4 +390,10 @@ Platform::Object ^ Reddit::CurrentUserSubscribedConverter::Convert(Platform::Obj
 	{
 		return Windows::UI::Xaml::Visibility::Collapsed;
 	}
+}
+
+
+void Reddit::rootWindowGrid::MenuFlyoutItem_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	SubRedditViewPage::NavigateToSubreddit(nullptr);
 }
